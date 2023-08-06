@@ -1,0 +1,1 @@
+DROP DATABASE IF EXISTS isys2099_group9_app;
