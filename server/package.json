@@ -4,6 +4,11 @@
   "description": "RMIT University Vietnam, Semester 2023B - ISYS2099 Database Application - Group 9",
   "main": "app.js",
   "scripts": {
+    "start": "npx nodemon app.js",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "lint": "npx eslint --fix .",
+    "check-lint": "npx eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
