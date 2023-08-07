@@ -45,8 +45,10 @@ CREATE TABLE IF NOT EXISTS product_category
 (
     category_name VARCHAR(45),
     parent        VARCHAR(45) DEFAULT NULL,
+    child         VARCHAR(45) DEFAULT NULL,
     CONSTRAINT product_category_pk PRIMARY KEY (category_name),
-    CONSTRAINT product_category_parent_fk FOREIGN KEY (parent) REFERENCES product_category (category_name)
+    CONSTRAINT product_category_parent_fk FOREIGN KEY (parent) REFERENCES product_category (category_name),
+    CONSTRAINT product_category_child_fk FOREIGN KEY (child) REFERENCES product_category (child)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS product_attribute
