@@ -2,6 +2,13 @@ CREATE DATABASE IF NOT EXISTS isys2099_group9_app;
 USE isys2099_group9_app;
 
 
+CREATE TABLE IF NOT EXISTS wh_admin
+(
+    username      VARCHAR(45),
+    password_hash VARCHAR(255) NOT NULL,
+    CONSTRAINT lazada_user_pk PRIMARY KEY (username)
+) ENGINE = InnoDB;
+
 CREATE TABLE IF NOT EXISTS lazada_user
 (
     username      VARCHAR(45),
