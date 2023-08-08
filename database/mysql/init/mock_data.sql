@@ -13,3 +13,6 @@ VALUES ('tony');
 
 INSERT INTO seller (username, shop_name)
 VALUES ('loi', 'loc');
+
+INSERT INTO warehouse (warehouse_name, volume, province, city, district, street, streetNumber)
+VALUES ('Ontario LAZ', 2000)

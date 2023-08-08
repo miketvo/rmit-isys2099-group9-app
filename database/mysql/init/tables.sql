@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS warehouse
 (
     id             INT AUTO_INCREMENT,
     warehouse_name VARCHAR(45) NOT NULL,
-    total_area     INT         NOT NULL,
+    volume         INT         NOT NULL,  -- Cubic centimeter
     province       VARCHAR(45) NOT NULL,
     city           VARCHAR(45) NOT NULL,
     district       VARCHAR(45),
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS warehouse
     streetNumber   VARCHAR(10),
     CONSTRAINT warehouse_pk PRIMARY KEY (id),
     CONSTRAINT warehouse_warehouse_name_un UNIQUE (warehouse_name),
-    CONSTRAINT chk_warehouse CHECK (total_area > 0)
+    CONSTRAINT chk_warehouse CHECK (volume > 0)
 ) ENGINE = InnoDB;
 
 
@@ -72,9 +72,9 @@ CREATE TABLE IF NOT EXISTS product
     category            VARCHAR(45),
     image               BLOB,
     price               DECIMAL(6, 2),
-    width               INT         NOT NULL,
-    length              INT         NOT NULL,
-    height              INT         NOT NULL,
+    width               INT         NOT NULL,  -- Centimeter
+    length              INT         NOT NULL,  -- Centimeter
+    height              INT         NOT NULL,  -- Centimeter
     warehouse_id        INT NOT NULL,
     stock_quantity      INT NOT NULL DEFAULT 0,
     CONSTRAINT product_pk PRIMARY KEY (id),
