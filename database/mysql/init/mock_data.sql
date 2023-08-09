@@ -189,7 +189,7 @@ VALUES
     (22, 'Smartphone Model Y', 'Mid-range smartphone with sleek design.', 'Mobiles', 499.99, 5, 11, 0.7, 1, 75, 'mike'),
     (23, 'Noise-Boosting Over-Ear Headphones', 'Premium over-ear headphones with cutting-edge noise boosting.', 'Headphones', 249.99, 18, 16, 25, 2, 25, 'mike'),
     (24, 'Low Resolution Smart TV', '320p TV with mediocre visuals.', 'Televisions', 999.99, 55, 32, 5, 6, 10, 'mike'),
-    (26, 'Robotic Vacuum Dust Depositor', 'Automated dust depositor for a dirtier than ever house.', 'Small Appliances', 149.99, 14, 14, 4, 8, 15, 'mike');
+    (25, 'Robotic Vacuum Dust Depositor', 'Automated dust depositor for a dirtier than ever house.', 'Small Appliances', 149.99, 14, 14, 4, 8, 15, 'mike');
 
 
 -- Orders
