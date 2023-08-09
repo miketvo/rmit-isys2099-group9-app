@@ -75,9 +75,9 @@ CREATE TABLE IF NOT EXISTS product
 (
     id                  INT AUTO_INCREMENT,
     title               VARCHAR(45) NOT NULL,
+    image               BLOB,
     product_description TEXT,
     category            VARCHAR(45),
-    image               BLOB,
     price               DECIMAL(6, 2),
     width               INT         NOT NULL,  -- Centimeter
     length              INT         NOT NULL,  -- Centimeter
