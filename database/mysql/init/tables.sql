@@ -62,6 +62,15 @@ CREATE TABLE IF NOT EXISTS product_attribute
     CONSTRAINT product_attribute_pk PRIMARY KEY (attribute_name)
 ) ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS product_category_attribute_association
+(
+    category VARCHAR(45),
+    attribute VARCHAR(45),
+    CONSTRAINT product_category_attribute_association_pk PRIMARY KEY (category, attribute),
+    CONSTRAINT product_category_attribute_association_category_fk FOREIGN KEY (category) REFERENCES product_category (category_name),
+    CONSTRAINT product_category_attribute_association_attribute_fk FOREIGN KEY (attribute) REFERENCES product_attribute (attribute_name)
+) ENGINE = InnoDB;
+
 CREATE TABLE IF NOT EXISTS product
 (
     id                  INT AUTO_INCREMENT,
@@ -75,16 +84,18 @@ CREATE TABLE IF NOT EXISTS product
     height              INT         NOT NULL,  -- Centimeter
     warehouse_id        INT NOT NULL,
     stock_quantity      INT NOT NULL DEFAULT 0,
+    seller              VARCHAR(45) NOT NULL,
     CONSTRAINT product_pk PRIMARY KEY (id),
     CONSTRAINT product_category_fk FOREIGN KEY (category) REFERENCES product_category(category_name),
     CONSTRAINT product_warehouse_id_fk FOREIGN KEY (warehouse_id) REFERENCES warehouse(id),
+    CONSTRAINT product_seller_fk FOREIGN KEY (seller) REFERENCES seller(username),
     CONSTRAINT chk_product CHECK (price > .0 AND width > 0 AND length > 0 AND height > 0 AND stock_quantity >= 0)
 ) ENGINE = InnoDB;
 
 
 CREATE TABLE IF NOT EXISTS inbound_order
 (
-    id             INT,
+    id             INT AUTO_INCREMENT,
     quantity       INT NOT NULL,
     product_id     INT NOT NULL,
     created_date   DATE NOT NULL,
@@ -112,7 +123,7 @@ CREATE TABLE IF NOT EXISTS inbound_order
 
 CREATE TABLE IF NOT EXISTS buyer_order
 (
-    id             INT,
+    id             INT AUTO_INCREMENT,
     quantity       INT NOT NULL,
     product_id     INT NOT NULL,
     created_date   DATE NOT NULL,
