@@ -35,7 +35,7 @@ Available on [YouTube](upload_and_insert_link_here).
 
 | SID      | Name                 | Score |
 |:---------|:---------------------|:-----:|
-| s3915155 | Nguyen Thi Quynh Lam |   5   |
+| s3924826 | Tran Minh Nhat       |   5   |
 | s3864188 | Phan Thanh Loi       |   5   |
 | s3963207 | Do Le Long An        |   5   |
 | s3877562 | Vo Tuong Minh (Mike) |   5   |
