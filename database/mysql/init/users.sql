@@ -150,7 +150,7 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
     - View buyer username to support the above operation: SELECT privilege on buyer and lazada_user table, restricted to
       username column.
 
- The Seller shall not be able to:
+ The Buyer shall not be able to:
     - Have any access to Warehouse Admin information.
     - Have any access to warehouse information.
     - View which warehouse a product belongs to.
