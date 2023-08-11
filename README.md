@@ -18,7 +18,21 @@ TODO: Write this
 
 ## Installation
 
-TODO: Write this
+### Database:
+
+#### MySQL:
+
+1. From the project's root directory, connect to your local instance of MySQL as the root user:
+   ```bash
+   mysql -u<root-username> -p
+   ```
+2. Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
+   - `source database/mysql/reset.sql`
+   - `source database/mysql/init/tables.sql`
+   - `source database/mysql/init/users.sql`
+   - `source database/mysql/init/mock_data.sql` (Optional - for testing purpose only)
+
+TODO: Finish writing this
 
 
 ## Usage
