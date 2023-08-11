@@ -160,8 +160,8 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
     - View seller password hash.
     - Modify seller information.
 
- Summary: The Seller has unlimited CRUD privileges only on the tables required for their main operations: account
- management, product management, and inbound order management, plus some other SELECT privileges on relevant
+ Summary: The Buyer has unlimited CRUD privileges only on the tables required for their main operations: account
+ management, viewing products, and buyer order management, plus some other SELECT privileges on relevant
  information to support these operations.
  */
 GRANT SELECT, INSERT, UPDATE, DELETE ON lazada_user TO 'isys2099_group9_app_buyer_user'@'%';
