@@ -152,7 +152,7 @@ VALUES ('Electronic Devices', 'Warranty'),
 
 
 -- Warehouse and products
-INSERT INTO warehouse (warehouse_name, volume, province, city, district, street, streetNumber)
+INSERT INTO warehouse (warehouse_name, volume, province, city, district, street, street_number)
 VALUES ('Toronto LAZ', 5000, 'Ontario', 'Toronto', NULL, NULL, NULL),
        ('Montreal LAZ', 4600, 'Quebec', 'Montreal', NULL, NULL, NULL),
        ('Vancouver LAZ', 4000, 'British Columbia', 'Vancouver', NULL, NULL, NULL),
