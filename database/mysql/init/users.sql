@@ -55,7 +55,7 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_whadmin_user'@'%'
     - CRUD warehouses: warehouse table.
     - CRUD categories and their attributes: product_category, product_attribute, and
       product_category_attribute_association table.
-    - CRUD products, in case a product needs to be manually edited: product table.
+    - CRUD products, to move products between warehouses, or in case a product needs to be manually edited: product table.
     - CRUD inbound orders, to fulfill those orders, or in case some inbound order needs to be manually edited:
       inbound_order table.
     - CRUD buyer orders, to fulfill buyer orders, in case some buyer order needs to be manually edited:
