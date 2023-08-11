@@ -1,0 +1,27 @@
+{
+  "name": "isys2099-group9-app-client",
+  "version": "1.0.0",
+  "description": "RMIT University Vietnam, Semester 2023B - ISYS2099 Database Application - Group 9",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miketvo/rmit-isys2099-group9-app.git"
+  },
+  "keywords": [
+    "frontend"
+  ],
+  "contributors": [
+    {
+      "name": "Do Le Long An",
+      "email": "do.an@rmit.edu.vn"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/miketvo/rmit-isys2099-group9-app/issues"
+  },
+  "homepage": "https://github.com/miketvo/rmit-isys2099-group9-app#readme"
+}
