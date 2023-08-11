@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS warehouse
     city           VARCHAR(45) NOT NULL,
     district       VARCHAR(45),
     street         VARCHAR(45),
-    streetNumber   VARCHAR(10),
+    street_number   VARCHAR(10),
     CONSTRAINT warehouse_pk PRIMARY KEY (id),
     CONSTRAINT warehouse_warehouse_name_un UNIQUE (warehouse_name),
     CONSTRAINT chk_warehouse CHECK (volume > 0)
