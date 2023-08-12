@@ -30,6 +30,7 @@ TODO: Write this
    - `source database/mysql/reset.sql`
    - `source database/mysql/init/tables.sql`
    - `source database/mysql/init/users.sql`
+   - `source database/mysql/init/business_rules.sql`
    - `source database/mysql/init/mock_data.sql` (Optional - for testing purpose only)
 
 TODO: Finish writing this
