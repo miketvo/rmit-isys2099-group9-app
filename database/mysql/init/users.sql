@@ -89,6 +89,8 @@ GRANT INSERT, UPDATE ON view_buyer_order_noid TO 'isys2099_group9_app_whadmin_us
 GRANT SELECT ON seller TO 'isys2099_group9_app_whadmin_user'@'%';
 GRANT SELECT ON buyer TO 'isys2099_group9_app_whadmin_user'@'%';
 
+GRANT EXECUTE ON sp_move_product TO 'isys2099_group9_app_whadmin_user'@'%';
+
 
 -- Seller
 CREATE USER IF NOT EXISTS 'isys2099_group9_app_seller_user'@'%'
