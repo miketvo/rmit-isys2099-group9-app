@@ -29,6 +29,8 @@ BEGIN
     -- Checks for early termination
     IF move_quantity < 1 THEN SET result = 2; LEAVE this_proc; END IF;
 
+    IF from_warehouse = to_warehouse THEN SET result = 2; LEAVE this_proc; END IF;
+
     SELECT count(*) INTO @exist_product FROM product WHERE id = move_product FOR SHARE ;
     IF @exist_product = 0 THEN SET result = 1; LEAVE this_proc; END IF;
 
