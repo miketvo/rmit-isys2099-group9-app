@@ -45,7 +45,6 @@ FROM buyer_order;
 
 
 -- Warehouse Administrator
-DROP USER IF EXISTS 'isys2099_group9_app_whadmin_user'@'%';
 CREATE USER IF NOT EXISTS 'isys2099_group9_app_whadmin_user'@'%'
     IDENTIFIED WITH 'caching_sha2_password' BY 'jlAfD3sBdpJvz0phULIq4CAaAMIIoGNA';
 
@@ -92,7 +91,6 @@ GRANT SELECT ON buyer TO 'isys2099_group9_app_whadmin_user'@'%';
 
 
 -- Seller
-DROP USER IF EXISTS 'isys2099_group9_app_seller_user'@'%';
 CREATE USER IF NOT EXISTS 'isys2099_group9_app_seller_user'@'%'
     IDENTIFIED WITH 'caching_sha2_password' BY 'IAAX8qFR3bdXkQrb4dM77QGgV9FxRGap';
 
@@ -139,7 +137,6 @@ GRANT SELECT ON product_category_attribute_association TO 'isys2099_group9_app_s
 
 
 -- Buyer
-DROP USER IF EXISTS 'isys2099_group9_app_buyer_user'@'%';
 CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
     IDENTIFIED WITH 'caching_sha2_password' BY 'gxQJCza0eADkT5AKmeE865ZN8p1nBsar';
 

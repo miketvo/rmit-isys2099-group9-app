@@ -36,12 +36,12 @@ CREATE TABLE IF NOT EXISTS warehouse
 (
     id             INT AUTO_INCREMENT,
     warehouse_name VARCHAR(45) NOT NULL,
-    volume         INT         NOT NULL,  -- Cubic centimeter
+    volume         BIGINT      NOT NULL, -- Cubic centimeter
     province       VARCHAR(45) NOT NULL,
     city           VARCHAR(45) NOT NULL,
     district       VARCHAR(45),
     street         VARCHAR(45),
-    street_number   VARCHAR(10),
+    street_number  VARCHAR(10),
     CONSTRAINT warehouse_pk PRIMARY KEY (id),
     CONSTRAINT warehouse_warehouse_name_un UNIQUE (warehouse_name),
     CONSTRAINT chk_warehouse CHECK (volume > 0)
@@ -79,9 +79,9 @@ CREATE TABLE IF NOT EXISTS product
     product_description TEXT,
     category            VARCHAR(45),
     price               DECIMAL(6, 2),
-    width               INT         NOT NULL,  -- Centimeter
-    length              INT         NOT NULL,  -- Centimeter
-    height              INT         NOT NULL,  -- Centimeter
+    width               BIGINT      NOT NULL, -- Centimeter
+    length              BIGINT      NOT NULL, -- Centimeter
+    height              BIGINT      NOT NULL, -- Centimeter
     seller              VARCHAR(45) NOT NULL,
     CONSTRAINT product_pk PRIMARY KEY (id),
     CONSTRAINT product_category_fk FOREIGN KEY (category) REFERENCES product_category(category_name),

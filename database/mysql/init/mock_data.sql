@@ -153,15 +153,15 @@ VALUES ('Electronic Devices', 'Warranty'),
 
 -- Warehouse and products
 INSERT INTO warehouse (warehouse_name, volume, province, city, district, street, street_number)
-VALUES ('Toronto LAZ', 5000, 'Ontario', 'Toronto', NULL, NULL, NULL),
-       ('Montreal LAZ', 4600, 'Quebec', 'Montreal', NULL, NULL, NULL),
-       ('Vancouver LAZ', 4000, 'British Columbia', 'Vancouver', NULL, NULL, NULL),
-       ('Victoria LAZ', 1800, 'British Columbia', 'Victoria', NULL, NULL, NULL),
-       ('Winnipeg LAZ', 3000, 'Manitoba', 'Winnipeg', NULL, NULL, NULL),
-       ('Edmonton LAZ', 2000, 'Alberta', 'Edmonton', NULL, NULL, NULL),
-       ('St. John\'s LAZ', 1200, 'Newfoundland and Labrador', 'St. John\'s', NULL, NULL, NULL),
-       ('Regina LAZ', 2200, 'Saskatchewan', 'Regina', NULL, NULL, NULL),
-       ('Charlottetown LAZ', 800, 'Prince Edward Island', 'Charlottetown', NULL, NULL, NULL);
+VALUES ('Toronto LAZ', 5000000, 'Ontario', 'Toronto', NULL, NULL, NULL),
+       ('Montreal LAZ', 4600000, 'Quebec', 'Montreal', NULL, NULL, NULL),
+       ('Vancouver LAZ', 4000000, 'British Columbia', 'Vancouver', NULL, NULL, NULL),
+       ('Victoria LAZ', 1800000, 'British Columbia', 'Victoria', NULL, NULL, NULL),
+       ('Winnipeg LAZ', 3000000, 'Manitoba', 'Winnipeg', NULL, NULL, NULL),
+       ('Edmonton LAZ', 2000000, 'Alberta', 'Edmonton', NULL, NULL, NULL),
+       ('St. John\'s LAZ', 1200000, 'Newfoundland and Labrador', 'St. John\'s', NULL, NULL, NULL),
+       ('Regina LAZ', 2200000, 'Saskatchewan', 'Regina', NULL, NULL, NULL),
+       ('Charlottetown LAZ', 800000, 'Prince Edward Island', 'Charlottetown', NULL, NULL, NULL);
 
 INSERT INTO product (id, title, image, product_description, category, price, width, length, height, seller)
 VALUES (1, 'Smartphone Model X', load_file('mock-data/1.jpg'), 'High-end smartphone with top-notch features.', 'Mobiles', 899.99, 6, 12, 1, 'loi'),
@@ -188,7 +188,8 @@ VALUES (1, 'Smartphone Model X', load_file('mock-data/1.jpg'), 'High-end smartph
        (22, 'Smartphone Model Y', load_file('mock-data/22.jpg'), 'Mid-range smartphone with sleek design.', 'Mobiles', 499.99, 5, 11, 1, 'mike'),
        (23, 'Noise-Boosting Over-Ear Headphones', load_file('mock-data/23.jpg'), 'Premium over-ear headphones with cutting-edge noise boosting.', 'Headphones', 249.99, 18, 16, 25, 'mike'),
        (24, 'Low Resolution Smart TV', load_file('mock-data/24.jpg'), '320p TV with mediocre visuals.', 'Televisions', 999.99, 55, 32, 5, 'mike'),
-       (25, 'Robotic Vacuum Dust Depositor', load_file('mock-data/25.jpg'), 'Automated dust depositor for a dirtier than ever house.', 'Small Appliances', 149.99, 14, 14, 4, 'mike');
+       (25, 'Robotic Vacuum Dust Depositor', load_file('mock-data/25.jpg'), 'Automated dust depositor for a dirtier than ever house.', 'Small Appliances', 149.99, 14, 14, 4, 'mike'),
+       (26, 'A Cube', null, 'A mysterious dense 1x1x1 meter cube of exotic material. Where is it from? Why is it here? What is its purpose? No one knows...', 'Large Appliances', 9999.99, 100, 100, 100, 'mike');
 
 INSERT INTO stockpile (product_id, warehouse_id, quantity)
 VALUES (1, 1, 100),
