@@ -1,8 +1,8 @@
-![header image](client/public/assets/header.jpg)
+![header image](public/assets/header.jpg)
 
 # ISYS2099 Database Application - Database Project - Group 9
 
-View assesment details [here](client/public/assets/Project_ISYS2099.pdf).
+View assesment details [here](public/assets/Project_ISYS2099.pdf).
 
 ---
 
