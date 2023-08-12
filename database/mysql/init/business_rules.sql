@@ -76,6 +76,7 @@ BEGIN
         UPDATE stockpile SET quantity = quantity + move_quantity WHERE product_id = move_product AND warehouse_id = to_warehouse;
     END IF;
 
+
     -- Commit or Rollback
     IF _rollback THEN
         SET result = -1;
