@@ -1,5 +1,8 @@
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
+app.use(cors());
 const port = 3000;
 
 const mysql = require("mysql");
@@ -8,6 +11,10 @@ const connection = mysql.createConnection({
   user: "root",
   password: "root",
   database: "isys2099_group9_app",
+});
+
+app.get('/', (req, res) => {
+  return res.json("serverResponse");
 });
 
 app.get("/", (req, res) => {

@@ -1,5 +1,6 @@
 {
   "name": "isys2099-group9-app-server",
+  "private": true,
   "version": "1.0.0",
   "description": "RMIT University Vietnam, Semester 2023B - ISYS2099 Database Application - Group 9",
   "main": "app.js",
