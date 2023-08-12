@@ -82,14 +82,23 @@ CREATE TABLE IF NOT EXISTS product
     width               INT         NOT NULL,  -- Centimeter
     length              INT         NOT NULL,  -- Centimeter
     height              INT         NOT NULL,  -- Centimeter
-    warehouse_id        INT NOT NULL,
-    stock_quantity      INT NOT NULL DEFAULT 0,
     seller              VARCHAR(45) NOT NULL,
     CONSTRAINT product_pk PRIMARY KEY (id),
     CONSTRAINT product_category_fk FOREIGN KEY (category) REFERENCES product_category(category_name),
-    CONSTRAINT product_warehouse_id_fk FOREIGN KEY (warehouse_id) REFERENCES warehouse(id),
     CONSTRAINT product_seller_fk FOREIGN KEY (seller) REFERENCES seller(username),
-    CONSTRAINT chk_product CHECK (price > .0 AND width > 0 AND length > 0 AND height > 0 AND stock_quantity >= 0)
+    CONSTRAINT chk_product CHECK (price > .0 AND width > 0 AND length > 0 AND height > 0)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS stockpile
+(
+    product_id INT,
+    warehouse_id INT,
+    quantity INT NOT NULL,
+    CONSTRAINT stockpile_pk PRIMARY KEY (product_id, warehouse_id),
+    CONSTRAINT stockpile_product_fk FOREIGN KEY (product_id) REFERENCES product(id),
+    CONSTRAINT stockpile_warehouse_fk FOREIGN KEY (warehouse_id) REFERENCES warehouse(id),
+    CONSTRAINT chk_stockpile CHECK (quantity > 0)
 ) ENGINE = InnoDB;
 
 
