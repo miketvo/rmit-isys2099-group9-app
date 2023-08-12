@@ -189,7 +189,7 @@ VALUES (1, 'Smartphone Model X', load_file('mock-data/1.jpg'), 'High-end smartph
        (23, 'Noise-Boosting Over-Ear Headphones', load_file('mock-data/23.jpg'), 'Premium over-ear headphones with cutting-edge noise boosting.', 'Headphones', 249.99, 18, 16, 25, 'mike'),
        (24, 'Low Resolution Smart TV', load_file('mock-data/24.jpg'), '320p TV with mediocre visuals.', 'Televisions', 999.99, 55, 32, 5, 'mike'),
        (25, 'Robotic Vacuum Dust Depositor', load_file('mock-data/25.jpg'), 'Automated dust depositor for a dirtier than ever house.', 'Small Appliances', 149.99, 14, 14, 4, 'mike'),
-       (26, 'A Cube', null, 'A mysterious dense 1x1x1 meter cube of exotic material. Where is it from? Why is it here? What is its purpose? No one knows...', 'Large Appliances', 9999.99, 100, 100, 100, 'mike');
+       (26, 'A Cube', null, 'A mysterious dense 1x1x1 centimeter cube of exotic material. Where is it from? Why is it here? What is its purpose? No one knows...', 'Large Appliances', 9999.99, 1, 1, 1, 'mike');
 
 INSERT INTO stockpile (product_id, warehouse_id, quantity)
 VALUES (1, 1, 100),
@@ -216,7 +216,8 @@ VALUES (1, 1, 100),
        (22, 1, 75),
        (23, 2, 25),
        (24, 6, 10),
-       (25, 8, 15);
+       (25, 8, 15),
+       (26, 9, 1);
 
 
 -- Orders
