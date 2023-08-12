@@ -20,13 +20,6 @@
     "backend",
     "express"
   ],
-  "contributors": [
-    {
-      "name": "Tuong-Minh 'Mike' Vo",
-      "email": "miketvo@outlook.com",
-      "url": "https://miketvo.com/"
-    }
-  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/miketvo/rmit-isys2099-group9-app/issues"
