@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
-    fetch("http://localhost:3000/product")
+    fetch("http://localhost:3000/warehouse")
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => console.error(err));

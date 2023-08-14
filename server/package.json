@@ -8,8 +8,7 @@
     "start": "npx nodemon app.js",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "lint": "npx eslint --fix .",
-    "check-lint": "npx eslint .",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
