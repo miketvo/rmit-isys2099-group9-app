@@ -90,6 +90,7 @@ GRANT SELECT ON seller TO 'isys2099_group9_app_whadmin_user'@'%';
 GRANT SELECT ON buyer TO 'isys2099_group9_app_whadmin_user'@'%';
 
 GRANT EXECUTE ON PROCEDURE sp_move_product TO 'isys2099_group9_app_whadmin_user'@'%';
+GRANT EXECUTE ON PROCEDURE sp_delete_warehouse TO 'isys2099_group9_app_whadmin_user'@'%';
 
 
 -- Seller

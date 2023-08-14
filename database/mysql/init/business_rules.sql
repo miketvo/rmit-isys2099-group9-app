@@ -89,7 +89,7 @@ DELIMITER ;
 
 
 /*
- int so_move_product(warehouse_id: int, OUT result: int)
+ int sp_delete_warehouse(warehouse_id: int, OUT result: int)
 
  OUT result:
     -1 on rollback
@@ -113,8 +113,9 @@ BEGIN
     SELECT count(*) INTO @exist_warehouse FROM warehouse WHERE id = warehouse_id FOR UPDATE;
     IF @exist_warehouse = 0 THEN SET result = 1; LEAVE this_proc; END IF;
 
-
-
+    SELECT id, sum(quantity) INTO @warehouse_stockpile
+    FROM warehouse LEFT JOIN stockpile s on id = s.warehouse_id WHERE id = warehouse_id GROUP BY id;
+    IF @warehouse_stockpile IS NOT NULL THEN SET result = 1; LEAVE this_proc; END IF;
 
 
     -- Update the database for the move

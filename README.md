@@ -29,8 +29,8 @@ TODO: Write this
 2. Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
    - `source database/mysql/reset.sql`
    - `source database/mysql/init/tables.sql`
-   - `source database/mysql/init/users.sql`
    - `source database/mysql/init/business_rules.sql`
+   - `source database/mysql/init/users.sql`
    - `source database/mysql/init/mock_data.sql` (Optional - for testing purpose only)
 3. Set up the backend API server in `server`:
    ```bash
