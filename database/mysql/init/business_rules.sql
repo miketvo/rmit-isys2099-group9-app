@@ -2,7 +2,7 @@ USE isys2099_group9_app;
 
 
 /*
- int so_move_product(product_id int, move_quantity int, from_warehouse: int, to_warehouse: int)
+ sp_move_product(product_id: int, move_quantity: int, from_warehouse: int, to_warehouse: int, OUT result: int)
 
  OUT result:
     -1 on rollback
@@ -75,6 +75,50 @@ BEGIN
     ELSE
         UPDATE stockpile SET quantity = quantity + move_quantity WHERE product_id = move_product AND warehouse_id = to_warehouse;
     END IF;
+
+
+    -- Commit or Rollback
+    IF _rollback THEN
+        SET result = -1;
+        ROLLBACK;
+    ELSE
+        COMMIT;
+    END IF;
+END $$
+DELIMITER ;
+
+
+/*
+ int so_move_product(warehouse_id: int, OUT result: int)
+
+ OUT result:
+    -1 on rollback
+    0 on successful commit
+    1 on warehouse not empty or not exist
+ */
+DROP PROCEDURE IF EXISTS sp_delete_warehouse;
+DELIMITER $$
+CREATE PROCEDURE sp_delete_warehouse(
+    IN warehouse_id INT,
+    OUT result INT
+)
+this_proc:
+BEGIN
+    DECLARE _rollback BOOL DEFAULT 0;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
+    START TRANSACTION;
+    SET result = 0;
+
+    -- Checks for early termination
+    SELECT count(*) INTO @exist_warehouse FROM warehouse WHERE id = warehouse_id FOR UPDATE;
+    IF @exist_warehouse = 0 THEN SET result = 1; LEAVE this_proc; END IF;
+
+
+
+
+
+    -- Update the database for the move
+    DELETE FROM warehouse WHERE id = warehouse_id;
 
 
     -- Commit or Rollback
