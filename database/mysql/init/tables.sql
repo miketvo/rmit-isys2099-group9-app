@@ -2,10 +2,17 @@ CREATE DATABASE IF NOT EXISTS isys2099_group9_app;
 USE isys2099_group9_app;
 
 
+CREATE TABLE IF NOT EXISTS wh_admin
+(
+    username      VARCHAR(45),
+    password_hash VARCHAR(255) NOT NULL,
+    CONSTRAINT lazada_user_pk PRIMARY KEY (username)
+) ENGINE = InnoDB;
+
 CREATE TABLE IF NOT EXISTS lazada_user
 (
     username      VARCHAR(45),
-    password_hash VARCHAR(255),
+    password_hash VARCHAR(255) NOT NULL,
     CONSTRAINT lazada_user_pk PRIMARY KEY (username)
 ) ENGINE = InnoDB;
 
@@ -29,15 +36,15 @@ CREATE TABLE IF NOT EXISTS warehouse
 (
     id             INT AUTO_INCREMENT,
     warehouse_name VARCHAR(45) NOT NULL,
-    total_area     INT         NOT NULL,
+    volume         BIGINT      NOT NULL, -- Cubic centimeter
     province       VARCHAR(45) NOT NULL,
     city           VARCHAR(45) NOT NULL,
     district       VARCHAR(45),
     street         VARCHAR(45),
-    streetNumber   VARCHAR(10),
+    street_number  VARCHAR(10),
     CONSTRAINT warehouse_pk PRIMARY KEY (id),
     CONSTRAINT warehouse_warehouse_name_un UNIQUE (warehouse_name),
-    CONSTRAINT chk_warehouse CHECK (total_area > 0)
+    CONSTRAINT chk_warehouse CHECK (volume > 0)
 ) ENGINE = InnoDB;
 
 
@@ -55,29 +62,49 @@ CREATE TABLE IF NOT EXISTS product_attribute
     CONSTRAINT product_attribute_pk PRIMARY KEY (attribute_name)
 ) ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS product_category_attribute_association
+(
+    category VARCHAR(45),
+    attribute VARCHAR(45),
+    CONSTRAINT product_category_attribute_association_pk PRIMARY KEY (category, attribute),
+    CONSTRAINT product_category_attribute_association_category_fk FOREIGN KEY (category) REFERENCES product_category (category_name),
+    CONSTRAINT product_category_attribute_association_attribute_fk FOREIGN KEY (attribute) REFERENCES product_attribute (attribute_name)
+) ENGINE = InnoDB;
+
 CREATE TABLE IF NOT EXISTS product
 (
     id                  INT AUTO_INCREMENT,
     title               VARCHAR(45) NOT NULL,
+    image               BLOB,
     product_description TEXT,
     category            VARCHAR(45),
-    image               BLOB,
     price               DECIMAL(6, 2),
-    width               INT         NOT NULL,
-    length              INT         NOT NULL,
-    height              INT         NOT NULL,
-    warehouse_id        INT NOT NULL,
-    stock_quantity      INT NOT NULL DEFAULT 0,
+    width               BIGINT      NOT NULL, -- Centimeter
+    length              BIGINT      NOT NULL, -- Centimeter
+    height              BIGINT      NOT NULL, -- Centimeter
+    seller              VARCHAR(45) NOT NULL,
     CONSTRAINT product_pk PRIMARY KEY (id),
     CONSTRAINT product_category_fk FOREIGN KEY (category) REFERENCES product_category(category_name),
-    CONSTRAINT product_warehouse_id_fk FOREIGN KEY (warehouse_id) REFERENCES warehouse(id),
-    CONSTRAINT chk_product CHECK (price > .0 AND width > 0 AND length > 0 AND height > 0 AND stock_quantity >= 0)
+    CONSTRAINT product_seller_fk FOREIGN KEY (seller) REFERENCES seller(username),
+    CONSTRAINT chk_product CHECK (price > .0 AND width > 0 AND length > 0 AND height > 0)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS stockpile
+(
+    product_id INT,
+    warehouse_id INT,
+    quantity INT NOT NULL,
+    CONSTRAINT stockpile_pk PRIMARY KEY (product_id, warehouse_id),
+    CONSTRAINT stockpile_product_fk FOREIGN KEY (product_id) REFERENCES product(id),
+    CONSTRAINT stockpile_warehouse_fk FOREIGN KEY (warehouse_id) REFERENCES warehouse(id),
+    CONSTRAINT chk_stockpile CHECK (quantity > 0)
 ) ENGINE = InnoDB;
 
 
 CREATE TABLE IF NOT EXISTS inbound_order
 (
-    id             INT,
+    id             INT AUTO_INCREMENT,
     quantity       INT NOT NULL,
     product_id     INT NOT NULL,
     created_date   DATE NOT NULL,
@@ -105,7 +132,7 @@ CREATE TABLE IF NOT EXISTS inbound_order
 
 CREATE TABLE IF NOT EXISTS buyer_order
 (
-    id             INT,
+    id             INT AUTO_INCREMENT,
     quantity       INT NOT NULL,
     product_id     INT NOT NULL,
     created_date   DATE NOT NULL,
