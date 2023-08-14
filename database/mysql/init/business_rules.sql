@@ -110,10 +110,10 @@ BEGIN
     SET result = 0;
 
     -- Checks for early termination
-    SELECT count(*) INTO @exist_warehouse FROM warehouse WHERE id = warehouse_id FOR UPDATE;
+    SELECT count(*) INTO @exist_warehouse FROM warehouse WHERE id = warehouse_id FOR SHARE;
     IF @exist_warehouse = 0 THEN SET result = 1; LEAVE this_proc; END IF;
 
-    SELECT id, sum(quantity) INTO @warehouse_stockpile
+    SELECT sum(quantity) INTO @warehouse_stockpile
     FROM warehouse LEFT JOIN stockpile s on id = s.warehouse_id WHERE id = warehouse_id GROUP BY id;
     IF @warehouse_stockpile IS NOT NULL THEN SET result = 1; LEAVE this_proc; END IF;
 
