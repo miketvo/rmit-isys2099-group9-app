@@ -89,7 +89,7 @@ DELIMITER ;
 
 
 /*
- int sp_delete_warehouse(warehouse_id: int, OUT result: int)
+ sp_delete_warehouse(warehouse_id: int, OUT result: int)
 
  OUT result:
     -1 on rollback
