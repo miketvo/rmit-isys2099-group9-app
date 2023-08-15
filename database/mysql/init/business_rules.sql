@@ -1,6 +1,21 @@
 USE isys2099_group9_app;
 
 
+-- Utility functions
+DROP FUNCTION IF EXISTS fn_max;
+DELIMITER $$
+CREATE FUNCTION fn_max(
+    a BIGINT,
+    b BIGINT
+) RETURNS BIGINT
+BEGIN
+    IF a > b THEN RETURN a; END IF;
+    IF a < b THEN RETURN b; END IF;
+    RETURN a;
+END $$
+DELIMITER ;
+
+
 /*
  sp_move_product(product_id: int, move_quantity: int, from_warehouse: int, to_warehouse: int, OUT result: int)
 
@@ -139,7 +154,7 @@ DELIMITER ;
  OUT result:
     -1 on rollback
     0 on successful commit
-    1 on no available warehouses
+    1 on no available warehouses or inbound order already fulfilled
     2 on inbound_order_id does not exist
  */
 DROP PROCEDURE IF EXISTS sp_fulfill_inbound_order;
@@ -160,6 +175,10 @@ BEGIN
     -- Checks for early termination
     SELECT count(*) INTO @exist_order FROM inbound_order WHERE id = inbound_order_id FOR UPDATE;
     IF @exist_order = 0 THEN SET result = 2; LEAVE this_proc; END IF;
+
+    SELECT count(fulfilled_date) INTO @order_fulfilled_date FROM inbound_order WHERE id = inbound_order_id;
+    SELECT count(fulfilled_time) INTO @order_fulfilled_time FROM inbound_order WHERE id = inbound_order_id;
+    IF @order_fulfilled_date = 0 OR @order_fulfilled_time = 0 THEN SET result = 1; LEAVE this_proc; END IF;
 
     SELECT sum(available_volume)
     INTO @total_available_warehouse_volume
@@ -212,7 +231,7 @@ BEGIN
             WHERE w.id = @best_warehouse_id
             GROUP BY w.id;
 
-            SET product_items_fill_count = @best_warehouse_volume DIV @product_unit_volume;
+            SET product_items_fill_count = fn_max(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
 
             SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id FOR UPDATE;
             IF @best_warehouse_has_product = 0 THEN
