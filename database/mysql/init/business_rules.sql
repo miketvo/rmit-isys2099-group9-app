@@ -300,7 +300,7 @@ BEGIN
     VALUES (order_quantity, order_product_id, date(sysdate()), time(sysdate()), buyer_username);
 
     SELECT warehouse_id INTO @serving_warehouse FROM stockpile WHERE product_id = order_product_id ORDER BY quantity LIMIT 1;
-    UPDATE stockpile SET quantity = quantity - order_quantity WHERE warehouse_id = @serving_warehouse;
+    -- TODO: Implement removing product from stockpile here
 
 
     -- Commit or Rollback

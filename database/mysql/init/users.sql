@@ -18,11 +18,6 @@ CREATE VIEW view_product_noid AS
 SELECT title, image, product_description, category, price, width, height, length, seller
 FROM product;
 
-DROP VIEW IF EXISTS view_as_buyer_stockpile;
-CREATE VIEW view_as_buyer_stockpile AS
-SELECT product_id, quantity
-FROM stockpile;
-
 DROP VIEW IF EXISTS view_inbound_order_noid;
 CREATE VIEW view_inbound_order_noid AS
 SELECT quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time, seller
@@ -143,7 +138,7 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
  The Buyer shall be able to:
     - CRUD **their own** account (username and password): seller and lazada_user table.
     - View products: product table, excluding the id and warehouse_id columns.
-    - View stockpiled product quantity: stockpile table, restricted to the product_id and quantity columns.
+    - CRUD stockpile information for when we simulate buyer_oder fulfillment on the buyer's end: stockpile table.
     - View categories and their attributes to support the above operation: product_category, product_attribute, and
       product_category_attribute_association table.
     - CRUD buyer orders: buyer_order table.
@@ -156,7 +151,6 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
     - Have any access to warehouse information.
     - Have any access to inbound order information.
     - Modify product information.
-    - View which warehouse(s) a product is being stockpiled to.
     - Modify any product category their attributes.
     - View seller password hash.
     - Modify seller information.
@@ -170,7 +164,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON buyer TO 'isys2099_group9_app_buyer_user
 GRANT SELECT ON seller TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT, DELETE ON buyer_order TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT INSERT, UPDATE ON view_buyer_order_noid TO 'isys2099_group9_app_buyer_user'@'%';
-GRANT SELECT ON view_as_buyer_stockpile TO 'isys2099_group9_app_buyer_user'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON stockpile TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product_category TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product_attribute TO 'isys2099_group9_app_buyer_user'@'%';
