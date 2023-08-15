@@ -151,6 +151,8 @@ CREATE PROCEDURE sp_fulfill_inbound_order(
 this_proc:
 BEGIN
     DECLARE _rollback BOOL DEFAULT 0;
+    DECLARE remaining_product_items_count INT DEFAULT 0;
+    DECLARE product_items_fill_count INT DEFAULT 0;
     DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
     START TRANSACTION;
     SET result = 0;
@@ -171,13 +173,51 @@ BEGIN
     INTO @order_volume
     FROM inbound_order o
         JOIN product p ON o.product_id = p.id
-    WHERE o.id = 1;
+    WHERE o.id = inbound_order_id;
 
     IF @total_available_warehouse_volume < @order_volume THEN SET result = 1; LEAVE this_proc; END IF;
 
 
     -- Update the database
-    -- TODO: Implement this
+    UPDATE inbound_order
+    SET fulfilled_date = date(sysdate()),
+        fulfilled_time = time(sysdate())
+    WHERE id = inbound_order_id;
+
+    SELECT p.width * p.length * p.height
+    INTO @product_unit_volume
+    FROM inbound_order o JOIN product p ON o.product_id = p.id
+    WHERE o.id = inbound_order_id;
+
+    SELECT quantity INTO remaining_product_items_count FROM inbound_order WHERE id = inbound_order_id;
+
+    WHILE remaining_product_items_count > 0
+        DO
+            SELECT warehouse_id
+            INTO @best_warehouse_id
+            FROM (SELECT w.id                                                       AS warehouse_id,
+                         w.volume - sum(s.quantity * p.width * p.length * p.height) AS available_volume
+                  FROM stockpile s
+                           JOIN warehouse w ON s.warehouse_id = w.id
+                           JOIN product p on s.product_id = p.id
+                  GROUP BY w.id
+                  ORDER BY available_volume DESC
+                  LIMIT 1) best_warehouse;
+
+            SELECT w.volume - sum(s.quantity * p.width * p.length * p.height)
+            INTO @best_warehouse_volume
+            FROM stockpile s
+                     JOIN warehouse w ON s.warehouse_id = w.id
+                     JOIN product p on s.product_id = p.id
+            WHERE w.id = @best_warehouse_id
+            GROUP BY w.id;
+
+            SET product_items_fill_count = @best_warehouse_volume DIV @product_unit_volume;
+
+            -- TODO: Finish implementing this
+
+            SET remaining_product_items_count = remaining_product_items_count - product_items_fill_count;
+    END WHILE;
 
 
     -- Commit or Rollback
