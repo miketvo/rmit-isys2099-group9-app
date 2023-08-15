@@ -23,11 +23,6 @@ CREATE VIEW view_inbound_order_noid AS
 SELECT quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time, seller
 FROM inbound_order;
 
-DROP VIEW IF EXISTS view_as_seller_inbound_order_noid;
-CREATE VIEW view_as_seller_inbound_order_noid AS
-SELECT quantity, product_id, created_date, created_time, seller
-FROM inbound_order;
-
 DROP VIEW IF EXISTS view_buyer_order_noid;
 CREATE VIEW view_buyer_order_noid AS
 SELECT quantity, product_id, created_date, created_time, order_status, fulfilled_date, fulfilled_time, buyer
@@ -94,10 +89,9 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_seller_user'@'%'
     - CRUD **their own** products: product table.
     - View categories and their attributes to support the above operation: product_category, product_attribute, and
       product_category_attribute_association table.
-    - CRUD inbound orders: inbound_order table, excluding UPDATE privilege for the fulfilled_date and fulfilled_time
-      columns, which only the Warehouse Admin has.
+    - CRUD inbound orders: inbound_order table.
+    - CRU stockpile information, to support the above operation.
     - View warehouse information, to support the above operation: SELECT privilege on warehouse table.
-    - View stockpile information, to support the above operation: SELECT privilege on stockpile table.
     - View buyer orders for **their own** products.
     - View buyer username to support the above operation: SELECT privilege on buyer and lazada_user table, restricted to
       username column.
@@ -105,7 +99,7 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_seller_user'@'%'
  The Seller shall not be able to:
     - Have any access to Warehouse Admin information.
     - Modify warehouses.
-    - Modify stockpile information.
+    - Delete stockpile information.
     - View buyer password hash.
     - Modify buyer information.
     - Modify buyer orders.
@@ -121,13 +115,15 @@ GRANT SELECT ON buyer TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT, DELETE ON product TO 'isys2099_group9_app_seller_user'@'%';
 GRANT INSERT, UPDATE ON view_product_noid TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT, DELETE ON inbound_order TO 'isys2099_group9_app_seller_user'@'%';
-GRANT INSERT, UPDATE ON view_as_seller_inbound_order_noid TO 'isys2099_group9_app_seller_user'@'%';
+GRANT INSERT, UPDATE ON view_inbound_order_noid TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT ON buyer_order TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT ON warehouse TO 'isys2099_group9_app_seller_user'@'%';
-GRANT SELECT ON stockpile TO 'isys2099_group9_app_seller_user'@'%';
+GRANT SELECT, INSERT, UPDATE ON stockpile TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT ON product_category TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT ON product_attribute TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT ON product_category_attribute_association TO 'isys2099_group9_app_seller_user'@'%';
+
+GRANT EXECUTE ON PROCEDURE sp_fulfill_inbound_order TO 'isys2099_group9_app_seller_user'@'%';
 
 
 -- Buyer
