@@ -258,3 +258,54 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
+
+
+/*
+ sp_place_buyer_order( OUT result: int)
+
+ OUT result:
+    -1 on rollback
+    0 on successful commit
+    1 on not enough stockpile
+    2 on product_id or buyer_id not exist
+ */
+DROP PROCEDURE IF EXISTS sp_place_buyer_order;
+DELIMITER $$
+CREATE PROCEDURE sp_place_buyer_order(
+    IN order_quantity INT,
+    IN product_id INT,
+    IN buyer_username VARCHAR(45),
+    OUT result INT
+)
+this_proc:
+BEGIN
+    DECLARE _rollback BOOL DEFAULT 0;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
+    START TRANSACTION;
+    SET result = 0;
+
+    -- Checks for early termination
+    SELECT count(*) INTO @product_exist FROM product WHERE id = product_id;
+    IF @product_exist = 0 THEN SET result = 2; LEAVE this_proc; END IF;
+
+    SELECT count(*) INTO @buyer_exist FROM buyer WHERE username = buyer_username;
+    IF @buyer_exist = 0 THEN SET result = 2; LEAVE this_proc; END IF;
+
+
+    -- Check if warehouse stockpile can fulfill order
+    -- TODO: Implement this
+
+
+    -- Update the database
+    -- TODO: Implement this
+
+
+    -- Commit or Rollback
+    IF _rollback THEN
+        SET result = -1;
+        ROLLBACK;
+    ELSE
+        COMMIT;
+    END IF;
+END $$
+DELIMITER ;

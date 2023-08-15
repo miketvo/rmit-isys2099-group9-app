@@ -146,8 +146,7 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
     - View stockpiled product quantity: stockpile table, restricted to the product_id and quantity columns.
     - View categories and their attributes to support the above operation: product_category, product_attribute, and
       product_category_attribute_association table.
-    - CRUD buyer orders: buyer_order table, excluding UPDATE privilege for the fulfilled_date and fulfilled_time
-      columns, which only the Warehouse Admin has.
+    - CRUD buyer orders: buyer_order table.
     - View buyer orders for **their own** products.
     - View buyer username to support the above operation: SELECT privilege on buyer and lazada_user table, restricted to
       username column.
@@ -176,3 +175,5 @@ GRANT SELECT ON product TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product_category TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product_attribute TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product_category_attribute_association TO 'isys2099_group9_app_buyer_user'@'%';
+
+GRANT EXECUTE ON PROCEDURE sp_place_buyer_order TO 'isys2099_group9_app_buyer_user'@'%';
