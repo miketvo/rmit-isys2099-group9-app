@@ -32,25 +32,32 @@ TODO: Write this
    - `source database/mysql/init/business_rules.sql`
    - `source database/mysql/init/users.sql`
    - `source database/mysql/init/mock_data.sql` (Optional - for testing purpose only)
-3. Set up the backend API server in `server`:
-   ```bash
-   cd server
-   npm clean-install
-   ```
-4. Set up the mall frontend in `client-mall` (for sellers and buyers):
-   ```bash
-   cd client-mall
-   npm clean-install
-   ```
-5. Set up the warehouse dashboard frontend in `client-whadmin` (for warehouse administrators):
-   ```bash
-   cd client-whadmin
-   npm clean-install
-   ```
-   
+
 #### MongoDB:
 
 **TODO: Write this**
+
+
+### Backend API server in `server`:
+
+```bash
+cd server
+npm clean-install
+ ```
+
+### Mall frontend in `client-mall` (for sellers and buyers):
+
+```bash
+cd client-mall
+npm clean-install
+```
+
+### Warehouse dashboard frontend in `client-whadmin` (for warehouse administrators):
+
+```bash
+cd client-whadmin
+npm clean-install
+ ```
 
 
 ## Usage
