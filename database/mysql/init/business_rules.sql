@@ -131,3 +131,61 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
+
+
+/*
+ sp_fulfill_inbound_order(inbound_order_id: int, OUT result: int)
+
+ OUT result:
+    -1 on rollback
+    0 on successful commit
+    1 on no available warehouses
+    2 on inbound_order_id does not exist
+ */
+DROP PROCEDURE IF EXISTS sp_fulfill_inbound_order;
+DELIMITER $$
+CREATE PROCEDURE sp_fulfill_inbound_order(
+    IN inbound_order_id INT,
+    OUT result INT
+)
+this_proc:
+BEGIN
+    DECLARE _rollback BOOL DEFAULT 0;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
+    START TRANSACTION;
+    SET result = 0;
+
+    -- Checks for early termination
+    SELECT count(*) INTO @exist_order FROM inbound_order WHERE id = inbound_order_id FOR SHARE;
+    IF @exist_order = 0 THEN SET result = 2; LEAVE this_proc; END IF;
+
+    SELECT sum(available_volume)
+    INTO @total_available_warehouse_volume
+    FROM (SELECT w.volume - sum(s.quantity * p.width * p.length * p.height) AS available_volume
+          FROM stockpile s
+              JOIN warehouse w ON s.warehouse_id = w.id
+              JOIN product p on s.product_id = p.id
+          GROUP BY w.id) as warehouse_available_volume;
+
+    SELECT o.quantity * p.width * p.length * p.height
+    INTO @order_volume
+    FROM inbound_order o
+        JOIN product p ON o.product_id = p.id
+    WHERE o.id = 1;
+
+    IF @total_available_warehouse_volume < @order_volume THEN SET result = 1; LEAVE this_proc; END IF;
+
+
+    -- Update the database
+    -- TODO: Implement this
+
+
+    -- Commit or Rollback
+    IF _rollback THEN
+        SET result = -1;
+        ROLLBACK;
+    ELSE
+        COMMIT;
+    END IF;
+END $$
+DELIMITER ;
