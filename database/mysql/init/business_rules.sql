@@ -2,15 +2,15 @@ USE isys2099_group9_app;
 
 
 -- Utility functions
-DROP FUNCTION IF EXISTS fn_max;
+DROP FUNCTION IF EXISTS fn_min;
 DELIMITER $$
-CREATE FUNCTION fn_max(
+CREATE FUNCTION fn_min(
     a BIGINT,
     b BIGINT
-) RETURNS BIGINT
+) RETURNS BIGINT DETERMINISTIC
 BEGIN
-    IF a > b THEN RETURN a; END IF;
-    IF a < b THEN RETURN b; END IF;
+    IF a < b THEN RETURN a; END IF;
+    IF a > b THEN RETURN b; END IF;
     RETURN a;
 END $$
 DELIMITER ;
@@ -178,7 +178,7 @@ BEGIN
 
     SELECT count(fulfilled_date) INTO @order_fulfilled_date FROM inbound_order WHERE id = inbound_order_id;
     SELECT count(fulfilled_time) INTO @order_fulfilled_time FROM inbound_order WHERE id = inbound_order_id;
-    IF @order_fulfilled_date = 0 OR @order_fulfilled_time = 0 THEN SET result = 1; LEAVE this_proc; END IF;
+    IF (@order_fulfilled_date = 1) OR (@order_fulfilled_time = 1) THEN SET result = 1; LEAVE this_proc; END IF;
 
     SELECT sum(available_volume)
     INTO @total_available_warehouse_volume
@@ -231,7 +231,7 @@ BEGIN
             WHERE w.id = @best_warehouse_id
             GROUP BY w.id;
 
-            SET product_items_fill_count = fn_max(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
+            SET product_items_fill_count = fn_min(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
 
             SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id FOR UPDATE;
             IF @best_warehouse_has_product = 0 THEN
