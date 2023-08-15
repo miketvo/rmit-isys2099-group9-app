@@ -279,6 +279,14 @@ this_proc:
 BEGIN
     DECLARE _rollback BOOL DEFAULT 0;
     DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
+
+    DECLARE curr_order_quantity INT DEFAULT order_quantity;
+    DECLARE cur_stock CURSOR FOR
+        SELECT product_id, warehouse_id, quantity
+        FROM stockpile s
+        WHERE s.product_id = order_product_id
+        ORDER BY quantity;
+
     START TRANSACTION;
     SET result = 0;
 
@@ -299,8 +307,22 @@ BEGIN
     INSERT INTO buyer_order (quantity, product_id, created_date, created_time, buyer)
     VALUES (order_quantity, order_product_id, date(sysdate()), time(sysdate()), buyer_username);
 
-    SELECT warehouse_id INTO @serving_warehouse FROM stockpile WHERE product_id = order_product_id ORDER BY quantity LIMIT 1;
-    -- TODO: Implement removing product from stockpile here
+    OPEN cur_stock;
+    WHILE curr_order_quantity <= 0
+        DO
+            FETCH cur_stock INTO @cur_product_id, @cur_warehouse_id, @cur_quantity;
+
+            IF @cur_quantity <= curr_order_quantity THEN
+                SET curr_order_quantity = curr_order_quantity - @cur_quantity;
+                DELETE FROM stockpile WHERE product_id = @cur_product_id AND warehouse_id = @cur_warehouse_id;
+            ELSE
+                UPDATE stockpile SET quantity = quantity - curr_order_quantity
+                WHERE product_id = @cur_product_id AND warehouse_id = @cur_warehouse_id;
+
+                SET curr_order_quantity = 0;
+            END IF;
+        END WHILE;
+    CLOSE cur_stock;
 
 
     -- Commit or Rollback
