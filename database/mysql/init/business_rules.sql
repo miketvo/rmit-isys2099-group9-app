@@ -158,7 +158,7 @@ BEGIN
     SET result = 0;
 
     -- Checks for early termination
-    SELECT count(*) INTO @exist_order FROM inbound_order WHERE id = inbound_order_id FOR SHARE;
+    SELECT count(*) INTO @exist_order FROM inbound_order WHERE id = inbound_order_id FOR UPDATE;
     IF @exist_order = 0 THEN SET result = 2; LEAVE this_proc; END IF;
 
     SELECT sum(available_volume)
@@ -179,10 +179,10 @@ BEGIN
 
 
     -- Update the database
-    UPDATE inbound_order
-    SET fulfilled_date = date(sysdate()),
-        fulfilled_time = time(sysdate())
-    WHERE id = inbound_order_id;
+    SELECT p.id
+    INTO @product_id
+    FROM inbound_order o JOIN product p ON o.product_id = p.id
+    WHERE o.id = inbound_order_id;
 
     SELECT p.width * p.length * p.height
     INTO @product_unit_volume
@@ -214,10 +214,20 @@ BEGIN
 
             SET product_items_fill_count = @best_warehouse_volume DIV @product_unit_volume;
 
-            -- TODO: Finish implementing this
+            SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id FOR UPDATE;
+            IF @best_warehouse_has_product = 0 THEN
+                INSERT INTO stockpile (product_id, warehouse_id, quantity) VALUES (@product_id, @best_warehouse_id, product_items_fill_count);
+            ELSE
+                UPDATE stockpile SET quantity = quantity + product_items_fill_count WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id;
+            END IF;
 
             SET remaining_product_items_count = remaining_product_items_count - product_items_fill_count;
     END WHILE;
+
+    UPDATE inbound_order
+    SET fulfilled_date = date(sysdate()),
+        fulfilled_time = time(sysdate())
+    WHERE id = inbound_order_id;
 
 
     -- Commit or Rollback
