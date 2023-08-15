@@ -331,3 +331,18 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
+
+
+/*
+ Simulate the order delivery on the customer side. In the customer interface, for each placed order, there are two
+ buttons: Accept and Reject. If this is an Accept, update the inventory information. If it is a Reject, send back the
+ products placed in the order to the appropriate warehouses.
+ */
+DROP TRIGGER IF EXISTS trig_reject_buyer_order;
+DELIMITER $$
+CREATE DEFINER = 'isys2099_group9_app_buyer_user'@'%' TRIGGER trig_reject_buyer_order AFTER UPDATE ON buyer_order
+FOR EACH ROW
+BEGIN
+    -- TODO: Implement this
+END $$
+DELIMITER ;
