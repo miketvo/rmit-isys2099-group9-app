@@ -169,8 +169,8 @@ CREATE TABLE IF NOT EXISTS buyer_order
  Order statuses:
  ---------------
 
- P - Pending
+ P - Pending (Processing)
  A - Accepted (Fulfilled)
- R - Rejected
+ R - Rejected (Cancelled)
  */
 
