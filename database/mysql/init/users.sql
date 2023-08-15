@@ -35,12 +35,7 @@ FROM inbound_order;
 
 DROP VIEW IF EXISTS view_buyer_order_noid;
 CREATE VIEW view_buyer_order_noid AS
-SELECT quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time, buyer
-FROM buyer_order;
-
-DROP VIEW IF EXISTS view_as_buyer_buyer_order_noid;
-CREATE VIEW view_as_buyer_buyer_order_noid AS
-SELECT quantity, product_id, created_date, created_time, buyer
+SELECT quantity, product_id, created_date, created_time, order_status, fulfilled_date, fulfilled_time, buyer
 FROM buyer_order;
 
 
@@ -175,7 +170,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON lazada_user TO 'isys2099_group9_app_buye
 GRANT SELECT, INSERT, UPDATE, DELETE ON buyer TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON seller TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT, DELETE ON buyer_order TO 'isys2099_group9_app_buyer_user'@'%';
-GRANT INSERT, UPDATE ON view_as_buyer_buyer_order_noid TO 'isys2099_group9_app_buyer_user'@'%';
+GRANT INSERT, UPDATE ON view_buyer_order_noid TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON view_as_buyer_stockpile TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product_category TO 'isys2099_group9_app_buyer_user'@'%';

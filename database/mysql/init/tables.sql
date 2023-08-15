@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS buyer_order
     product_id     INT NOT NULL,
     created_date   DATE NOT NULL,
     created_time   TIME NOT NULL,
+    order_status   VARCHAR(1) NOT NULL DEFAULT 'P',
     fulfilled_date DATE DEFAULT NULL,
     fulfilled_time TIME DEFAULT NULL,
     buyer          VARCHAR(45) NOT NULL,
@@ -144,7 +145,7 @@ CREATE TABLE IF NOT EXISTS buyer_order
     CONSTRAINT buyer_order_product_id_fk FOREIGN KEY (product_id) REFERENCES product (id),
     CONSTRAINT buyer_order_buyer_fk FOREIGN KEY (buyer) REFERENCES buyer (username),
     CONSTRAINT chk_buyer_order_quantity CHECK (quantity > 0),
-    CONSTRAINT chk_order_datetime CHECK
+    CONSTRAINT chk_buyer_order_datetime CHECK
         (
             (
                 created_date < fulfilled_date OR
@@ -155,5 +156,21 @@ CREATE TABLE IF NOT EXISTS buyer_order
                 (fulfilled_date IS NULL AND fulfilled_time IS NULL) OR
                 (fulfilled_date IS NOT NULL AND fulfilled_time IS NOT NULL)
             )
+        ),
+    CONSTRAINT chk_buyer_order_status CHECK
+        (
+            ((order_status = 'P' OR order_status = 'R') AND fulfilled_date IS NULL AND fulfilled_time IS NULL) OR
+            (order_status = 'A' AND fulfilled_date IS NOT NULL AND fulfilled_time IS NOT NULL)
         )
 ) ENGINE = InnoDB;
+
+
+/*
+ Order statuses:
+ ---------------
+
+ P - Pending
+ A - Accepted (Fulfilled)
+ R - Rejected
+ */
+
