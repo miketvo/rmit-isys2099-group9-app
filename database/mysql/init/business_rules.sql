@@ -198,13 +198,11 @@ BEGIN
 
 
     -- Update the database
-    SELECT p.id
-    INTO @product_id
+    SELECT p.id INTO @product_id
     FROM inbound_order o JOIN product p ON o.product_id = p.id
     WHERE o.id = inbound_order_id;
 
-    SELECT p.width * p.length * p.height
-    INTO @product_unit_volume
+    SELECT p.width * p.length * p.height INTO @product_unit_volume
     FROM inbound_order o JOIN product p ON o.product_id = p.id
     WHERE o.id = inbound_order_id;
 
@@ -261,7 +259,7 @@ DELIMITER ;
 
 
 /*
- sp_place_buyer_order( OUT result: int)
+ sp_place_buyer_order(order_quantity: int, order_product_id: int, buyer_username: varchar(45), OUT result: int)
 
  OUT result:
     -1 on rollback
@@ -273,7 +271,7 @@ DROP PROCEDURE IF EXISTS sp_place_buyer_order;
 DELIMITER $$
 CREATE PROCEDURE sp_place_buyer_order(
     IN order_quantity INT,
-    IN product_id INT,
+    IN order_product_id INT,
     IN buyer_username VARCHAR(45),
     OUT result INT
 )
@@ -285,7 +283,7 @@ BEGIN
     SET result = 0;
 
     -- Checks for early termination
-    SELECT count(*) INTO @product_exist FROM product WHERE id = product_id;
+    SELECT count(*) INTO @product_exist FROM product WHERE id = order_product_id;
     IF @product_exist = 0 THEN SET result = 2; LEAVE this_proc; END IF;
 
     SELECT count(*) INTO @buyer_exist FROM buyer WHERE username = buyer_username;
@@ -293,11 +291,16 @@ BEGIN
 
 
     -- Check if warehouse stockpile can fulfill order
-    -- TODO: Implement this
+    SELECT sum(quantity) INTO @product_stock_quantity FROM stockpile s WHERE s.product_id = order_product_id FOR UPDATE;
+    IF @product_stock_quantity < order_quantity THEN SET result = 1; LEAVE this_proc; END IF;
 
 
     -- Update the database
-    -- TODO: Implement this
+    INSERT INTO buyer_order (quantity, product_id, created_date, created_time, buyer)
+    VALUES (order_quantity, order_product_id, date(sysdate()), time(sysdate()), buyer_username);
+
+    SELECT warehouse_id INTO @serving_warehouse FROM stockpile WHERE product_id = order_product_id ORDER BY quantity LIMIT 1;
+    UPDATE stockpile SET quantity = quantity - order_quantity WHERE warehouse_id = @serving_warehouse;
 
 
     -- Commit or Rollback
