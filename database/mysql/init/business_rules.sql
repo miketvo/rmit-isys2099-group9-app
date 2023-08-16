@@ -372,8 +372,8 @@ BEGIN
         DO
             SELECT warehouse_id, available_volume
             INTO @best_warehouse_id, @best_warehouse_available_volume
-            FROM (SELECT w.id                                                                               AS warehouse_id,
-                         w.volume - coalesce(w.volume - sum(s.quantity * p.width * p.length * p.height), 0) AS available_volume
+            FROM (SELECT w.id                                                                    AS warehouse_id,
+                         w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0) AS available_volume
                   FROM stockpile s
                       LEFT JOIN warehouse w ON s.warehouse_id = w.id
                       LEFT JOIN product p on s.product_id = p.id
