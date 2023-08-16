@@ -4,8 +4,8 @@ USE isys2099_group9_app;
 -- Supporting views
 
 /*
- Note: For some tables with AUTO_INCREMENT id column, the user should not be able to manually INSERT or UPDATE this
- column, thus the need for _noid views.
+ Note: For some tables with AUTO_INCREMENT id column, the user should not be able to manually INSERT this column, thus
+ the need for _noid views.
  */
 
 DROP VIEW IF EXISTS view_warehouse_noid;
