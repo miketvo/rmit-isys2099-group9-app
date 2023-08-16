@@ -472,17 +472,17 @@ BEGIN
     END IF;
 
     IF (OLD.order_status = 'R') AND (NEW.order_status = 'P') THEN
-        SET err_msg = 'Cannot reopen rejected buyer order. Create a new order instead.';
+        SET err_msg = 'Cannot reopen rejected buyer order. Place a new order with sp_return_product_from_buyer_order() instead.';
         SIGNAL SQLSTATE '45000' SET message_text = err_msg;
     END IF;
 
     IF (OLD.order_status = 'R') AND (NEW.order_status = 'A') THEN
-        SET err_msg = concat('Cannot accept rejected buyer order. Create a new order instead.');
+        SET err_msg = concat('Cannot accept rejected buyer order. Place a new order with sp_return_product_from_buyer_order() instead.');
         SIGNAL SQLSTATE '45000' SET message_text = err_msg;
     END IF;
 
     IF (OLD.order_status = 'A') AND (NEW.order_status = 'P') THEN
-        SET err_msg = 'Cannot reopen accepted buyer order. Create a new order instead.';
+        SET err_msg = 'Cannot reopen accepted buyer order. Place a new order with sp_return_product_from_buyer_order() instead.';
         SIGNAL SQLSTATE '45000' SET message_text = err_msg;
     END IF;
 
