@@ -195,8 +195,8 @@ BEGIN
 
     WHILE remaining_product_items_count > 0
         DO
-            SELECT warehouse_id
-            INTO @best_warehouse_id
+            SELECT warehouse_id, available_volume
+            INTO @best_warehouse_id, @best_warehouse_available_volume
             FROM (SELECT w.id                                                                    AS warehouse_id,
                          w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0) AS available_volume
                   FROM stockpile s
@@ -206,15 +206,7 @@ BEGIN
                   ORDER BY available_volume DESC
                   LIMIT 1) best_warehouse;
 
-            SELECT w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0)
-            INTO @best_warehouse_volume
-            FROM stockpile s
-                JOIN warehouse w ON s.warehouse_id = w.id
-                JOIN product p on s.product_id = p.id
-            WHERE w.id = @best_warehouse_id
-            GROUP BY w.id;
-
-            SET product_items_fill_count = least(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
+            SET product_items_fill_count = least(@best_warehouse_available_volume DIV @product_unit_volume, remaining_product_items_count);
 
             SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id FOR UPDATE;
             IF @best_warehouse_has_product = 0 THEN
@@ -376,36 +368,12 @@ BEGIN
 
     SELECT quantity INTO remaining_product_items_count FROM buyer_order WHERE id = buyer_order_id;
 
-    this_loop:WHILE remaining_product_items_count > 0
-        DO
-            -- Check for warehouses that already have the product
-            SELECT warehouse_id, quantity
-            INTO @best_warehouse_id, @best_warehouse_has_product
-            FROM stockpile
-            WHERE product_id = @product_id
-            ORDER BY quantity DESC
-            LIMIT 1;
-
-            IF @best_warehouse_has_product IS NOT NULL THEN
-                SET product_items_fill_count = least(@best_warehouse_has_product, remaining_product_items_count);
-
-                UPDATE stockpile
-                SET quantity = quantity + product_items_fill_count
-                WHERE product_id = @product_id
-                  AND warehouse_id = @best_warehouse_id;
-
-                SET remaining_product_items_count = remaining_product_items_count - product_items_fill_count;
-            ELSE
-                LEAVE this_loop;
-            END IF;
-        END WHILE;
-
     WHILE remaining_product_items_count > 0
         DO
-            SELECT warehouse_id
-            INTO @best_warehouse_id
-            FROM (SELECT w.id                                                                    AS warehouse_id,
-                         coalesce(w.volume - sum(s.quantity * p.width * p.length * p.height), 0) AS available_volume
+            SELECT warehouse_id, available_volume
+            INTO @best_warehouse_id, @best_warehouse_available_volume
+            FROM (SELECT w.id                                                                               AS warehouse_id,
+                         w.volume - coalesce(w.volume - sum(s.quantity * p.width * p.length * p.height), 0) AS available_volume
                   FROM stockpile s
                       LEFT JOIN warehouse w ON s.warehouse_id = w.id
                       LEFT JOIN product p on s.product_id = p.id
@@ -413,15 +381,7 @@ BEGIN
                   ORDER BY available_volume DESC
                   LIMIT 1) best_warehouse;
 
-            SELECT w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0)
-            INTO @best_warehouse_volume
-            FROM stockpile s
-                JOIN warehouse w ON s.warehouse_id = w.id
-                JOIN product p on s.product_id = p.id
-            WHERE w.id = @best_warehouse_id
-            GROUP BY w.id;
-
-            SET product_items_fill_count = least(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
+            SET product_items_fill_count = least(@best_warehouse_available_volume DIV @product_unit_volume, remaining_product_items_count);
 
             SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id;
             IF @best_warehouse_has_product = 0 THEN
