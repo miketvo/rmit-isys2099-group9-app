@@ -343,9 +343,6 @@ this_proc:
 BEGIN
     DECLARE remaining_product_items_count INT DEFAULT 0;
     DECLARE product_items_fill_count INT DEFAULT 0;
-    DECLARE _rollback BOOL DEFAULT 0;
-    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
-    START TRANSACTION;
     SET result = 0;
 
     -- Checks for early termination
@@ -378,7 +375,7 @@ BEGIN
         JOIN product p ON o.product_id = p.id
     WHERE o.id = buyer_order_id;
 
-    SELECT quantity INTO remaining_product_items_count FROM buyer_order WHERE id = buyer_order_id FOR UPDATE;
+    SELECT quantity INTO remaining_product_items_count FROM buyer_order WHERE id = buyer_order_id;
 
     this_loop:WHILE remaining_product_items_count > 0
         DO
@@ -436,15 +433,6 @@ BEGIN
 
             SET remaining_product_items_count = remaining_product_items_count - product_items_fill_count;
         END WHILE;
-
-
-    -- Commit or Rollback
-    IF _rollback THEN
-        SET result = -1;
-        ROLLBACK;
-    ELSE
-        COMMIT;
-    END IF;
 END $$
 DELIMITER ;
 
