@@ -170,3 +170,4 @@ GRANT SELECT ON product_category_attribute_association TO 'isys2099_group9_app_b
 
 GRANT EXECUTE ON PROCEDURE sp_place_buyer_order TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT EXECUTE ON PROCEDURE sp_return_product_from_buyer_order TO 'isys2099_group9_app_buyer_user'@'%';
+GRANT TRIGGER ON buyer_order TO 'isys2099_group9_app_buyer_user'@'%';

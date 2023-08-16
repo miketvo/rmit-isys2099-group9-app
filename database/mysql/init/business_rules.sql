@@ -451,10 +451,46 @@ DELIMITER ;
 
 DROP TRIGGER IF EXISTS trig_reject_buyer_order;
 DELIMITER $$
-CREATE DEFINER = 'isys2099_group9_app_buyer_user'@'%' TRIGGER trig_reject_buyer_order AFTER UPDATE ON buyer_order
+CREATE TRIGGER trig_reject_buyer_order AFTER UPDATE ON buyer_order
 FOR EACH ROW
 BEGIN
     DECLARE err_msg VARCHAR(128);
+
+    IF (OLD.order_status = 'A') AND (NEW.order_status = 'A') THEN
+        SET err_msg = concat('Order already accepted.');
+        SIGNAL SQLSTATE '45000' SET message_text = err_msg;
+    END IF;
+
+    IF (OLD.order_status = 'R') AND (NEW.order_status = 'R') THEN
+        SET err_msg = concat('Order already rejected.');
+        SIGNAL SQLSTATE '45000' SET message_text = err_msg;
+    END IF;
+
+    IF (OLD.order_status = 'P') AND (NEW.order_status = 'P') THEN
+        SET err_msg = concat('Order already pending.');
+        SIGNAL SQLSTATE '45000' SET message_text = err_msg;
+    END IF;
+
+    IF (OLD.order_status = 'R') AND (NEW.order_status = 'P') THEN
+        SET err_msg = 'Cannot reopen rejected buyer order. Create a new order instead.';
+        SIGNAL SQLSTATE '45000' SET message_text = err_msg;
+    END IF;
+
+    IF (OLD.order_status = 'R') AND (NEW.order_status = 'A') THEN
+        SET err_msg = concat('Cannot accept rejected buyer order. Create a new order instead.');
+        SIGNAL SQLSTATE '45000' SET message_text = err_msg;
+    END IF;
+
+    IF (OLD.order_status = 'A') AND (NEW.order_status = 'P') THEN
+        SET err_msg = 'Cannot reopen accepted buyer order. Create a new order instead.';
+        SIGNAL SQLSTATE '45000' SET message_text = err_msg;
+    END IF;
+
+    IF (OLD.order_status = 'A') AND (NEW.order_status = 'R') THEN
+        SET err_msg = concat('Cannot reject accepted buyer order.');
+        SIGNAL SQLSTATE '45000' SET message_text = err_msg;
+    END IF;
+
     IF (OLD.order_status = 'P') AND (NEW.order_status = 'R') THEN
         CALL sp_return_product_from_buyer_order(NEW.id, @result);
         IF @result != 0 THEN
