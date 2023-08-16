@@ -1,21 +1,6 @@
 USE isys2099_group9_app;
 
 
--- Utility functions
-DROP FUNCTION IF EXISTS fn_min;
-DELIMITER $$
-CREATE FUNCTION fn_min(
-    a BIGINT,
-    b BIGINT
-) RETURNS BIGINT DETERMINISTIC
-BEGIN
-    IF a < b THEN RETURN a; END IF;
-    IF a > b THEN RETURN b; END IF;
-    RETURN a;
-END $$
-DELIMITER ;
-
-
 /*
  sp_move_product(product_id: int, move_quantity: int, from_warehouse: int, to_warehouse: int, OUT result: int)
 
@@ -200,12 +185,10 @@ BEGIN
 
 
     -- Update the database
-    SELECT p.id INTO @product_id
-    FROM inbound_order o JOIN product p ON o.product_id = p.id
-    WHERE o.id = inbound_order_id;
-
-    SELECT p.width * p.length * p.height INTO @product_unit_volume
-    FROM inbound_order o JOIN product p ON o.product_id = p.id
+    SELECT p.id, p.width * p.length * p.height
+    INTO @product_id, @product_unit_volume
+    FROM inbound_order o
+        JOIN product p ON o.product_id = p.id
     WHERE o.id = inbound_order_id;
 
     SELECT quantity INTO remaining_product_items_count FROM inbound_order WHERE id = inbound_order_id;
@@ -231,7 +214,7 @@ BEGIN
             WHERE w.id = @best_warehouse_id
             GROUP BY w.id;
 
-            SET product_items_fill_count = fn_min(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
+            SET product_items_fill_count = least(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
 
             SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id FOR UPDATE;
             IF @best_warehouse_has_product = 0 THEN
@@ -241,7 +224,7 @@ BEGIN
             END IF;
 
             SET remaining_product_items_count = remaining_product_items_count - product_items_fill_count;
-    END WHILE;
+        END WHILE;
 
     UPDATE inbound_order
     SET fulfilled_date = date(sysdate()),
@@ -347,7 +330,7 @@ DELIMITER ;
  OUT result:
     -1 on rollback
     0 on successful commit
-    1 on not enough warehouse to return
+    1 on not enough warehouse space to return product
     2 on buyer_order_id not exist
  */
 DROP PROCEDURE IF EXISTS sp_return_product_from_buyer_order;
@@ -389,15 +372,37 @@ BEGIN
 
 
     -- Update the database
-    SELECT p.id INTO @product_id
-    FROM buyer_order o JOIN product p ON o.product_id = p.id
-    WHERE o.id = buyer_order_id;
-
-    SELECT p.width * p.length * p.height INTO @product_unit_volume
-    FROM buyer_order o JOIN product p ON o.product_id = p.id
+    SELECT p.id, p.width * p.length * p.height
+    INTO @product_id, @product_unit_volume
+    FROM buyer_order o
+        JOIN product p ON o.product_id = p.id
     WHERE o.id = buyer_order_id;
 
     SELECT quantity INTO remaining_product_items_count FROM buyer_order WHERE id = buyer_order_id FOR UPDATE;
+
+    this_loop:WHILE remaining_product_items_count > 0
+        DO
+            -- Check for warehouses that already have the product
+            SELECT warehouse_id, quantity
+            INTO @best_warehouse_id, @best_warehouse_has_product
+            FROM stockpile
+            WHERE product_id = @product_id
+            ORDER BY quantity DESC
+            LIMIT 1;
+
+            IF @best_warehouse_has_product IS NOT NULL THEN
+                SET product_items_fill_count = least(@best_warehouse_has_product, remaining_product_items_count);
+
+                UPDATE stockpile
+                SET quantity = quantity + product_items_fill_count
+                WHERE product_id = @product_id
+                  AND warehouse_id = @best_warehouse_id;
+
+                SET remaining_product_items_count = remaining_product_items_count - product_items_fill_count;
+            ELSE
+                LEAVE this_loop;
+            END IF;
+        END WHILE;
 
     WHILE remaining_product_items_count > 0
         DO
@@ -420,7 +425,7 @@ BEGIN
             WHERE w.id = @best_warehouse_id
             GROUP BY w.id;
 
-            SET product_items_fill_count = fn_min(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
+            SET product_items_fill_count = least(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
 
             SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id FOR UPDATE;
             IF @best_warehouse_has_product = 0 THEN

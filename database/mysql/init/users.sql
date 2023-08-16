@@ -59,18 +59,18 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_whadmin_user'@'%'
  any access to the lazada_user, which contains sensitive password hash for all Lazada users.
  */
 GRANT SELECT, INSERT, UPDATE, DELETE ON wh_admin TO 'isys2099_group9_app_whadmin_user'@'%';
-GRANT SELECT, DELETE ON warehouse TO 'isys2099_group9_app_whadmin_user'@'%';
-GRANT INSERT, UPDATE ON view_warehouse_noid TO 'isys2099_group9_app_whadmin_user'@'%';
+GRANT SELECT, UPDATE, DELETE ON warehouse TO 'isys2099_group9_app_whadmin_user'@'%';
+GRANT INSERT ON view_warehouse_noid TO 'isys2099_group9_app_whadmin_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON product_category TO 'isys2099_group9_app_whadmin_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON product_attribute TO 'isys2099_group9_app_whadmin_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON product_category_attribute_association TO 'isys2099_group9_app_whadmin_user'@'%';
-GRANT SELECT, DELETE ON product TO 'isys2099_group9_app_whadmin_user'@'%';
+GRANT SELECT, UPDATE, DELETE ON product TO 'isys2099_group9_app_whadmin_user'@'%';
+GRANT INSERT ON view_product_noid TO 'isys2099_group9_app_whadmin_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON stockpile TO 'isys2099_group9_app_whadmin_user'@'%';
-GRANT INSERT, UPDATE ON view_product_noid TO 'isys2099_group9_app_whadmin_user'@'%';
-GRANT SELECT, DELETE ON inbound_order TO 'isys2099_group9_app_whadmin_user'@'%';
-GRANT INSERT, UPDATE ON view_inbound_order_noid TO 'isys2099_group9_app_whadmin_user'@'%';
-GRANT SELECT, DELETE ON buyer_order TO 'isys2099_group9_app_whadmin_user'@'%';
-GRANT INSERT, UPDATE ON view_buyer_order_noid TO 'isys2099_group9_app_whadmin_user'@'%';
+GRANT SELECT, UPDATE, DELETE ON inbound_order TO 'isys2099_group9_app_whadmin_user'@'%';
+GRANT INSERT ON view_inbound_order_noid TO 'isys2099_group9_app_whadmin_user'@'%';
+GRANT SELECT, UPDATE, DELETE ON buyer_order TO 'isys2099_group9_app_whadmin_user'@'%';
+GRANT INSERT ON view_buyer_order_noid TO 'isys2099_group9_app_whadmin_user'@'%';
 GRANT SELECT ON seller TO 'isys2099_group9_app_whadmin_user'@'%';
 GRANT SELECT ON buyer TO 'isys2099_group9_app_whadmin_user'@'%';
 
@@ -112,10 +112,10 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_seller_user'@'%'
 GRANT SELECT, INSERT, UPDATE, DELETE ON lazada_user TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON seller TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT ON buyer TO 'isys2099_group9_app_seller_user'@'%';
-GRANT SELECT, DELETE ON product TO 'isys2099_group9_app_seller_user'@'%';
-GRANT INSERT, UPDATE ON view_product_noid TO 'isys2099_group9_app_seller_user'@'%';
-GRANT SELECT, DELETE ON inbound_order TO 'isys2099_group9_app_seller_user'@'%';
-GRANT INSERT, UPDATE ON view_inbound_order_noid TO 'isys2099_group9_app_seller_user'@'%';
+GRANT SELECT, UPDATE, DELETE ON product TO 'isys2099_group9_app_seller_user'@'%';
+GRANT INSERT ON view_product_noid TO 'isys2099_group9_app_seller_user'@'%';
+GRANT SELECT, UPDATE, DELETE ON inbound_order TO 'isys2099_group9_app_seller_user'@'%';
+GRANT INSERT ON view_inbound_order_noid TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT ON buyer_order TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT ON warehouse TO 'isys2099_group9_app_seller_user'@'%';
 GRANT SELECT, INSERT, UPDATE ON stockpile TO 'isys2099_group9_app_seller_user'@'%';
@@ -159,8 +159,8 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
 GRANT SELECT, INSERT, UPDATE, DELETE ON lazada_user TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON buyer TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON seller TO 'isys2099_group9_app_buyer_user'@'%';
-GRANT SELECT, DELETE ON buyer_order TO 'isys2099_group9_app_buyer_user'@'%';
-GRANT INSERT, UPDATE ON view_buyer_order_noid TO 'isys2099_group9_app_buyer_user'@'%';
+GRANT SELECT, UPDATE, DELETE ON buyer_order TO 'isys2099_group9_app_buyer_user'@'%';
+GRANT INSERT ON view_buyer_order_noid TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON stockpile TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ( id ) ON warehouse TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product TO 'isys2099_group9_app_buyer_user'@'%';
