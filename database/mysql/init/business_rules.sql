@@ -27,31 +27,31 @@ BEGIN
     SET result = 0;
 
     -- Checks for early termination
-    IF move_quantity < 1 THEN SET result = 2; LEAVE this_proc; END IF;
+    IF move_quantity < 1 THEN SET result = 2; ROLLBACK; LEAVE this_proc; END IF;
 
-    IF from_warehouse = to_warehouse THEN SET result = 2; LEAVE this_proc; END IF;
+    IF from_warehouse = to_warehouse THEN SET result = 2; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT count(*) INTO @exist_product FROM product WHERE id = move_product FOR SHARE ;
-    IF @exist_product = 0 THEN SET result = 1; LEAVE this_proc; END IF;
+    IF @exist_product = 0 THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT count(*) INTO @exist_from_warehouse FROM warehouse WHERE id = from_warehouse FOR SHARE;
-    IF @exist_from_warehouse = 0 THEN SET result = 1; LEAVE this_proc; END IF;
+    IF @exist_from_warehouse = 0 THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT count(*) INTO @exist_to_warehouse FROM warehouse WHERE id = to_warehouse FOR SHARE;
-    IF @exist_to_warehouse = 0 THEN SET result = 1; LEAVE this_proc; END IF;
+    IF @exist_to_warehouse = 0 THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT count(*) INTO @from_warehouse_has_product FROM stockpile WHERE product_id = move_product AND warehouse_id = from_warehouse FOR UPDATE;
-    IF @from_warehouse_has_product = 0 THEN SET result = 1; LEAVE this_proc; END IF;
+    IF @from_warehouse_has_product = 0 THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT quantity INTO @from_warehouse_product_quantity FROM stockpile WHERE product_id = move_product AND warehouse_id = from_warehouse FOR UPDATE;
-    IF move_quantity > @from_warehouse_product_quantity THEN SET result = 1; LEAVE this_proc; END IF;
+    IF move_quantity > @from_warehouse_product_quantity THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     -- Calculate available space in to_warehouse
-    SELECT w.volume - sum(s.quantity * p.width * p.length * p.height)
+    SELECT w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0)
     INTO @to_warehouse_available_volume
     FROM stockpile s
-        JOIN warehouse w ON s.warehouse_id = w.id
-        JOIN product p on s.product_id = p.id
+        LEFT JOIN warehouse w ON s.warehouse_id = w.id
+        LEFT JOIN product p on s.product_id = p.id
     WHERE w.id = to_warehouse FOR SHARE;
 
     -- Calculate the amount of space needed in to_warehouse
@@ -59,7 +59,7 @@ BEGIN
     INTO @move_volume
     FROM product WHERE id = move_product FOR SHARE;
 
-    IF @to_warehouse_available_volume < @move_volume THEN SET result = 1; LEAVE this_proc; END IF;
+    IF @to_warehouse_available_volume < @move_volume THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
 
     -- Update the database for the move
@@ -111,11 +111,11 @@ BEGIN
 
     -- Checks for early termination
     SELECT count(*) INTO @exist_warehouse FROM warehouse WHERE id = warehouse_id FOR SHARE;
-    IF @exist_warehouse = 0 THEN SET result = 1; LEAVE this_proc; END IF;
+    IF @exist_warehouse = 0 THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT sum(quantity) INTO @warehouse_stockpile
     FROM warehouse LEFT JOIN stockpile s on id = s.warehouse_id WHERE id = warehouse_id GROUP BY id;
-    IF @warehouse_stockpile IS NOT NULL THEN SET result = 1; LEAVE this_proc; END IF;
+    IF @warehouse_stockpile IS NOT NULL THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
 
     -- Update the database for the move
@@ -159,21 +159,21 @@ BEGIN
 
     -- Checks for early termination
     SELECT count(*) INTO @exist_order FROM inbound_order WHERE id = inbound_order_id FOR UPDATE;
-    IF @exist_order = 0 THEN SET result = 2; LEAVE this_proc; END IF;
+    IF @exist_order = 0 THEN SET result = 2; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT count(fulfilled_date) INTO @order_fulfilled_date FROM inbound_order WHERE id = inbound_order_id;
     SELECT count(fulfilled_time) INTO @order_fulfilled_time FROM inbound_order WHERE id = inbound_order_id;
-    IF (@order_fulfilled_date = 1) OR (@order_fulfilled_time = 1) THEN SET result = 1; LEAVE this_proc; END IF;
+    IF (@order_fulfilled_date = 1) OR (@order_fulfilled_time = 1) THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
 
     -- Check if there is enough space in our warehouses to take in new product items
     SELECT sum(available_volume)
     INTO @total_available_warehouse_volume
-    FROM (SELECT w.volume - sum(s.quantity * p.width * p.length * p.height) AS available_volume
-          FROM stockpile s
-              JOIN warehouse w ON s.warehouse_id = w.id
-              JOIN product p on s.product_id = p.id
-          GROUP BY w.id) as warehouse_available_volume;
+    FROM (SELECT w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0) AS available_volume
+          FROM warehouse w
+              LEFT JOIN stockpile s ON s.warehouse_id = w.id
+              LEFT JOIN product p ON s.product_id = p.id
+          GROUP BY w.id) AS warehouse_available_volume;
 
     SELECT o.quantity * p.width * p.length * p.height
     INTO @order_volume
@@ -181,7 +181,7 @@ BEGIN
         JOIN product p ON o.product_id = p.id
     WHERE o.id = inbound_order_id;
 
-    IF @total_available_warehouse_volume < @order_volume THEN SET result = 1; LEAVE this_proc; END IF;
+    IF @total_available_warehouse_volume < @order_volume THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
 
     -- Update the database
@@ -197,20 +197,20 @@ BEGIN
         DO
             SELECT warehouse_id
             INTO @best_warehouse_id
-            FROM (SELECT w.id                                                       AS warehouse_id,
-                         w.volume - sum(s.quantity * p.width * p.length * p.height) AS available_volume
+            FROM (SELECT w.id                                                                    AS warehouse_id,
+                         w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0) AS available_volume
                   FROM stockpile s
-                           JOIN warehouse w ON s.warehouse_id = w.id
-                           JOIN product p on s.product_id = p.id
+                      LEFT JOIN warehouse w ON s.warehouse_id = w.id
+                      LEFT JOIN product p on s.product_id = p.id
                   GROUP BY w.id
                   ORDER BY available_volume DESC
                   LIMIT 1) best_warehouse;
 
-            SELECT w.volume - sum(s.quantity * p.width * p.length * p.height)
+            SELECT w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0)
             INTO @best_warehouse_volume
             FROM stockpile s
-                     JOIN warehouse w ON s.warehouse_id = w.id
-                     JOIN product p on s.product_id = p.id
+                JOIN warehouse w ON s.warehouse_id = w.id
+                JOIN product p on s.product_id = p.id
             WHERE w.id = @best_warehouse_id
             GROUP BY w.id;
 
@@ -270,15 +270,15 @@ BEGIN
 
     -- Checks for early termination
     SELECT count(*) INTO @product_exist FROM product WHERE id = order_product_id;
-    IF @product_exist = 0 THEN SET result = 2; LEAVE this_proc; END IF;
+    IF @product_exist = 0 THEN SET result = 2; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT count(*) INTO @buyer_exist FROM buyer WHERE username = buyer_username;
-    IF @buyer_exist = 0 THEN SET result = 2; LEAVE this_proc; END IF;
+    IF @buyer_exist = 0 THEN SET result = 2; ROLLBACK; LEAVE this_proc; END IF;
 
 
     -- Check if warehouse stockpile can fulfill order
     SELECT sum(quantity) INTO @product_stock_quantity FROM stockpile s WHERE s.product_id = order_product_id FOR UPDATE;
-    IF @product_stock_quantity < order_quantity THEN SET result = 1; LEAVE this_proc; END IF;
+    IF @product_stock_quantity < order_quantity THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
 
     -- Update the database
@@ -298,10 +298,9 @@ BEGIN
                 SET curr_order_quantity = curr_order_quantity - @curr_quantity;
                 DELETE FROM stockpile WHERE product_id = @curr_product_id AND warehouse_id = @curr_warehouse_id;
             ELSE
-                UPDATE stockpile
-                SET quantity = quantity - curr_order_quantity
-                WHERE product_id = @curr_product_id
-                  AND warehouse_id = @curr_warehouse_id;
+                UPDATE stockpile SET quantity = quantity - curr_order_quantity
+                WHERE product_id = @curr_product_id AND warehouse_id = @curr_warehouse_id;
+
                 SET curr_order_quantity = 0;
             END IF;
         END WHILE;
@@ -353,16 +352,16 @@ BEGIN
     -- Check if warehouse has enough space to return product items
     SELECT sum(available_volume)
     INTO @total_available_warehouse_volume
-    FROM (SELECT w.volume - sum(s.quantity * p.width * p.length * p.height) AS available_volume
-          FROM stockpile s
-                   JOIN warehouse w ON s.warehouse_id = w.id
-                   JOIN product p on s.product_id = p.id
-          GROUP BY w.id) as warehouse_available_volume;
+    FROM (SELECT w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0) AS available_volume
+          FROM warehouse w
+              LEFT JOIN stockpile s ON s.warehouse_id = w.id
+              LEFT JOIN product p ON s.product_id = p.id
+          GROUP BY w.id) AS warehouse_available_volume;
 
     SELECT o.quantity * p.width * p.length * p.height
     INTO @order_volume
     FROM buyer_order o
-             JOIN product p ON o.product_id = p.id
+        JOIN product p ON o.product_id = p.id
     WHERE o.id = buyer_order_id;
 
     IF @total_available_warehouse_volume < @order_volume THEN SET result = 1; LEAVE this_proc; END IF;
@@ -405,26 +404,26 @@ BEGIN
         DO
             SELECT warehouse_id
             INTO @best_warehouse_id
-            FROM (SELECT w.id                                                       AS warehouse_id,
-                         w.volume - sum(s.quantity * p.width * p.length * p.height) AS available_volume
+            FROM (SELECT w.id                                                                    AS warehouse_id,
+                         coalesce(w.volume - sum(s.quantity * p.width * p.length * p.height), 0) AS available_volume
                   FROM stockpile s
-                           JOIN warehouse w ON s.warehouse_id = w.id
-                           JOIN product p on s.product_id = p.id
+                      LEFT JOIN warehouse w ON s.warehouse_id = w.id
+                      LEFT JOIN product p on s.product_id = p.id
                   GROUP BY w.id
                   ORDER BY available_volume DESC
                   LIMIT 1) best_warehouse;
 
-            SELECT w.volume - sum(s.quantity * p.width * p.length * p.height)
+            SELECT w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0)
             INTO @best_warehouse_volume
             FROM stockpile s
-                     JOIN warehouse w ON s.warehouse_id = w.id
-                     JOIN product p on s.product_id = p.id
+                JOIN warehouse w ON s.warehouse_id = w.id
+                JOIN product p on s.product_id = p.id
             WHERE w.id = @best_warehouse_id
             GROUP BY w.id;
 
             SET product_items_fill_count = least(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
 
-            SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id FOR UPDATE;
+            SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id;
             IF @best_warehouse_has_product = 0 THEN
                 INSERT INTO stockpile (product_id, warehouse_id, quantity) VALUES (@product_id, @best_warehouse_id, product_items_fill_count);
             ELSE
