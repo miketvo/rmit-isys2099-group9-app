@@ -145,7 +145,7 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
 
  The Buyer shall not be able to:
     - Have any access to Warehouse Admin information.
-    - Have any access to warehouse information except the warehouse id.
+    - Have any access to warehouse information, except the warehouse id.
     - Have any access to inbound order information.
     - Modify product information.
     - Modify any product category their attributes.
