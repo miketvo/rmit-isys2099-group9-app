@@ -1,7 +1,7 @@
 USE isys2099_group9_app;
 
 
--- Supporting views
+-- Auxiliary views
 
 /*
  Note: For some tables with AUTO_INCREMENT id column, the user should not be able to manually INSERT this column, thus
