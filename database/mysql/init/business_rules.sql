@@ -180,6 +180,8 @@ BEGIN
     SELECT count(fulfilled_time) INTO @order_fulfilled_time FROM inbound_order WHERE id = inbound_order_id;
     IF (@order_fulfilled_date = 1) OR (@order_fulfilled_time = 1) THEN SET result = 1; LEAVE this_proc; END IF;
 
+
+    -- Check if there is enough space in our warehouses to take in new product items
     SELECT sum(available_volume)
     INTO @total_available_warehouse_volume
     FROM (SELECT w.volume - sum(s.quantity * p.width * p.length * p.height) AS available_volume
@@ -338,11 +340,77 @@ DELIMITER ;
  buttons: Accept and Reject. If this is an Accept, update the inventory information. If it is a Reject, send back the
  products placed in the order to the appropriate warehouses.
  */
+
+/*
+ sp_place_buyer_order(order_quantity: int, OUT result: int)
+
+ OUT result:
+    -1 on rollback
+    0 on successful commit
+    1 on not enough warehouse to return
+    2 on buyer_order_id not exist
+ */
+DROP PROCEDURE IF EXISTS sp_return_product_from_buyer_order;
+DELIMITER $$
+CREATE PROCEDURE sp_return_product_from_buyer_order(
+    IN buyer_order_id INT,
+    OUT result INT
+)
+this_proc:
+BEGIN
+    DECLARE _rollback BOOL DEFAULT 0;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
+    START TRANSACTION;
+    SET result = 0;
+
+    -- Checks for early termination
+    SELECT count(*) INTO @order_exist FROM buyer_order WHERE id = buyer_order_id;
+    IF @order_exist = 0 THEN SET result = 2; LEAVE this_proc; END IF;
+
+
+    -- Check if warehouse has enough space to return product items
+    SELECT sum(available_volume)
+    INTO @total_available_warehouse_volume
+    FROM (SELECT w.volume - sum(s.quantity * p.width * p.length * p.height) AS available_volume
+          FROM stockpile s
+                   JOIN warehouse w ON s.warehouse_id = w.id
+                   JOIN product p on s.product_id = p.id
+          GROUP BY w.id) as warehouse_available_volume;
+
+    SELECT o.quantity * p.width * p.length * p.height
+    INTO @order_volume
+    FROM buyer_order o
+             JOIN product p ON o.product_id = p.id
+    WHERE o.id = buyer_order_id;
+
+    IF @total_available_warehouse_volume < @order_volume THEN SET result = 1; LEAVE this_proc; END IF;
+
+
+    -- Update the database
+    -- TODO: Implement this
+
+
+    -- Commit or Rollback
+    IF _rollback THEN
+        SET result = -1;
+        ROLLBACK;
+    ELSE
+        COMMIT;
+    END IF;
+END $$
+DELIMITER ;
+
+
 DROP TRIGGER IF EXISTS trig_reject_buyer_order;
 DELIMITER $$
 CREATE DEFINER = 'isys2099_group9_app_buyer_user'@'%' TRIGGER trig_reject_buyer_order AFTER UPDATE ON buyer_order
 FOR EACH ROW
 BEGIN
-    -- TODO: Implement this
+    IF NEW.order_status = 'R' THEN
+        CALL sp_return_product_from_buyer_order(NEW.id, @result);
+        IF @result != 0 THEN
+            SIGNAL SQLSTATE '45000' SET message_text = concat('Failed to return product to warehouse, error code: ', @result);
+        END IF;
+    END IF;
 END $$
 DELIMITER ;
