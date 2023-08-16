@@ -135,6 +135,7 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
     - CRUD **their own** account (username and password): seller and lazada_user table.
     - View products: product table, excluding the id and warehouse_id columns.
     - CRUD stockpile information for when we simulate buyer_oder fulfillment on the buyer's end: stockpile table.
+    - View warehouse id, to support the above operation: warehouse table, restricted to only the id column.
     - View categories and their attributes to support the above operation: product_category, product_attribute, and
       product_category_attribute_association table.
     - CRUD buyer orders: buyer_order table.
@@ -144,7 +145,7 @@ CREATE USER IF NOT EXISTS 'isys2099_group9_app_buyer_user'@'%'
 
  The Buyer shall not be able to:
     - Have any access to Warehouse Admin information.
-    - Have any access to warehouse information.
+    - Have any access to warehouse information except the warehouse id.
     - Have any access to inbound order information.
     - Modify product information.
     - Modify any product category their attributes.
@@ -161,9 +162,11 @@ GRANT SELECT ON seller TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT, DELETE ON buyer_order TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT INSERT, UPDATE ON view_buyer_order_noid TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON stockpile TO 'isys2099_group9_app_buyer_user'@'%';
+GRANT SELECT ( id ) ON warehouse TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product_category TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product_attribute TO 'isys2099_group9_app_buyer_user'@'%';
 GRANT SELECT ON product_category_attribute_association TO 'isys2099_group9_app_buyer_user'@'%';
 
 GRANT EXECUTE ON PROCEDURE sp_place_buyer_order TO 'isys2099_group9_app_buyer_user'@'%';
+GRANT EXECUTE ON PROCEDURE sp_return_product_from_buyer_order TO 'isys2099_group9_app_buyer_user'@'%';

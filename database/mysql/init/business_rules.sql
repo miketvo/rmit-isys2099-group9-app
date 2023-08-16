@@ -165,9 +165,9 @@ CREATE PROCEDURE sp_fulfill_inbound_order(
 )
 this_proc:
 BEGIN
-    DECLARE _rollback BOOL DEFAULT 0;
     DECLARE remaining_product_items_count INT DEFAULT 0;
     DECLARE product_items_fill_count INT DEFAULT 0;
+    DECLARE _rollback BOOL DEFAULT 0;
     DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
     START TRANSACTION;
     SET result = 0;
@@ -358,6 +358,8 @@ CREATE PROCEDURE sp_return_product_from_buyer_order(
 )
 this_proc:
 BEGIN
+    DECLARE remaining_product_items_count INT DEFAULT 0;
+    DECLARE product_items_fill_count INT DEFAULT 0;
     DECLARE _rollback BOOL DEFAULT 0;
     DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
     START TRANSACTION;
@@ -387,7 +389,48 @@ BEGIN
 
 
     -- Update the database
-    -- TODO: Implement this
+    SELECT p.id INTO @product_id
+    FROM buyer_order o JOIN product p ON o.product_id = p.id
+    WHERE o.id = buyer_order_id;
+
+    SELECT p.width * p.length * p.height INTO @product_unit_volume
+    FROM buyer_order o JOIN product p ON o.product_id = p.id
+    WHERE o.id = buyer_order_id;
+
+    SELECT quantity INTO remaining_product_items_count FROM buyer_order WHERE id = buyer_order_id FOR UPDATE;
+
+    WHILE remaining_product_items_count > 0
+        DO
+            SELECT warehouse_id
+            INTO @best_warehouse_id
+            FROM (SELECT w.id                                                       AS warehouse_id,
+                         w.volume - sum(s.quantity * p.width * p.length * p.height) AS available_volume
+                  FROM stockpile s
+                           JOIN warehouse w ON s.warehouse_id = w.id
+                           JOIN product p on s.product_id = p.id
+                  GROUP BY w.id
+                  ORDER BY available_volume DESC
+                  LIMIT 1) best_warehouse;
+
+            SELECT w.volume - sum(s.quantity * p.width * p.length * p.height)
+            INTO @best_warehouse_volume
+            FROM stockpile s
+                     JOIN warehouse w ON s.warehouse_id = w.id
+                     JOIN product p on s.product_id = p.id
+            WHERE w.id = @best_warehouse_id
+            GROUP BY w.id;
+
+            SET product_items_fill_count = fn_min(@best_warehouse_volume DIV @product_unit_volume, remaining_product_items_count);
+
+            SELECT count(*) INTO @best_warehouse_has_product FROM stockpile WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id FOR UPDATE;
+            IF @best_warehouse_has_product = 0 THEN
+                INSERT INTO stockpile (product_id, warehouse_id, quantity) VALUES (@product_id, @best_warehouse_id, product_items_fill_count);
+            ELSE
+                UPDATE stockpile SET quantity = quantity + product_items_fill_count WHERE product_id = @product_id AND warehouse_id = @best_warehouse_id;
+            END IF;
+
+            SET remaining_product_items_count = remaining_product_items_count - product_items_fill_count;
+        END WHILE;
 
 
     -- Commit or Rollback
@@ -406,10 +449,12 @@ DELIMITER $$
 CREATE DEFINER = 'isys2099_group9_app_buyer_user'@'%' TRIGGER trig_reject_buyer_order AFTER UPDATE ON buyer_order
 FOR EACH ROW
 BEGIN
-    IF NEW.order_status = 'R' THEN
+    DECLARE err_msg VARCHAR(128);
+    IF (OLD.order_status = 'P') AND (NEW.order_status = 'R') THEN
         CALL sp_return_product_from_buyer_order(NEW.id, @result);
         IF @result != 0 THEN
-            SIGNAL SQLSTATE '45000' SET message_text = concat('Failed to return product to warehouse, error code: ', @result);
+            SET err_msg = concat('Failed to return product to warehouse, error code: ', @result);
+            SIGNAL SQLSTATE '45000' SET message_text = err_msg;
         END IF;
     END IF;
 END $$
