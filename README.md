@@ -22,21 +22,25 @@ TODO: Write this
 
 #### MySQL:
 
-1. From the project's root directory, TODO: write this Tony:
+1. From the project's root directory, navigate to `database/mysql/` directory:
+   ```bash
+   cd database/mysql
+   ```
+2. TODO: write this Tony: What the heck are we doing here?
    ```bash
    npm ci
    npm run init  # You will be prompted for your root username and password
    ```
-2. From the project's root directory, connect to your local instance of MySQL as the root user:
+3. Connect to your local instance of MySQL as the root user:
    ```bash
    mysql -u<root-username> -p
    ```
-3. Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
-   - `source database/mysql/reset.sql`
-   - `source database/mysql/init/tables.sql`
-   - `source database/mysql/init/business_rules.sql`
-   - `source database/mysql/init/users.sql`
-   - `source database/mysql/init/mock_data.sql` (Optional - for testing purpose only)
+4. Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
+   - `source reset.sql`
+   - `source init/tables.sql`
+   - `source init/business_rules.sql`
+   - `source init/users.sql`
+   - `source init/mock_data.sql` (Optional - for testing purpose only)
 
 #### MongoDB:
 
