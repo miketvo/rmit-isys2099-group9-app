@@ -22,11 +22,16 @@ TODO: Write this
 
 #### MySQL:
 
-1. From the project's root directory, connect to your local instance of MySQL as the root user:
+1. From the project's root directory, TODO: write this Tony:
+   ```bash
+   npm ci
+   npm run init  # You will be prompted for your root username and password
+   ```
+2. From the project's root directory, connect to your local instance of MySQL as the root user:
    ```bash
    mysql -u<root-username> -p
    ```
-2. Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
+3. Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
    - `source database/mysql/reset.sql`
    - `source database/mysql/init/tables.sql`
    - `source database/mysql/init/business_rules.sql`

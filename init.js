@@ -19,6 +19,12 @@ const dbConfig = {
   user: "root",
 };
 
+
+/**
+ * TODO: Describe what the heck this is doing, TONY.
+ * @param password
+ * @returns {Promise<void>}
+ */
 async function setValidationPolicy(password) {
   const setPolicyQuery = "SET GLOBAL validate_password.policy = 0";
 
@@ -34,7 +40,7 @@ async function setValidationPolicy(password) {
   } catch (err) {
     console.error("Failed to set validation policy:", err);
   } finally {
-    connection.end(); // Close the connection
+    await connection.end(); // Close the connection
   }
 }
 
@@ -60,7 +66,7 @@ async function main() {
       await setValidationPolicy(password);
     }
 
-    connection.end(); // Close the connection
+    await connection.end(); // Close the connection
 
     console.log(`Backend API Server listening`);
   } catch (err) {
@@ -70,4 +76,5 @@ async function main() {
   }
 }
 
-main();
+
+main().then(() => {});
