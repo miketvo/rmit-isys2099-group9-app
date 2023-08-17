@@ -6,17 +6,24 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-async function promptPassword() {
+async function promptPassword(user) {
   return new Promise((resolve) => {
-    rl.question('Enter MySQL password for root user: ', (password) => {
+    rl.question(`Enter MySQL password for ${user} user: `, (password) => {
       resolve(password);
+    });
+  });
+}
+
+async function promptUser() {
+  return new Promise((resolve) => {
+    rl.question("Enter MySQL user: ", (user) => {
+      resolve(user);
     });
   });
 }
 
 const dbConfig = {
   host: "localhost",
-  user: "root",
 };
 
 
@@ -27,10 +34,12 @@ const dbConfig = {
  * @returns {Promise<void>} - A Promise that resolves when the validation policy is set or
  *                           rejects if there was an error during the process.
  */
-async function setValidationPolicy(password) {
+async function setValidationPolicy(user, password) {
+
   const setPolicyQuery = "SET GLOBAL validate_password.policy = 0";
 
   const connection = await mysql.createConnection({
+    user: user,
     ...dbConfig,
     password: password,
   });
@@ -48,9 +57,11 @@ async function setValidationPolicy(password) {
 
 async function main() {
   try {
-    const password = await promptPassword();
+    const user = await promptUser();
+    const password = await promptPassword(user);
 
     const connection = await mysql.createConnection({
+      user: user,
       ...dbConfig,
       password: password,
     });
@@ -65,7 +76,7 @@ async function main() {
     if (rows.length === 0) {
       console.log("validate_password.policy not found. Skipping policy setting.");
     } else {
-      await setValidationPolicy(password);
+      await setValidationPolicy(user,password);
     }
 
     await connection.end(); // Close the connection
