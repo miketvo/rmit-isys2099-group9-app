@@ -1,0 +1,23 @@
+{
+  "name": "rmit-isys2099-group9-app",
+  "version": "1.0.0",
+  "description": "rmit-isys2099-group9-app",
+  "scripts": {
+    "start": "node check_validate_password.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miketvo/rmit-isys2099-group9-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/miketvo/rmit-isys2099-group9-app/issues"
+  },
+  "homepage": "https://github.com/miketvo/rmit-isys2099-group9-app#readme",
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "readline": "^1.3.0"
+  }
+}
