@@ -22,11 +22,6 @@ async function promptUser() {
   });
 }
 
-const dbConfig = {
-  host: "localhost",
-};
-
-
 /**
  * Establishes a connection and sets the MySQL server's global validation policy to 0.
  *
@@ -40,7 +35,7 @@ async function setValidationPolicy(user, password) {
 
   const connection = await mysql.createConnection({
     user: user,
-    ...dbConfig,
+    host: "localhost",
     password: password,
   });
 
@@ -62,7 +57,7 @@ async function main() {
 
     const connection = await mysql.createConnection({
       user: user,
-      ...dbConfig,
+      host: "localhost",
       password: password,
     });
 
