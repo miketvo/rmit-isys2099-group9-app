@@ -26,7 +26,7 @@ TODO: Write this
    ```bash
    cd database/mysql
    ```
-2. TODO: write this Tony: What the heck are we doing here?
+2. If you have the MySQL validate_password plugin installed, we will disable its password policy.
    ```bash
    npm ci
    npm run init  # You will be prompted for your MySQL server root username and password

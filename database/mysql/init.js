@@ -8,7 +8,7 @@ const rl = readline.createInterface({
 
 async function promptPassword() {
   return new Promise((resolve) => {
-    rl.question('Enter MySQL password: ', (password) => {
+    rl.question('Enter MySQL password for root user: ', (password) => {
       resolve(password);
     });
   });
@@ -21,9 +21,11 @@ const dbConfig = {
 
 
 /**
- * TODO: Describe what the heck this is doing, TONY.
- * @param password
- * @returns {Promise<void>}
+ * Establishes a connection and sets the MySQL server's global validation policy to 0.
+ *
+ * @param {string} password - The password used to authenticate with the MySQL root server.
+ * @returns {Promise<void>} - A Promise that resolves when the validation policy is set or
+ *                           rejects if there was an error during the process.
  */
 async function setValidationPolicy(password) {
   const setPolicyQuery = "SET GLOBAL validate_password.policy = 0";
