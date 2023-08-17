@@ -1,4 +1,4 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const express = require("express");
 const cors = require("cors");
 
@@ -14,8 +14,8 @@ app.get("/warehouse", async (req, res) => {
   try {
     const connection = mysql.createConnection({
       host: "localhost",
-      user: "root",
-      password: "root",
+      user: "isys2099_group9_app_whadmin_user",
+      password: "jlAfD3sBdpJvz0phULIq4CAaAMIIoGNA",
       database: "isys2099_group9_app",
     });
 
@@ -64,8 +64,8 @@ app.get("/product", async (req, res) => {
   try {
     const connection = mysql.createConnection({
       host: "localhost",
-      user: "root",
-      password: "root",
+      user: "isys2099_group9_app_buyer_user",
+      password: "gxQJCza0eADkT5AKmeE865ZN8p1nBsar",
       database: "isys2099_group9_app",
     });
 
