@@ -29,7 +29,7 @@ TODO: Write this
 2. TODO: write this Tony: What the heck are we doing here?
    ```bash
    npm ci
-   npm run init  # You will be prompted for your root username and password
+   npm run init  # You will be prompted for your MySQL server root username and password
    ```
 3. Connect to your local instance of MySQL as the root user:
    ```bash
