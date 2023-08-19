@@ -1,5 +1,6 @@
 const mysql = require("mysql2/promise"); // Import promise-compatible version
 const readline = require('readline');
+const fs = require('fs').promises;
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -50,6 +51,20 @@ async function setValidationPolicy(user, password) {
   }
 }
 
+async function executeSqlScript(connection, scriptPath) {
+  try {
+    const script = await fs.readFile(scriptPath, 'utf-8');
+    const statements = script.split(';').filter(statement => statement.trim() !== '');
+
+    for (const statement of statements) {
+      await connection.query(statement + ';');
+      console.log(`Statement executed successfully: ${statement}`);
+    }
+  } catch (err) {
+    console.error(`Error executing script ${scriptPath}:`, err);
+  }
+}
+
 async function main() {
   try {
     const user = await promptUser();
@@ -74,9 +89,23 @@ async function main() {
       await setValidationPolicy(user,password);
     }
 
+    // Execute SQL scripts
+    const scripts = [
+      'reset.sql',
+      'init/tables.sql',
+      'init/business_rules.sql',
+      'init/users.sql',
+      'init/mock_data.sql',
+    ];
+
+    for (const script of scripts) {
+      await executeSqlScript(connection, `${script}`);
+    }
+
     await connection.end(); // Close the connection
 
-    console.log(`Backend API Server listening`);
+    console.log(`Backend API Server is listening`);
+    console.log(`Using isys2099_group9_app database`)
   } catch (err) {
     console.error("Error connecting to MySQL database: " + err.stack);
   } finally {
