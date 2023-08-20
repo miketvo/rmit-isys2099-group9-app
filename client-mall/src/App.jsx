@@ -8,7 +8,7 @@ import PageRender from "./customRouter/PageRender";
 import PrivateRouter from "./customRouter/PrivateRouter"
 
 // NavBar Component
-import NavBar from "./components/NavBar/NavBar";
+// import NavBar from "./components/NavBar/NavBar";
 
 
 // Page
@@ -27,7 +27,7 @@ function App() {
   return (
     <Router>
       <div className="">
-      <NavBar />
+      {/* <NavBar /> */}
       <Routes>
         {/* Authentication an Authorization */}
         <Route exact path="/login" element={<LoginPage />} />
