@@ -35,13 +35,9 @@ TODO: Write this
    ```bash
    mysql -u<root-username> -p
    ```
-4. Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
-   - `source reset.sql`
-   - `source init/tables.sql`
+4. Execute the setup SQL scripts located in the `database/mysql/` directory to set up business rules and access control:
    - `source init/business_rules.sql`
    - `source init/users.sql`
-   - `source init/mock_data.sql` (Optional - for testing purpose only)
-
 #### MongoDB:
 
 **TODO: Write this**
