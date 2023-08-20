@@ -2,7 +2,7 @@ import {createElement} from 'react'
 import { useParams} from 'react-router-dom'
 
 const generatePage = (pageName) => {
-    const pageComponent = () => import(`../pages/${pageName}`).default
+    const pageComponent = () => import(/* @vite-ignore */`../pages/${pageName}`).default
          
     try {
         return createElement(pageComponent())
