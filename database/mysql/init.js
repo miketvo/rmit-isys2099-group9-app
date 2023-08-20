@@ -93,8 +93,6 @@ async function main() {
     const scripts = [
       'reset.sql',
       'init/tables.sql',
-      'init/business_rules.sql',
-      'init/users.sql',
       'init/mock_data.sql',
     ];
 
