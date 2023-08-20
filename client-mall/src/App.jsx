@@ -1,6 +1,8 @@
 // import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 
+// import styles
+
 // Page Routing
 import PageRender from "./customRouter/PageRender";
 import PrivateRouter from "./customRouter/PrivateRouter"

@@ -1,53 +1,39 @@
-import {FaShoppingCart} from 'react-icons/fa'
-import { IconSetting } from '../../utils/IconSettings'
 import { Link } from 'react-router-dom';
 const NavBar = () => {
   return (
     <>
-        <div className="navbar navbar-expand-lg navbar-light top_navbar">
-            <div className="container">
-                <div className="navbar-logo">
-                    <Link to="/">
-                        Logo
-                    </Link>
-                </div>
-                <div className="navbar_search">
-                    <form className="d-flex" role="search">
-                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                        <button className="btn btn-outline-success" type="submit">Search</button>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <div className="container px-4 px-lg-5">
+                <Link to="/" className="navbar-brand" href="#!">Logo</Link>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span className="navbar-toggler-icon"></span></button>
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li className="nav-item"><a className="nav-link active" aria-current="page" href="#!">Home</a></li>
+                        <li className="nav-item"><a className="nav-link" href="#!">About</a></li>
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a className="dropdown-item" href="#!">All Products</a></li>
+                                <li><hr className="dropdown-divider" /></li>
+                                <li><a className="dropdown-item" href="#!">Popular Items</a></li>
+                                <li><a className="dropdown-item" href="#!">New Arrivals</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form className="d-flex">
+                        <button className="btn btn-outline-dark" type="submit">
+                            <i className="bi-cart-fill me-1"></i>
+                            Cart
+                            <span className="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                        </button>
+                        <Link to="/login" className="btn btn-outline-dark mx-2">
+                            Login
+                        </Link>
                     </form>
-                </div>
-                <div className="navbar_user d-flex">
-                    <div className="mx-2">
-                        {IconSetting(<FaShoppingCart/>, 'black', '16px')}
-                        <span className="ms-2">Cart</span>
-                    </div>
-                    <div className="mx-2">
-                        <Link to="/login">Login / Register</Link>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div className="navbar navbar-expand-lg navbar-light bottom_navbar">
-            <div className="container justify-content-start">
-                <div className="navbar-categories pe-4 py-3">
-                    Categories
                 </div>
-                <div className="navbar_option d-flex">
-                    <div className="px-4 py-3">
-                        <Link to="/">Home</Link>
-                    </div>
-                    <div className="px-4 py-3">
-                        <Link to="/">Product</Link>
-                    </div>
-                    <div className="px-4 py-3">
-                        <Link to="/">My Order</Link>
-                    </div>
-                </div>
-                
             </div>
-        </div>
+        </nav>
     </>
 
   )
