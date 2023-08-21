@@ -233,9 +233,9 @@ VALUES (50, 1, '2022-08-01', '10:00:00', '2022-08-02', '14:30:00', 'loi'),
        (15, 14, '2022-08-04', '13:20:00', null, null, 'mike'),
        (60, 15, '2022-08-05', '16:15:00', null, null, 'mike');
 
-INSERT INTO buyer_order (quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time, buyer)
-VALUES (3, 1, '2023-08-06', '11:30:00', '2023-08-07', '15:45:00', 'tony'),
-       (1, 4, '2023-08-07', '15:45:00', '2023-08-08', '10:20:00', 'tony'),
-       (2, 2, '2023-08-08', '10:20:00', '2023-08-09', '12:00:00', 'tony'),
-       (5, 3, '2023-08-09', '12:00:00', null, null, 'tony'),
-       (4, 5, '2023-08-10', '14:10:00', null, null, 'tony');
+INSERT INTO buyer_order (quantity, product_id, created_date, created_time, order_status, fulfilled_date, fulfilled_time, buyer)
+VALUES (3, 1, '2023-08-06', '11:30:00', 'A', '2023-08-07', '15:45:00', 'tony'),
+       (1, 4, '2023-08-07', '15:45:00', 'A', '2023-08-08', '10:20:00', 'tony'),
+       (2, 2, '2023-08-08', '10:20:00', 'A', '2023-08-09', '12:00:00', 'tony'),
+       (5, 3, '2023-08-09', '12:00:00', 'R', null, null, 'tony'),
+       (4, 5, '2023-08-10', '14:10:00', 'P', null, null, 'tony');
