@@ -1,7 +1,5 @@
 const DetailedProduct = () => {
-  return (
-    <div>[id]</div>
-  )
-}
+  return <div>[id]</div>;
+};
 
-export default DetailedProduct
+export default DetailedProduct;

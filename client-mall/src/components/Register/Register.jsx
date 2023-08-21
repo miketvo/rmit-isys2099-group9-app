@@ -1,7 +1,5 @@
 const RegisterComponent = () => {
-  return (
-    <div>Register</div>
-  )
-}
+  return <div>Register</div>;
+};
 
-export default RegisterComponent
+export default RegisterComponent;

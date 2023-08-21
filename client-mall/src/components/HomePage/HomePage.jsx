@@ -1,5 +1,5 @@
-import ProductList from "./Product/ProductList"
-import NavBar from "../NavBar/NavBar"
+import ProductList from "./Product/ProductList";
+import NavBar from "../NavBar/NavBar";
 
 const HomePage = () => {
   return (
@@ -9,16 +9,34 @@ const HomePage = () => {
       <form method="POST" action="/home/search" className="mb-3">
         <div className="row">
           <div className="col">
-            <input type="text" name="searchTerm" className="form-control" placeholder="Search product model" required />
+            <input
+              type="text"
+              name="searchTerm"
+              className="form-control"
+              placeholder="Search product model"
+              required
+            />
           </div>
           <div className="col">
-            <input type="number" name="minPrice" className="form-control" placeholder="Minimum price" />
+            <input
+              type="number"
+              name="minPrice"
+              className="form-control"
+              placeholder="Minimum price"
+            />
           </div>
           <div className="col">
-            <input type="number" name="maxPrice" className="form-control" placeholder="Maximum price" />
+            <input
+              type="number"
+              name="maxPrice"
+              className="form-control"
+              placeholder="Maximum price"
+            />
           </div>
           <div className="col">
-            <button type="submit" className="btn btn-primary">Search</button>
+            <button type="submit" className="btn btn-primary">
+              Search
+            </button>
           </div>
         </div>
       </form>
@@ -28,8 +46,7 @@ const HomePage = () => {
         <ProductList />
       </div>
     </section>
+  );
+};
 
-  )
-}
-
-export default HomePage
+export default HomePage;
