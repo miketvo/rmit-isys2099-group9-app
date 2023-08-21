@@ -25,6 +25,7 @@ const ProductCard = ({ product }) => {
                 Add to Cart
               </a>
             </div>
+            <p className='text-center fw-bold pt-2'>{product.category}</p>
           </div>
         </div>
     );
