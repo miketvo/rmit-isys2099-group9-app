@@ -58,13 +58,12 @@ async function executeSetupScript(connection, scriptPath) {
 
     for (const statement of statements) {
       await connection.query(statement + ";");
-      console.log(`Statement executed successfully: ${statement}`);
+      console.log(`Statement executed successfully: ${statement};`);
     }
   } catch (err) {
     console.error(`Error executing script ${scriptPath}:`, err);
   }
 }
-
 
 (async () => {
   try {
