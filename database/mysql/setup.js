@@ -56,8 +56,19 @@ async function executeSetupScript(connection, scriptPath) {
       .split(";")
       .filter(statement => statement.trim() !== "");
 
+    const delimiterRx =
+      "/[Dd][Ee][Ll][Ii][Mm][Ii][Tt][Ee][Rr] [a-zA-Z$;_,\\{\\}\\[\\]\\/\\\\\\+\\-\\*\\.].\r?\n/g";
+
     for (const statement of statements) {
-      await connection.query(statement + ";");
+      let delimiterStatements = statement.match(delimiterRx);
+      if (delimiterStatements === null) {
+        await connection.query(statement + ";");
+      } else {
+        await connection.query(delimiterStatements[0]);
+        await connection.query(
+          statement.substring(delimiterStatements[0].length - 1),
+        );
+      }
       console.log(`Statement executed successfully: ${statement};`);
     }
   } catch (err) {
