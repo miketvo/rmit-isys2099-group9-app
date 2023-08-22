@@ -60,7 +60,7 @@ async function executeSetupScript(connection, scriptPath) {
       user: user,
       host: "localhost",
       password: password,
-      multipleStatements: true
+      multipleStatements: true,
     });
 
     console.log("Connected to MySQL database as id " + connection.threadId);
