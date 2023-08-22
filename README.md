@@ -26,18 +26,14 @@ TODO: Write this
    ```bash
    cd database/mysql
    ```
-2. If you have the MySQL validate_password plugin installed, we will disable its password policy.
+2. Initialize the MySQL database:
+
+   - Reset and 
    ```bash
    npm ci
    npm run init  # You will be prompted for your MySQL server root username and password
    ```
-3. Connect to your local instance of MySQL as the root user:
-   ```bash
-   mysql -u<root-username> -p
-   ```
-4. Execute the setup SQL scripts located in the `database/mysql/` directory to set up business rules and access control:
-   - `source init/business_rules.sql`
-   - `source init/users.sql`
+
 #### MongoDB:
 
 **TODO: Write this**
