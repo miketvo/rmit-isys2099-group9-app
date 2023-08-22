@@ -1,7 +1,5 @@
 const CategoryComponent = () => {
-  return (
-    <div>CategoryComponent</div>
-  )
-}
+  return <div>CategoryComponent</div>;
+};
 
-export default CategoryComponent
+export default CategoryComponent;
