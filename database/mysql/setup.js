@@ -24,7 +24,8 @@ async function promptUser() {
 }
 
 /**
- * Establishes a connection and sets the MySQL server's global validation policy to 0.
+ * Establishes a connection and sets the MySQL server's global validation policy to 0, in case MySQL has been set up
+ * with the validate_password plugin, which would be troublesome for when we want to grant privileges to users.
  *
  * @returns {Promise<void>} - A Promise that resolves when the validation policy is set or rejects if there was an error
  * during the process.
