@@ -52,25 +52,8 @@ async function setValidationPolicy(username, password) {
 async function executeSetupScript(connection, scriptPath) {
   try {
     const script = await fs.readFile(scriptPath, "utf-8");
-    const statements = script
-      .split(";")
-      .filter(statement => statement.trim() !== "");
-
-    const delimiterRx =
-      "/[Dd][Ee][Ll][Ii][Mm][Ii][Tt][Ee][Rr] [a-zA-Z$;_,\\{\\}\\[\\]\\/\\\\\\+\\-\\*\\.].\r?\n/g";
-
-    for (const statement of statements) {
-      let delimiterStatements = statement.match(delimiterRx);
-      if (delimiterStatements === null) {
-        await connection.query(statement + ";");
-      } else {
-        await connection.query(delimiterStatements[0]);
-        await connection.query(
-          statement.substring(delimiterStatements[0].length - 1),
-        );
-      }
-      console.log(`Statement executed successfully: ${statement};`);
-    }
+    await connection.query(script);
+    console.log(`Script executed successfully: ${scriptPath}`);
   } catch (err) {
     console.error(`Error executing script ${scriptPath}:`, err);
   }
@@ -85,6 +68,7 @@ async function executeSetupScript(connection, scriptPath) {
       user: user,
       host: "localhost",
       password: password,
+      multipleStatements: true
     });
 
     console.log("Connected to MySQL database as id " + connection.threadId);
