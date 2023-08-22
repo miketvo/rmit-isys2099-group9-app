@@ -26,18 +26,10 @@ async function promptUser() {
 /**
  * Establishes a connection and sets the MySQL server's global validation policy to 0.
  *
- * @param {string} username - The username used to authenticate with the MySQL server.
- * @param {string} password - The password used to authenticate with the MySQL server.
  * @returns {Promise<void>} - A Promise that resolves when the validation policy is set or rejects if there was an error
  * during the process.
  */
-async function setValidationPolicy(username, password) {
-  const connection = await mysql.createConnection({
-    user: username,
-    host: "localhost",
-    password: password,
-  });
-
+async function setValidationPolicy(connection) {
   try {
     await connection.query(`SET GLOBAL validate_password.policy = 0`);
 
@@ -76,13 +68,12 @@ async function executeSetupScript(connection, scriptPath) {
     // Check if validate_password.policy exists
     const checkPolicyQuery = "SHOW VARIABLES LIKE 'validate_password.policy'";
     const [rows] = await connection.query(checkPolicyQuery);
-
     if (rows.length === 0) {
       console.log(
         "validate_password.policy not found. Skipping policy setting.",
       );
     } else {
-      await setValidationPolicy(user, password);
+      await setValidationPolicy(connection);
     }
 
     // Execute SQL setup scripts
