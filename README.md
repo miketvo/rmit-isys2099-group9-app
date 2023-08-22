@@ -28,11 +28,29 @@ TODO: Write this
    ```
 2. Initialize the MySQL database:
 
-   - Reset and 
-   ```bash
-   npm ci
-   npm run init  # You will be prompted for your MySQL server root username and password
-   ```
+   - Without mock-data:
+     ```bash
+     npm ci
+     npm run setup  # You will be prompted for your MySQL server root username and password
+     ```
+
+   - Without mock-data:
+     ```bash
+     npm ci
+     npm run setup-with-mock-data  # You will be prompted for your MySQL server root username and password
+     ```
+
+   - Alternatively, you can manually set up the MySQL database using MySQL Shell and our provided SQL setup scripts for more granular control:
+     - From the project's root directory, connect to your local instance of MySQL as the root user:
+       ```bash
+       mysql -u<root-username> -p
+       ```
+     - Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
+       - `source reset.sql`
+       - `source init/tables.sql`
+       - `source init/business_rules.sql`
+       - `source init/users.sql`
+       - `source init/mock_data.sql` (Optional - for testing purpose only)
 
 #### MongoDB:
 
