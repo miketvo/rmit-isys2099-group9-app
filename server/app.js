@@ -10,6 +10,7 @@ app.get("/", (req, res) => {
   return res.json("Server is running");
 });
 
+{/* API Endpoint for warehouse */}
 app.get("/warehouse", async (req, res) => {
   try {
     const connection = mysql.createConnection({
@@ -60,6 +61,7 @@ app.get("/warehouse", async (req, res) => {
   }
 });
 
+{/* API Endpoint for product */}
 app.get("/product", async (req, res) => {
   try {
     const connection = mysql.createConnection({

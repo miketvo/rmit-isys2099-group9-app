@@ -6,6 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "npx nodemon app.js",
+    "server": "npx nodemon server.js",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
@@ -25,7 +26,9 @@
   },
   "homepage": "https://github.com/miketvo/rmit-isys2099-group9-app#readme",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mysql2": "^3.6.0",
     "sequelize": "^6.32.1"
