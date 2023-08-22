@@ -9,7 +9,7 @@ const stdin = readline.createInterface({
 
 async function promptPassword(user) {
   return new Promise(resolve => {
-    stdin.question(`Enter MySQL password for ${user} user: `, password => {
+    stdin.question(`Enter MySQL password for "${user}": `, password => {
       resolve(password);
     });
   });
@@ -17,7 +17,7 @@ async function promptPassword(user) {
 
 async function promptUser() {
   return new Promise(resolve => {
-    stdin.question("Enter MySQL user: ", user => {
+    stdin.question("Enter MySQL root username: ", user => {
       resolve(user);
     });
   });
