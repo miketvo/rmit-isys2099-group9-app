@@ -41,7 +41,7 @@ TODO: Write this
      ```
 
    - Alternatively, you can manually set up the MySQL database using MySQL Shell and our provided SQL setup scripts for more granular control:
-     - From the project's root directory, connect to your local instance of MySQL as the root user:
+     - Connect to your local instance of MySQL as the root user:
        ```bash
        mysql -u<root-username> -p
        ```
