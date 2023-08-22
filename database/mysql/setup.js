@@ -65,7 +65,8 @@ async function executeSetupScript(connection, scriptPath) {
   }
 }
 
-async function main() {
+
+(async () => {
   try {
     const user = await promptUser();
     const password = await promptPassword(user);
@@ -105,7 +106,7 @@ async function main() {
         "init/tables.sql",
         "init/business_rules.sql",
         "init/users.sql",
-        "mock_data.sql",
+        "init/mock_data.sql",
       ];
     }
 
@@ -120,6 +121,4 @@ async function main() {
   } finally {
     stdin.close(); // Close the readline interface
   }
-}
-
-main().then(() => {});
+})().then(() => {});
