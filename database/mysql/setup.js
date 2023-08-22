@@ -43,7 +43,18 @@ async function setValidationPolicy(connection) {
 
 async function executeSetupScript(connection, scriptPath) {
   try {
-    const script = await fs.readFile(scriptPath, "utf-8");
+    let script = await fs
+      .readFile(scriptPath, "utf-8")
+      .then(res => {
+        return res.replaceAll("DELIMITER $$", "");
+      })
+      .then(res => {
+        return res.replaceAll("END $$", "END;");
+      })
+      .then(res => {
+        return res.replaceAll("DELIMITER ;", "");
+      });
+
     await connection.query(script);
     console.log(`Script executed successfully: ${scriptPath}`);
   } catch (err) {
