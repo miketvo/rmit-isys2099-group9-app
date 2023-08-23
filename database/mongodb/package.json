@@ -9,5 +9,12 @@
     "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.0.1"
+  }
 }
