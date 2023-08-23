@@ -1,0 +1,46 @@
+/* Vertical Navigation Bar */
+.navbar_vertical {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    z-index: 1000;
+    max-width: var(--verticalNavBarWidth);
+    width: 100%;
+    max-height: 100vh;
+    height: 100%;
+    padding: 10px 14px;
+    background: #B64F4F;
+}
+
+.navbar_vertical .navbar-logo{
+    display: flex;
+    justify-content: center;
+}
+
+.navbar_vertical .navbar_vertical_content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.navbar_vertical_content .nav_item {
+    padding: 20px;
+    text-align: center;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.5;
+}
+
+.navbar_vertical_content .nav_item span {
+    font-size: 12px;
+}
+
+/* Horizontal Navigation Bar */
+.top_navbar {
+    height: 65px;
+    box-shadow: 0px 4px 8px 0px rgba(102, 112, 128, 0.16);
+}
