@@ -1,14 +1,13 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-const uri = "mongodb://127.0.0.1:27017";  // Putting localhost here will NOT work
-const client = new MongoClient(uri,  {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-  }
-);
+const uri = "mongodb://127.0.0.1:27017"; // Putting localhost here will NOT work
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
 
 (async () => {
   try {
