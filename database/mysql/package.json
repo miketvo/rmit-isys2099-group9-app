@@ -1,8 +1,8 @@
 {
   "name": "rmit-isys2099-group9-app",
   "private": true,
-  "version": "1.0.0",
-  "description": "rmit-isys2099-group9-app",
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "setup": "node setup.js",
     "setup-with-mock-data": "node setup.js --mock",
