@@ -12,7 +12,7 @@ const client = new MongoClient(uri,  {
 
 (async () => {
   try {
-    console.log(`Connecting to "${uri}"...`);
+    console.log(`Connecting to MongoDB at "${uri}"...`);
     await client.connect();
     await client.db("local").command({ ping: 1 });
     console.log("Successfully connected to MongoDB!");
