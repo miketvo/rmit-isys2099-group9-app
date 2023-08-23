@@ -2,7 +2,7 @@
   "name": "rmit-isys2099-group9-app-database-mysql",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "setup": "node setup.js",
     "setup-with-mock-data": "node setup.js --mock",
