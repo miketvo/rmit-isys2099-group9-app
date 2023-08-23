@@ -2,10 +2,10 @@
   "name": "rmit-isys2099-group9-app-database-mongodb",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "setup": "node setup.cjs",
-    "setup-with-mock-data": "node setup.cjs --mock",
+    "setup": "node setup.js",
+    "setup-with-mock-data": "node setup.js --mock",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
