@@ -33,12 +33,9 @@ async function promptUser() {
 async function setValidationPolicy(connection) {
   try {
     await connection.query(`SET GLOBAL validate_password.policy = 0`);
-
     console.log("Validation policy set to 0");
   } catch (err) {
     console.error("Failed to set validation policy: ", err);
-  } finally {
-    await connection.end(); // Close the connection
   }
 }
 
