@@ -34,7 +34,7 @@ TODO: Write this
      npm run setup  # You will be prompted for your MySQL server root username and password
      ```
 
-   - Without mock-data:
+   - With mock-data (Optional - for testing purpose only):
      ```bash
      npm ci
      npm run setup-with-mock-data  # You will be prompted for your MySQL server root username and password
