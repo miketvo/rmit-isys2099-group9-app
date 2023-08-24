@@ -23,11 +23,11 @@ const client = new MongoClient(uri, {
 
     const db = client.db("isys2099_group9_app");
     await createCollections(db);
-    if ((process.argv.length > 2) && (process.argv[2] === "--mock")) {
+    if (process.argv.length > 2 && process.argv[2] === "--mock") {
       await insertMockData(db);
     }
 
-    console.log("Database initialized!")
+    console.log("Database initialized!");
   } finally {
     await client.close();
   }
