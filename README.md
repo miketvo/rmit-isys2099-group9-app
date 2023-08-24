@@ -97,8 +97,8 @@ npm clean-install
 
 ## Usage
 
-1. Make sure your local instance of MySQL is running.
-2. Make sure your local instance of MongoDB is running.
+1. Make sure your local instance of MySQL is running and have been initialized according to the instructions above.
+2. Make sure your local instance of MongoDB is running and have been initialized according to the instructions above.
 3. Start API server:
    ```bash
    cd server
