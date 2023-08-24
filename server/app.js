@@ -36,18 +36,6 @@ app.get("/warehouse", async (req, res) => {
       });
     });
 
-    await new Promise((resolve, reject) => {
-      connection.end(err => {
-        if (err) {
-          console.error("Error connecting to MySQL database: " + err.stack);
-          reject(err);
-          return;
-        }
-        console.log("Connection closed");
-        resolve();
-      });
-    });
-
     return res.json(results);
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
@@ -77,18 +65,6 @@ app.get("/product", async (req, res) => {
           return;
         }
         resolve(results);
-      });
-    });
-
-    await new Promise((resolve, reject) => {
-      connection.end(err => {
-        if (err) {
-          console.error("Error connecting to MySQL database: " + err.stack);
-          reject(err);
-          return;
-        }
-        console.log("Connection closed");
-        resolve();
       });
     });
 
