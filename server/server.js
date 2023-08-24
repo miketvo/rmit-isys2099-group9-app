@@ -12,11 +12,19 @@ const app = express();
 const PORT= process.env.PORT;
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+    // eslint-disable-next-line no-undef
+    origin: `http://localhost:${PORT}`,
+    credentials: true
+}));
  
 apiRouter.use(cookieParser());
  
-app.use('/apiRouter',apiRouter)
+app.use('/apiRouter', apiRouter);
+
+app.get("/", (req, res) => {
+    return res.json("Server is running");
+});
     
 app.listen(PORT, ()=>{
     console.log(`server is listening  on ${PORT}`);
