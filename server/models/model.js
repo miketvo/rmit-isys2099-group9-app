@@ -1,13 +1,13 @@
 //db.js
-const connection = require('./db.js');
+const db = require('./db.js');
     
-let db = {};
+let database = {};
  
-// ***Requests to the User table ***
+// ***Requests to the LazadaUser table ***
  
-db.allLazadaUser = () =>{
+database.allLazadaUser = () =>{
     return new Promise((resolve, reject)=>{
-        connection.query(`SELECT * FROM lazada_user`, (err, results) => {
+        db.pool.query(`SELECT * FROM lazada_user`, (err, results) => {
             if (err) {
               console.error("error: " + err.stack);
               reject(err);
@@ -18,9 +18,9 @@ db.allLazadaUser = () =>{
     });
 };
 
-db.getLazadaUser = (username) =>{
+database.getLazadaUser = (username) =>{
     return new Promise((resolve, reject)=>{
-        connection.query(`SELECT * FROM lazada_user WHERE username = ?`, [username], (err, results) => {
+        db.pool.query(`SELECT * FROM lazada_user WHERE username = ?`, [username], (err, results) => {
             if (err) {
               console.error("error: " + err.stack);
               reject(err);
@@ -31,4 +31,4 @@ db.getLazadaUser = (username) =>{
     });
 };
 
-module.exports = db;
+module.exports = database;
