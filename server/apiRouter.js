@@ -6,7 +6,7 @@ const db = require('../server/models/db.js');
 apiRouter.get("/warehouse", async (req, res) => {
   try {
       const results = await new Promise((resolve, reject) => {
-          db.pool.query(`SELECT * FROM warehouse`, (err, results) => {
+          db.poolWHAdmin.query(`SELECT * FROM warehouse`, (err, results) => {
               if (err) {
                   console.error("error: " + err.stack);
                   reject(err);
@@ -26,7 +26,7 @@ apiRouter.get("/warehouse", async (req, res) => {
 apiRouter.get("/product", async (req, res) => {
   try {
     const results = await new Promise((resolve, reject) => {
-        db.pool.query(`SELECT * FROM product`, (err, results) => {
+        db.poolWHAdmin.query(`SELECT * FROM product`, (err, results) => {
             if (err) {
                 console.error("error: " + err.stack);
                 reject(err);

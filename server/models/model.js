@@ -7,7 +7,7 @@ let database = {};
  
 database.allLazadaUser = () =>{
     return new Promise((resolve, reject)=>{
-        db.pool.query(`SELECT * FROM lazada_user `, (err, results) => {
+        db.poolWHAdmin.query(`SELECT * FROM lazada_user `, (err, results) => {
             if (err) {
               console.error("error: " + err.stack);
               reject(err);
@@ -20,7 +20,7 @@ database.allLazadaUser = () =>{
 
 database.getLazadaUser = (username) =>{
     return new Promise((resolve, reject)=>{
-        db.pool.query(`SELECT * FROM lazada_user WHERE username = ?`, [username], (err, results) => {
+        db.poolWHAdmin.query(`SELECT * FROM lazada_user WHERE username = ?`, [username], (err, results) => {
             if (err) {
               console.error("error: " + err.stack);
               reject(err);

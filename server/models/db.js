@@ -13,10 +13,26 @@ class Database {
     }
 
     initDB() {
-        this.pool = mysql.createPool({
+        this.poolWHAdmin = mysql.createPool({
             host: process.env.DB_HOST,
             user: process.env.DB_USER_ADM,
             password: process.env.DB_PASS_ADM,
+            database: process.env.MYSQL_DB,
+            connectionLimit: process.env.CONNECTION_LIMIT,
+        });
+
+        this.poolBuyer = mysql.createPool({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER_BUYER,
+            password: process.env.DB_PASS_BUYER,
+            database: process.env.MYSQL_DB,
+            connectionLimit: process.env.CONNECTION_LIMIT,
+        });
+
+        this.poolSeller = mysql.createPool({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER_SELLER,
+            password: process.env.DB_PASS_SELLER,
             database: process.env.MYSQL_DB,
             connectionLimit: process.env.CONNECTION_LIMIT,
         });
@@ -24,7 +40,7 @@ class Database {
 
     connectDB() {
         return new Promise((resolve, reject) => {
-            this.pool.connect(err => {
+            this.poolWHAdmin.connect(err => {
                 if (err) {
                     console.error("Error connecting to MySQL database: " + err.stack);
                     reject(err);
