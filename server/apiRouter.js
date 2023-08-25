@@ -103,16 +103,16 @@ apiRouter.post('/register', async (req, res) => {
         const hashedPassword = hashSync(password, salt);
 
         // Insert the user into the database
-        const userId = await db.insertLazadaUser(username, hashedPassword);
+        const user = await db.insertLazadaUser(username, hashedPassword);
 
         // Create a JWT token
         // eslint-disable-next-line no-undef
-        const jsontoken = jsonwebtoken.sign({user: userId}, process.env.SECRET_KEY, { expiresIn: '1d'} );
+        const jsontoken = jsonwebtoken.sign({username: user.username}, process.env.SECRET_KEY, { expiresIn: '1d'} );
 
         // Set the token as a cookie
         res.cookie('token', jsontoken, { httpOnly: true, secure: true, SameSite: 'strict' , expires: new Date(Number(new Date()) + 30*60*1000) }); //we add secure: true, when using https.
 
-        res.status(200).send(`User created with ID: ${userId}`);
+        res.status(200).send(`User created with username: ${user.username}`);
     } catch (err) {
         console.error("error: " + err.stack);
         res.status(500).send('Error inserting user into database');
@@ -144,7 +144,7 @@ apiRouter.post('/login', async (req, res) => {
 
         // Create a JWT token
         // eslint-disable-next-line no-undef
-        const jsontoken = jsonwebtoken.sign({ user: user.id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+        const jsontoken = jsonwebtoken.sign({ username: user.username }, process.env.SECRET_KEY, { expiresIn: '1d' });
 
         // Set the token as a cookie
         res.cookie('token', jsontoken, { httpOnly: true, secure: true, SameSite: 'strict', expires: new Date(Number(new Date()) + 30*60*1000) });

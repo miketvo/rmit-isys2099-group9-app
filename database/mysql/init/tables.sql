@@ -1,6 +1,14 @@
 CREATE DATABASE IF NOT EXISTS isys2099_group9_app;
 USE isys2099_group9_app;
 
+CREATE TABLE UserToken (
+    id INT AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    refresh_token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
 
 CREATE TABLE IF NOT EXISTS wh_admin
 (
