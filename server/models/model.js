@@ -7,7 +7,7 @@ let database = {};
  
 database.allLazadaUser = () =>{
     return new Promise((resolve, reject)=>{
-        db.pool.query(`SELECT * FROM lazada_user`, (err, results) => {
+        db.pool.query(`SELECT * FROM lazada_user `, (err, results) => {
             if (err) {
               console.error("error: " + err.stack);
               reject(err);
