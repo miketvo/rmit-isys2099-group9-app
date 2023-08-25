@@ -41,7 +41,16 @@ async function insertMockData(uri) {
       },
       {
         sqlId: 6,
-        attributes: [],
+        attributes: [
+          { sqlId: "Warranty", value: true },
+          { sqlId: "Warranty period", value: "2 years" },
+          { sqlId: "Brand", value: "Steinheiser" },
+          { sqlId: "Wireless", value: true },
+          { sqlId: "Battery powered", value: true },
+          { sqlId: "Latency", value: "less than 1ms" },
+          { sqlId: "Noise cancelling", value: true },
+          { sqlId: "Frequency range", value: "20 Hz to 20,000 Hz" },
+        ],
       },
       {
         sqlId: 7,
@@ -49,7 +58,17 @@ async function insertMockData(uri) {
       },
       {
         sqlId: 8,
-        attributes: [],
+        attributes: [
+          { sqlId: "Warranty", value: true },
+          { sqlId: "Warranty period", value: "5 years" },
+          { sqlId: "Brand", value: "Sumsang" },
+          { sqlId: "Color", value: "Black" },
+          { sqlId: "Voltage", value: "120V" },
+          { sqlId: "Wattage", value: "180W" },
+          { sqlId: "SmartTV", value: true },
+          { sqlId: "Screen size", value: "60in" },
+          { sqlId: "Resolution", value: "4K" },
+        ],
       },
       {
         sqlId: 9,
@@ -108,7 +127,7 @@ async function insertMockData(uri) {
         attributes: [
           { sqlId: "Warranty", value: true },
           { sqlId: "Warranty period", value: "1 years" },
-          { sqlId: "Brand", value: "eyePhone" },
+          { sqlId: "Brand", value: "Pineapple" },
           { sqlId: "Width", value: 4 },
           { sqlId: "Length", value: 6 },
           { sqlId: "Thickness", value: 1 },
@@ -125,7 +144,16 @@ async function insertMockData(uri) {
       },
       {
         sqlId: 24,
-        attributes: [],
+        attributes: [
+          { sqlId: "Warranty", value: false },
+          { sqlId: "Brand", value: "Pineapple" },
+          { sqlId: "Color", value: "Pink" },
+          { sqlId: "Voltage", value: "120V" },
+          { sqlId: "Wattage", value: "200W" },
+          { sqlId: "SmartTV", value: false },
+          { sqlId: "Screen size", value: "10in" },
+          { sqlId: "Resolution", value: "320p" },
+        ],
       },
       {
         sqlId: 25,

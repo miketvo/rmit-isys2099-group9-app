@@ -64,10 +64,10 @@ VALUES ('Electronic Devices', null),
        ('Large Appliances', 'TV & Home Appliances');
 
 INSERT INTO product_attribute (attribute_name, attribute_type, required)
-VALUES ('Width', 'Number', TRUE),
-       ('Length', 'Number', TRUE),
-       ('Height', 'Number', TRUE),
-       ('Thickness', 'Number', TRUE),
+VALUES ('Width', 'Number', FALSE),
+       ('Length', 'Number', FALSE),
+       ('Height', 'Number', FALSE),
+       ('Thickness', 'Number', FALSE),
        ('Color', 'String', FALSE),
        ('RAM', 'String', TRUE),
        ('CPU', 'String', TRUE),
@@ -89,7 +89,7 @@ VALUES ('Width', 'Number', TRUE),
        ('Voltage', 'String', TRUE),
        ('Wattage', 'String', TRUE),
        ('Warranty', 'Boolean', TRUE),
-       ('Warranty period', 'String', TRUE);
+       ('Warranty period', 'String', FALSE);
 
 INSERT INTO product_category_attribute_association (category, attribute)
 VALUES ('Electronic Devices', 'Warranty'),
