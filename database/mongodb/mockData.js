@@ -5,8 +5,10 @@ async function insertMockData(uri) {
     await mongoose.connect(uri);
 
     console.log("Inserted mock data.");
+    mongoose.connection.close()
   } catch (error) {
     console.log(`Failed to insert mock data: ${error}`);
+    mongoose.connection.close()
   }
 }
 
