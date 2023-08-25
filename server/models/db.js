@@ -49,6 +49,26 @@ class Database {
                 console.log("Connected to MySQL database as id " + this.connection.threadId);
                 resolve();
             });
+
+            this.poolBuyer.connect(err => {
+                if (err) {
+                    console.error("Error connecting to MySQL database: " + err.stack);
+                    reject(err);
+                    return;
+                }
+                console.log("Connected to MySQL database as id " + this.connection.threadId);
+                resolve();
+            });
+
+            this.poolSeller.connect(err => {
+                if (err) {
+                    console.error("Error connecting to MySQL database: " + err.stack);
+                    reject(err);
+                    return;
+                }
+                console.log("Connected to MySQL database as id " + this.connection.threadId);
+                resolve();
+            });
         });
     }
 }
