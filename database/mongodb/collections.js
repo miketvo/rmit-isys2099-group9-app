@@ -1,5 +1,5 @@
 async function createCollections(db) {
-  await db.createCollection("productAttributes");
+  await db.createCollection("products");
   console.log("Created database and collections.");
 }
 
