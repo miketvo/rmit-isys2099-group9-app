@@ -109,7 +109,7 @@ async function executeSetupScript(connection, scriptPath) {
     }
 
     await connection.end(); // Close the connection
-    console.log(`Database initialized.`);
+    console.log(`Database initialized!`);
   } catch (err) {
     console.error("Error connecting to MySQL database: " + err.stack);
   } finally {
