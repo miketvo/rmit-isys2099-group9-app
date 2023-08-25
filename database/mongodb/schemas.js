@@ -2,12 +2,12 @@ const { Schema } = require("mongoose");
 
 const attributeSchema = new Schema({
   sqlId: String,
-  value: Schema.Types.Mixed
+  value: Schema.Types.Mixed,
 });
 
 const productSchema = new Schema({
   sqlId: Number,
-  attributes: [attributeSchema]
+  attributes: [attributeSchema],
 });
 
 exports.attributeSchema = attributeSchema;
