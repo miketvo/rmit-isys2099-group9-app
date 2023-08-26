@@ -13,7 +13,6 @@ const PORT= process.env.PORT;
 
 app.use(bodyParser.json());
 app.use(cors({
-    // eslint-disable-next-line no-undef
     origin: `http://localhost:${PORT}`,
     credentials: true
 }));
