@@ -8,7 +8,7 @@ const ProductList = () => {
   // Function to fetch products from the API
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:3000/product");
+      const response = await fetch("http://localhost:3000/api/product");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
