@@ -1,8 +1,7 @@
 {
   "name": "isys2099-group9-app-server",
   "private": true,
-  "version": "1.0.0",
-  "description": "RMIT University Vietnam, Semester 2023B - ISYS2099 Database Application - Group 9",
+  "version": "0.0.0",
   "main": "app.js",
   "scripts": {
     "start": "npx nodemon app.js",
@@ -12,19 +11,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/miketvo/rmit-isys2099-group9-app.git"
-  },
-  "keywords": [
-    "backend",
-    "express"
-  ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/miketvo/rmit-isys2099-group9-app/issues"
-  },
-  "homepage": "https://github.com/miketvo/rmit-isys2099-group9-app#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",

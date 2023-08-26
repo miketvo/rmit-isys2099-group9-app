@@ -59,12 +59,14 @@ CREATE TABLE IF NOT EXISTS product_category
 CREATE TABLE IF NOT EXISTS product_attribute
 (
     attribute_name VARCHAR(45),
+    attribute_type ENUM ('Number', 'String', 'Boolean') NOT NULL,
+    required       BOOLEAN                              NOT NULL,
     CONSTRAINT product_attribute_pk PRIMARY KEY (attribute_name)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS product_category_attribute_association
 (
-    category VARCHAR(45),
+    category  VARCHAR(45),
     attribute VARCHAR(45),
     CONSTRAINT product_category_attribute_association_pk PRIMARY KEY (category, attribute),
     CONSTRAINT product_category_attribute_association_category_fk FOREIGN KEY (category) REFERENCES product_category (category_name),
@@ -92,9 +94,9 @@ CREATE TABLE IF NOT EXISTS product
 
 CREATE TABLE IF NOT EXISTS stockpile
 (
-    product_id INT,
+    product_id   INT,
     warehouse_id INT,
-    quantity INT NOT NULL,
+    quantity     INT NOT NULL,
     CONSTRAINT stockpile_pk PRIMARY KEY (product_id, warehouse_id),
     CONSTRAINT stockpile_product_fk FOREIGN KEY (product_id) REFERENCES product(id),
     CONSTRAINT stockpile_warehouse_fk FOREIGN KEY (warehouse_id) REFERENCES warehouse(id),
@@ -133,14 +135,14 @@ CREATE TABLE IF NOT EXISTS inbound_order
 CREATE TABLE IF NOT EXISTS buyer_order
 (
     id             INT AUTO_INCREMENT,
-    quantity       INT         NOT NULL,
-    product_id     INT         NOT NULL,
-    created_date   DATE        NOT NULL,
-    created_time   TIME        NOT NULL,
-    order_status   VARCHAR(1)  NOT NULL DEFAULT 'P',
-    fulfilled_date DATE                 DEFAULT NULL,
-    fulfilled_time TIME                 DEFAULT NULL,
-    buyer          VARCHAR(45) NOT NULL,
+    quantity       INT                  NOT NULL,
+    product_id     INT                  NOT NULL,
+    created_date   DATE                 NOT NULL,
+    created_time   TIME                 NOT NULL,
+    order_status   ENUM ('P', 'A', 'R') NOT NULL DEFAULT 'P',
+    fulfilled_date DATE                          DEFAULT NULL,
+    fulfilled_time TIME                          DEFAULT NULL,
+    buyer          VARCHAR(45)          NOT NULL,
     CONSTRAINT buyer_order_pk PRIMARY KEY (id),
     CONSTRAINT buyer_order_product_id_fk FOREIGN KEY (product_id) REFERENCES product (id),
     CONSTRAINT buyer_order_buyer_fk FOREIGN KEY (buyer) REFERENCES buyer (username),

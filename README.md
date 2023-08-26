@@ -46,7 +46,7 @@ TODO: Write this
        mysql -u<root-username> -p
        ```
      - Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
-       - `source reset.sql`
+       - `source reset.sql` (Warning - this will wipe all existing data)
        - `source init/tables.sql`
        - `source init/business_rules.sql`
        - `source init/users.sql`
@@ -54,7 +54,23 @@ TODO: Write this
 
 #### MongoDB:
 
-**TODO: Write this**
+1. From the project's root directory, navigate to `database/mongdodb/` directory:
+   ```bash
+   cd database/mongodb
+   ```
+2. Initialize the MongoDB database:
+
+    - Without mock-data:
+      ```bash
+      npm ci
+      npm run setup
+      ```
+
+    - With mock-data (Optional - for testing purpose only):
+      ```bash
+      npm ci
+      npm run setup-with-mock-data
+      ```
 
 
 ### Backend API server in `server`:
@@ -81,8 +97,8 @@ npm clean-install
 
 ## Usage
 
-1. Make sure your local instance of MySQL is running.
-2. Make sure your local instance of MongoDB is running.
+1. Make sure your local instance of MySQL is running and have been initialized according to the instructions above.
+2. Make sure your local instance of MongoDB is running and have been initialized according to the instructions above.
 3. Start API server:
    ```bash
    cd server
