@@ -59,7 +59,7 @@ apiRouter.get("/product", async (req, res) => {
 apiRouter.get("/buyer", async (req, res) => {
   try {
     const results = await new Promise((resolve, reject) => {
-      db.poolWHAdmin.query(`SELECT * FROM buyer`, (err, results) => {
+      db.poolBuyer.query(`SELECT * FROM buyer`, (err, results) => {
         if (err) {
           console.error("error: " + err.stack);
           reject(err);
@@ -81,7 +81,7 @@ apiRouter.get("/buyer", async (req, res) => {
 apiRouter.get("/seller", async (req, res) => {
   try {
     const results = await new Promise((resolve, reject) => {
-      db.poolWHAdmin.query(`SELECT * FROM seller`, (err, results) => {
+      db.poolSeller.query(`SELECT * FROM seller`, (err, results) => {
         if (err) {
           console.error("error: " + err.stack);
           reject(err);
