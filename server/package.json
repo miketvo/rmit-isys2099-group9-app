@@ -2,10 +2,9 @@
   "name": "isys2099-group9-app-server",
   "private": true,
   "version": "0.0.0",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "npx nodemon app.js",
-    "server": "npx nodemon server.js",
+    "start": "npx nodemon server.js",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
