@@ -9,26 +9,40 @@ const apiRouter = require("./apiRouter");
 const app = express();
 
 // eslint-disable-next-line no-undef
-const PORT = process.env.PORT;
+const SERVER_PORT = process.env.SERVER_PORT;
+const CORS_WHITELIST = [
+  // eslint-disable-next-line no-undef
+  `http://localhost:${process.env.SERVER_PORT}`,
+  // eslint-disable-next-line no-undef
+  `http://localhost:${process.env.CLIENT_MALL_PORT}`,
+  // eslint-disable-next-line no-undef
+  `http://localhost:${process.env.CLIENT_WHADMIN_PORT}`
+];
 
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: `http://localhost:${PORT}`,
+    origin: (origin, callback) => {
+      if (CORS_WHITELIST.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   }),
 );
 
 apiRouter.use(cookieParser());
 
-app.use("/apiRouter", apiRouter);
+app.use("/api", apiRouter);
 
 app.get("/", (req, res) => {
   return res.json("Server is running");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is listening on ${PORT}`);
+app.listen(SERVER_PORT, () => {
+  console.log(`Server is listening on ${SERVER_PORT}`);
 });
 
 module.exports = app;
