@@ -16,13 +16,6 @@ import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
 
 function App() {
-  // useEffect(() => {
-  //   fetch("http://localhost:3000/product")
-  //     .then(res => res.json())
-  //     .then(data => console.log(data))
-  //     .catch(err => console.error(err));
-  // }, []);
-
   return (
     <Router>
       <div className="">
