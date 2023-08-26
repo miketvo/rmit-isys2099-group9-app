@@ -2,10 +2,10 @@
 const express =require('express');
 const apiRouter = express.Router();
  
-const jsonwebtoken = require('jsonwebtoken');
-const db = require('./models/db.js');
+const { db, model } = require('../models');
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const cookieParser = require('cookie-parser');
+const { generateTokens, setTokenCookie } = require('./utils');
 
 apiRouter.use(cookieParser());
 
@@ -89,12 +89,15 @@ apiRouter.get("/seller", async (req, res) => {
       }
 });
 
+// Endpoint for /register
 apiRouter.post('/register', async (req, res) => {
     try {
         const username = req.body.username;
         const password = req.body.password;
+        const role = req.body.role;
+        const shop_name = req.body.shop_name;
 
-        if (!username || !password) {
+        if (!username || !password || !role) {
             return res.sendStatus(400);
         }
 
@@ -103,22 +106,28 @@ apiRouter.post('/register', async (req, res) => {
         const hashedPassword = hashSync(password, salt);
 
         // Insert the user into the database
-        const user = await db.insertLazadaUser(username, hashedPassword);
+        await model.insertLazadaUser(username, hashedPassword);
 
-        // Create a JWT token
-        // eslint-disable-next-line no-undef
-        const jsontoken = jsonwebtoken.sign({username: user.username}, process.env.SECRET_KEY, { expiresIn: '1d'} );
+        if (role === 'seller') {
+            await model.insertSeller(username, shop_name);
+        } else if (role === 'buyer') {
+            await model.insertBuyer(username);
+        }
+
+        // Generate tokens
+        const tokens = await generateTokens({ username: username });
 
         // Set the token as a cookie
-        res.cookie('token', jsontoken, { httpOnly: true, secure: true, SameSite: 'strict' , expires: new Date(Number(new Date()) + 30*60*1000) }); //we add secure: true, when using https.
+        setTokenCookie(res, tokens.accessToken);
 
-        res.status(200).send(`User created with username: ${user.username}`);
+        res.status(200).send(`User created with username: ${username}`);
     } catch (err) {
         console.error("error: " + err.stack);
         res.status(500).send('Error inserting user into database');
     }
 });
 
+// Endpoint for /login
 apiRouter.post('/login', async (req, res) => {
     try {
         const username = req.body.username;
@@ -129,7 +138,7 @@ apiRouter.post('/login', async (req, res) => {
         }
 
         // Retrieve the user from the database
-        const user = await db.getLazadaUser(username);
+        const user = await model.getLazadaUser(username);
 
         if (!user) {
             return res.status(401).send('User not found');
@@ -142,14 +151,25 @@ apiRouter.post('/login', async (req, res) => {
             return res.status(401).send('Incorrect password');
         }
 
-        // Create a JWT token
-        // eslint-disable-next-line no-undef
-        const jsontoken = jsonwebtoken.sign({ username: user.username }, process.env.SECRET_KEY, { expiresIn: '1d' });
+        let role;
+        
+        let seller = await model.getSeller(username);
+        
+        if (seller) {
+            role = 'seller';
+        } else {
+            role = 'buyer';
+        }
+
+        console.log('role: ' + role);
+
+        // Generate tokens
+        const tokens = await generateTokens({ username: username });
 
         // Set the token as a cookie
-        res.cookie('token', jsontoken, { httpOnly: true, secure: true, SameSite: 'strict', expires: new Date(Number(new Date()) + 30*60*1000) });
+        setTokenCookie(res, tokens.accessToken);
 
-        res.json({ token: jsontoken });
+        res.json({ token: tokens.accessToken });
     } catch (e) {
         console.log(e);
         res.sendStatus(500);

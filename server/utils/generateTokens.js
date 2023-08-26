@@ -11,7 +11,7 @@ async function generateTokens(user) {
         const refreshToken = jwt.sign({ username: user.username }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
         // Store the refresh token in the database
-        await db.poolWHAdmin.query('INSERT INTO UserToken (user_id, refresh_token) VALUES (?, ?)', [user.id, refreshToken]);
+        await db.poolWHAdmin.query('INSERT INTO lazada_user (username, refresh_token) VALUES (?, ?) ON DUPLICATE KEY UPDATE refresh_token = ?', [user.username, refreshToken, refreshToken]);
 
         return { accessToken, refreshToken };
     } catch (err) {
