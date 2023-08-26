@@ -2,8 +2,8 @@ USE isys2099_group9_app;
 
 
 -- Warehouse admin
-INSERT INTO wh_admin (username, password_hash)
-VALUES ('mike', '');
+INSERT INTO wh_admin (username, refresh_token, password_hash)
+VALUES ('mike', '', '');
 
 
 -- Lazada user (buyer and seller)
