@@ -105,6 +105,11 @@ apiRouter.post("/register", async (req, res) => {
     const role = req.body.role;
     const shop_name = req.body.shop_name;
 
+    console.log(`username: ${username}`);
+    console.log(`password: ${password}`);
+    console.log(`role: ${role}`);
+    console.log(`shop_name: ${shop_name}`);
+
     if (!username || !password || !role) {
       return res.sendStatus(400);
     }
@@ -113,17 +118,23 @@ apiRouter.post("/register", async (req, res) => {
     const salt = genSaltSync(10);
     const hashedPassword = hashSync(password, salt);
 
+    console.log(`hashedPassword: ${hashedPassword}`);
+
     // Insert the user into the database
     await model.insertLazadaUser(role, username, hashedPassword);
 
     if (role === "seller") {
       await model.insertSeller(username, shop_name);
+      console.log('Seller inserted');
     } else if (role === "buyer") {
       await model.insertBuyer(username);
+      console.log('Buyer inserted');
     }
 
     // Generate tokens
     const tokens = await generateTokens({ username: username });
+
+    console.log(`tokens: ${JSON.stringify(tokens)}`);
 
     // Set the token as a cookie
     setTokenCookie(res, tokens.accessToken);
@@ -134,6 +145,7 @@ apiRouter.post("/register", async (req, res) => {
     res.status(500).send("Error inserting user into database");
   }
 });
+
 
 // Endpoint for /login
 apiRouter.post("/login", async (req, res) => {

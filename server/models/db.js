@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 
 class Database {
   constructor() {
