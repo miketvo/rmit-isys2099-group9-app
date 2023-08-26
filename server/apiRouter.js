@@ -2,7 +2,7 @@
 const express =require('express');
 const apiRouter = express.Router();
  
-const { db, model } = require('../models');
+const { db, model } = require('./models');
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const cookieParser = require('cookie-parser');
 const { generateTokens, setTokenCookie } = require('./utils');
