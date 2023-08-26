@@ -114,7 +114,7 @@ apiRouter.post("/register", async (req, res) => {
     const hashedPassword = hashSync(password, salt);
 
     // Insert the user into the database
-    await model.insertLazadaUser(username, hashedPassword);
+    await model.insertLazadaUser(role, username, hashedPassword);
 
     if (role === "seller") {
       await model.insertSeller(username, shop_name);
@@ -145,8 +145,17 @@ apiRouter.post("/login", async (req, res) => {
       return res.sendStatus(400);
     }
 
+    let role;
+    let seller = await model.getSeller(username);
+    if (seller) {
+      role = "seller";
+    } else {
+      role = "buyer";
+    }
+    console.log("role: " + role);
+
     // Retrieve the user from the database
-    const user = await model.getLazadaUser(username);
+    const user = await model.getLazadaUser(role, username);
 
     if (!user) {
       return res.status(401).send("User not found");
@@ -159,17 +168,6 @@ apiRouter.post("/login", async (req, res) => {
       return res.status(401).send("Incorrect password");
     }
 
-    let role;
-
-    let seller = await model.getSeller(username);
-
-    if (seller) {
-      role = "seller";
-    } else {
-      role = "buyer";
-    }
-
-    console.log("role: " + role);
 
     // Generate tokens
     const tokens = await generateTokens({ username: username });

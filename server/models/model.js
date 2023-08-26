@@ -9,37 +9,47 @@ Endpoints for Lazada User
 TODO: Grant SELECT permissions on lazada_user table
 */
 }
-database.getLazadaUser = username => {
-  return new Promise((resolve, reject) => {
-    db.poolWHAdmin.query(
-      `SELECT * FROM lazada_user WHERE username = ?`,
-      [username],
-      (err, results) => {
-        if (err) {
-          console.error("error: " + err.stack);
-          reject(err);
-          return;
-        }
-        resolve(results[0]);
-      },
-    );
+database.getLazadaUser = (role, username) => {
+  return new Promise(() => {
+    if (role === "seller") {
+      return database.getSeller(username);
+    } else if (role === "buyer") {
+      return database.getBuyer(username);
+    }
   });
 };
 
-database.insertLazadaUser = (username, hashedPassword) => {
+database.insertLazadaUser = (role, username, hashedPassword) => {
   return new Promise((resolve, reject) => {
-    db.poolWHAdmin.query(
-      `INSERT INTO lazada_user (username, password_hash) VALUES (?, ?)`,
-      [username, hashedPassword],
-      (err, results) => {
-        if (err) {
-          console.error("error: " + err.stack);
-          reject(err);
-          return;
-        }
-        resolve(results.insertId);
-      },
-    );
+    if (role === "seller") {
+      db.poolSeller.query(
+        `INSERT INTO lazada_user (username, password_hash)
+         VALUES (?, ?)`,
+        [username, hashedPassword],
+        (err, results) => {
+          if (err) {
+            console.error("error: " + err.stack);
+            reject(err);
+            return;
+          }
+          resolve(results.insertId);
+        },
+      );
+    } else if (role === "buyer") {
+      db.poolBuyer.query(
+        `INSERT INTO lazada_user (username, password_hash)
+         VALUES (?, ?)`,
+        [username, hashedPassword],
+        (err, results) => {
+          if (err) {
+            console.error("error: " + err.stack);
+            reject(err);
+            return;
+          }
+          resolve(results.insertId);
+        },
+      );
+    }
   });
 };
 
@@ -48,7 +58,7 @@ database.insertLazadaUser = (username, hashedPassword) => {
 }
 database.getBuyer = username => {
   return new Promise((resolve, reject) => {
-    db.poolWHAdmin.query(
+    db.poolBuyer.query(
       `SELECT * FROM buyer WHERE username = ?`,
       [username],
       (err, results) => {
@@ -65,7 +75,7 @@ database.getBuyer = username => {
 
 database.insertBuyer = username => {
   return new Promise((resolve, reject) => {
-    db.poolWHAdmin.query(
+    db.poolBuyer.query(
       `INSERT INTO buyer (username) VALUES (?)`,
       [username],
       (err, results) => {
@@ -85,7 +95,7 @@ database.insertBuyer = username => {
 }
 database.getSeller = username => {
   return new Promise((resolve, reject) => {
-    db.poolWHAdmin.query(
+    db.poolSeller.query(
       `SELECT * FROM seller WHERE username = ?`,
       [username],
       (err, results) => {
@@ -102,7 +112,7 @@ database.getSeller = username => {
 
 database.insertSeller = (username, shop_name) => {
   return new Promise((resolve, reject) => {
-    db.poolWHAdmin.query(
+    db.poolSeller.query(
       `INSERT INTO seller (username, shop_name) VALUES (?, ?)`,
       [username, shop_name],
       (err, results) => {
