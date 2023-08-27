@@ -14,19 +14,10 @@ apiRouter.use(cookieParser());
 }
 apiRouter.get("/warehouse", async (req, res) => {
   try {
-    const results = await new Promise((resolve, reject) => {
-      db.poolWHAdmin.query(`SELECT * FROM warehouse`, (err, results) => {
-        if (err) {
-          console.error("error: " + err.stack);
-          reject(err);
-          return;
-        }
-        resolve(results);
-      });
-    });
-
+    const [results] = await db.poolWHAdmin.query(`SELECT * FROM warehouse`);
     return res.json(results);
   } catch (error) {
+    console.error("error: " + error.stack);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -36,19 +27,10 @@ apiRouter.get("/warehouse", async (req, res) => {
 }
 apiRouter.get("/product", async (req, res) => {
   try {
-    const results = await new Promise((resolve, reject) => {
-      db.poolWHAdmin.query(`SELECT * FROM product`, (err, results) => {
-        if (err) {
-          console.error("error: " + err.stack);
-          reject(err);
-          return;
-        }
-        resolve(results);
-      });
-    });
-
+    const [results] = await db.poolWHAdmin.query(`SELECT * FROM product`);
     return res.json(results);
   } catch (error) {
+    console.error("error: " + error.stack);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -58,19 +40,10 @@ apiRouter.get("/product", async (req, res) => {
 }
 apiRouter.get("/buyer", async (req, res) => {
   try {
-    const results = await new Promise((resolve, reject) => {
-      db.poolBuyer.query(`SELECT * FROM buyer`, (err, results) => {
-        if (err) {
-          console.error("error: " + err.stack);
-          reject(err);
-          return;
-        }
-        resolve(results);
-      });
-    });
-
+    const [results] = await db.poolBuyer.query(`SELECT * FROM buyer`);
     return res.json(results);
   } catch (error) {
+    console.error("error: " + error.stack);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -80,19 +53,10 @@ apiRouter.get("/buyer", async (req, res) => {
 }
 apiRouter.get("/seller", async (req, res) => {
   try {
-    const results = await new Promise((resolve, reject) => {
-      db.poolSeller.query(`SELECT * FROM seller`, (err, results) => {
-        if (err) {
-          console.error("error: " + err.stack);
-          reject(err);
-          return;
-        }
-        resolve(results);
-      });
-    });
-
+    const [results] = await db.poolSeller.query(`SELECT * FROM seller`);
     return res.json(results);
   } catch (error) {
+    console.error("error: " + error.stack);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -110,6 +74,10 @@ apiRouter.post("/register", async (req, res) => {
     console.log(`role: ${role}`);
     console.log(`shop_name: ${shop_name}`);
 
+    if(await model.getLazadaUser(role, username)) {
+      return res.status(409).send('Username already exists');
+    };
+
     if (!username || !password || !role) {
       return res.sendStatus(400);
     }
@@ -121,18 +89,13 @@ apiRouter.post("/register", async (req, res) => {
     console.log(`hashedPassword: ${hashedPassword}`);
 
     // Insert the user into the database
-    await model.insertLazadaUser(role, username, hashedPassword);
+    await model.insertLazadaUser(role, username, salt, hashedPassword, shop_name);
 
-    if (role === "seller") {
-      await model.insertSeller(username, shop_name);
-      console.log('Seller inserted');
-    } else if (role === "buyer") {
-      await model.insertBuyer(username);
-      console.log('Buyer inserted');
-    }
+    // Retrieve the user from the database
+    const user = await model.getLazadaUser(role, username);
 
     // Generate tokens
-    const tokens = await generateTokens({ username: username });
+    const tokens = await generateTokens(user);
 
     console.log(`tokens: ${JSON.stringify(tokens)}`);
 
@@ -148,10 +111,14 @@ apiRouter.post("/register", async (req, res) => {
 
 
 // Endpoint for /login
+// Endpoint for /login
 apiRouter.post("/login", async (req, res) => {
   try {
     const username = req.body.username;
     const password = req.body.password;
+
+    console.log(`username: ${username}`);
+    console.log(`password: ${password}`);
 
     if (!username || !password) {
       return res.sendStatus(400);
@@ -166,6 +133,10 @@ apiRouter.post("/login", async (req, res) => {
     }
     console.log("role: " + role);
 
+    if (!username || !password || !role) {
+      return res.sendStatus(400);
+    }
+
     // Retrieve the user from the database
     const user = await model.getLazadaUser(role, username);
 
@@ -173,21 +144,26 @@ apiRouter.post("/login", async (req, res) => {
       return res.status(401).send("User not found");
     }
 
+    // Hash the password
+    const salt = genSaltSync(10);
+    const hashedPassword = hashSync(password, salt);
+
     // Compare the provided password with the stored hashed password
-    const passwordMatches = compareSync(password, user.password_hash);
+    const passwordMatches = compareSync(hashedPassword, user.password_hash);
 
     if (!passwordMatches) {
       return res.status(401).send("Incorrect password");
     }
 
-
     // Generate tokens
-    const tokens = await generateTokens({ username: username });
+    const tokens = await generateTokens(user);
+
+    console.log(`tokens: ${JSON.stringify(tokens)}`);
 
     // Set the token as a cookie
     setTokenCookie(res, tokens.accessToken);
 
-    res.json({ token: tokens.accessToken });
+    res.status(200).send(`User logged in with username: ${username}`);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

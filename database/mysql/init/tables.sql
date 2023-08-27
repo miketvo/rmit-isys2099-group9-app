@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS wh_admin
 CREATE TABLE IF NOT EXISTS lazada_user
 (
     username      VARCHAR(45),
+    salt          VARCHAR(255),
     refresh_token VARCHAR(255),
     password_hash VARCHAR(255) NOT NULL,
     CONSTRAINT lazada_user_pk PRIMARY KEY (username)

@@ -4,73 +4,19 @@ const db = require("./db.js");
 let database = {};
 
 {
-  /* 
-Endpoints for Lazada User
-TODO: Grant SELECT permissions on lazada_user table
-*/
-}
-database.getLazadaUser = (role, username) => {
-  return new Promise(() => {
-    if (role === "seller") {
-      return database.getSeller(username);
-    } else if (role === "buyer") {
-      return database.getBuyer(username);
-    }
-  });
-};
-
-database.insertLazadaUser = (role, username, hashedPassword) => {
-  return new Promise((resolve, reject) => {
-    if (role === "seller") {
-      db.poolSeller.query(
-        `INSERT INTO lazada_user (username, password_hash)
-         VALUES (?, ?)`,
-        [username, hashedPassword],
-        (err, results) => {
-          if (err) {
-            console.error("error: " + err.stack);
-            reject(err);
-            return;
-          }
-          resolve(results.insertId);
-        },
-      );
-    } else if (role === "buyer") {
-      db.poolBuyer.query(
-        `INSERT INTO lazada_user (username, password_hash)
-         VALUES (?, ?)`,
-        [username, hashedPassword],
-        (err, results) => {
-          if (err) {
-            console.error("error: " + err.stack);
-            reject(err);
-            return;
-          }
-          resolve(results.insertId);
-        },
-      );
-    }
-  });
-};
-
-{
   /* Endpoints for Buyer */
 }
-database.getBuyer = username => {
-  return new Promise((resolve, reject) => {
-    db.poolBuyer.query(
+database.getBuyer = async username => {
+  try {
+    const [results] = await db.poolBuyer.query(
       `SELECT * FROM buyer WHERE username = ?`,
-      [username],
-      (err, results) => {
-        if (err) {
-          console.error("error: " + err.stack);
-          reject(err);
-          return;
-        }
-        resolve(results[0]);
-      },
+      [username]
     );
-  });
+    return results[0];
+  } catch (err) {
+    console.error("error: " + err.stack);
+    throw err;
+  }
 };
 
 database.insertBuyer = username => {
@@ -93,21 +39,17 @@ database.insertBuyer = username => {
 {
   /* Endpoints for Seller */
 }
-database.getSeller = username => {
-  return new Promise((resolve, reject) => {
-    db.poolSeller.query(
+database.getSeller = async username => {
+  try {
+    const [results] = await db.poolSeller.query(
       `SELECT * FROM seller WHERE username = ?`,
-      [username],
-      (err, results) => {
-        if (err) {
-          console.error("error: " + err.stack);
-          reject(err);
-          return;
-        }
-        resolve(results[0]);
-      },
+      [username]
     );
-  });
+    return results[0];
+  } catch (err) {
+    console.error("error: " + err.stack);
+    throw err;
+  }
 };
 
 database.insertSeller = (username, shop_name) => {
@@ -126,5 +68,44 @@ database.insertSeller = (username, shop_name) => {
     );
   });
 };
+
+{
+  /* 
+Endpoints for Lazada User
+TODO: Grant SELECT permissions on lazada_user table
+*/
+}
+database.getLazadaUser = (role, username) => {
+  if (role === "seller") {
+    return database.getSeller(username);
+  } else if (role === "buyer") {
+    return database.getBuyer(username);
+  }
+};
+
+database.insertLazadaUser = async (role, username, salt, hashedPassword, shop_name) => {
+  try {
+    // Insert the user into the lazada_user table
+    const query = `INSERT INTO lazada_user (username, salt, password_hash) VALUES (?, ?, ?)`;
+    const values = [username, salt, hashedPassword];
+
+    // Insert the user into the buyer or seller table based on their role
+    if (role === 'buyer') {
+      await db.poolBuyer.query(query, values);
+      return database.insertBuyer(username);
+
+    } else if (role === 'seller') {
+      await db.poolSeller.query(query, values);
+      return database.insertSeller(username, shop_name);
+
+    } else {
+      throw new Error('Invalid role');
+    }
+
+  } catch (err) {
+    console.error("error: " + err.stack);
+  }
+};
+
 
 module.exports = database;

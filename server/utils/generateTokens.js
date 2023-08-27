@@ -19,9 +19,9 @@ async function generateTokens(user) {
     );
 
     // Store the refresh token in the database
-    await db.poolWHAdmin.query(
-      "INSERT INTO lazada_user (username, refresh_token) VALUES (?, ?) ON DUPLICATE KEY UPDATE refresh_token = ?",
-      [user.username, refreshToken, refreshToken],
+    await db.poolBuyer.query(
+      "INSERT INTO lazada_user (username, refresh_token, hashedPassword) VALUES (?, ?) ON DUPLICATE KEY UPDATE refresh_token = ?",
+      [user.username, refreshToken, user.hashedPassword, refreshToken],
     );
 
     return { accessToken, refreshToken };
