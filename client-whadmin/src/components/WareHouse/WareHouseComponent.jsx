@@ -1,17 +1,18 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react"
 
 // Item Component
-import WareHouse from "./Items/WareHouse";
-import Product from "./Items/Product";
-import Stockpile from "./Items/Stockpile";
+import WareHouse from "./Items/WareHouse"
+import Product from "./Items/Product"
+import Stockpile from "./Items/Stockpile"
 
 // Icons Imported
-import { BiSearch } from "react-icons/bi";
-import { IoAddOutline } from "react-icons/io5";
-import { IconSetting } from "../../utils/IconSettings";
+import {BiSearch} from "react-icons/bi"
+import {IoAddOutline} from "react-icons/io5"
+import { IconSetting } from "../../utils/IconSettings"
 
 import { getDataAPI } from "../../api/fetchAPI";
 const WareHouseComponent = () => {
+  
   useEffect(() => {
     async function fetchData() {
       const data = await getDataAPI("api/warehouse");
@@ -27,39 +28,58 @@ const WareHouseComponent = () => {
     }
     fetchData();
   }, []);
-
-  const [wareHouseData, setWareHouseData] = useState([]);
-  const [productData, setProductData] = useState([]);
+  
+  const [wareHouseData, setWareHouseData] = useState([])
+  const [productData, setProductData] = useState([])
 
   const handleDeleteData = (id, place) => {
     if (place === "warehouse") {
       setWareHouseData(preState => [...preState.filter((item) => item.id !== id)])
     }
     if (place === "product") {
-      setProductData(preState => [...preState.filter(item => item.id !== id)]);
+      setProductData(preState => [...preState.filter((item) => item.id !== id)])
     }
-  };
+  }
 
-  const WareHouseFunction = { handleDeleteData };
-  const ProductFunction = { handleDeleteData };
+  const handlePopUpForm = () => {
+    setPopUpState(prevState => ({
+      ...prevState,
+      state: !prevState.state,
+      created: true
+    }))
+  }
+
+  const WareHouseFunction = {handleDeleteData}
+  const ProductFunction = {handleDeleteData}
 
   const WareHouseTabsMap = [
     {
-      id: "warehouse",
-      component: (
-        <WareHouse data={wareHouseData} compFunction={WareHouseFunction} />
-      ),
+      id: 'warehouse',
+      component: <WareHouse data={wareHouseData} compFunction={WareHouseFunction}/>
     },
     {
-      id: "stockpile",
-      component: <Stockpile />,
+      id: 'stockpile',
+      component: <Stockpile />
     },
     {
-      id: "product",
-      component: <Product data={productData} compFunction={ProductFunction} />,
-    },
-  ];
-  const [wareHouseTabs, setWareHouseTab] = useState(WareHouseTabsMap[0].id);
+      id: 'product',
+      component: <Product data={productData} compFunction={ProductFunction}/>
+    }
+  ]
+
+  const [wareHouseTabs, setWareHouseTab] = useState(WareHouseTabsMap[0].id)
+
+  const [popUpState, setPopUpState] = useState({
+    state: false,
+    created: false,
+    type: wareHouseTabs
+  })
+
+  const PopUpData = {popUpState, wareHouseData, productData}
+  const PopUpFunction = {setPopUpState, setWareHouseData, setProductData}
+
+
+  
 
   return (
     <div className="warehouse_wrapper mt-3">
@@ -102,24 +122,29 @@ const WareHouseComponent = () => {
             </div>
           </div>
 
-          <div className="">
-            <button className="btn btn-success">
-              {IconSetting(<IoAddOutline />, "white", "16px")}
-              <span>Create</span>
-            </button>
+            <div className="">
+              <button className="btn btn-success" onClick={handlePopUpForm}>
+                {IconSetting(<IoAddOutline/>, "white", "16px")}
+                <span>Create</span>
+              </button>
+            </div>
+          </div>
+
+
+          <div className="warehouse_body">
+            {
+              WareHouseTabsMap.map((tab) => (
+                tab.id === wareHouseTabs && (
+                    <Fragment key={tab.id}>
+                      {tab.component}
+                    </Fragment>
+                  )
+              ))
+            }
           </div>
         </div>
-
-        <div className="warehouse_body">
-          {WareHouseTabsMap.map(
-            tab =>
-              tab.id === wareHouseTabs && (
-                <Fragment key={tab.id}>{tab.component}</Fragment>
-              ),
-          )}
-        </div>
       </div>
-    </div>
+
   );
 };
 

@@ -1,5 +1,7 @@
 const Stockpile = () => {
-  return <div>Stockpile</div>;
-};
+  return (
+    <div>Stockpile</div>
+  )
+}
 
-export default Stockpile;
+export default Stockpile

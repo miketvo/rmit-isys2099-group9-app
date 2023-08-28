@@ -1,7 +1,9 @@
-import WareHouseComponent from "../components/WareHouse/WareHouseComponent";
+import WareHouseComponent from "../components/WareHouse/WareHouseComponent"
 
 const WarehousePage = () => {
-  return <WareHouseComponent />;
-};
+  return (
+    <WareHouseComponent />
+  )
+}
 
-export default WarehousePage;
+export default WarehousePage
