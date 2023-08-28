@@ -1,5 +1,7 @@
 const OrderComponent = () => {
-  return <div>OrderComponent</div>;
-};
+  return (
+    <div>OrderComponent</div>
+  )
+}
 
-export default OrderComponent;
+export default OrderComponent

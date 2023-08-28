@@ -1,0 +1,27 @@
+.popup_wrapper .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    display: block;
+}
+
+.popup_wrapper .popup_container {
+    position: absolute;
+    width: 750px;
+    top: -10%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    background: #fff;
+    z-index: 2001;
+}
+
+.popup_wrapper .popup_container .submit_btn {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    float: right;
+}
