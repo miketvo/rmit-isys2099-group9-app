@@ -5,6 +5,8 @@
 
 @import url("./components/WareHouse.css");
 
+@import url("./components/PopUp/PopUp.css");
+
 
 * {
     margin: 0;

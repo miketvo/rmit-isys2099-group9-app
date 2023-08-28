@@ -65,7 +65,7 @@ WareHouse.propTypes = {
       city: PropTypes.string,
       district: PropTypes.string,
       street: PropTypes.string,
-      street_number: PropTypes.number
+      street_number: PropTypes.string
     })).isRequired,
     compFunction: PropTypes.shape({
         handleDeleteData: PropTypes.func.isRequired
