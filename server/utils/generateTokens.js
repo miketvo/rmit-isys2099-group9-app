@@ -2,27 +2,34 @@
 const jwt = require("jsonwebtoken");
 const db = require("../models/db.js");
 
-async function generateTokens(user) {
+async function generateTokens(username) {
   try {
+    // Check if environment variables are set
+    if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
+      throw new Error('Token secrets are not set in the environment variables.');
+    }
+
     // Generate an access token
     const accessToken = jwt.sign(
-      { username: user.username },
+      { username: username },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "30m" },
     );
 
     // Generate a refresh token
     const refreshToken = jwt.sign(
-      { username: user.username },
+      { username: username },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "7d" },
     );
 
+    console.log(`user for tokens: ${username}`);
+
     // Store the refresh token in the database
-    // await db.poolBuyer.query(
-    //   "INSERT INTO lazada_user (username, refresh_token, hashedPassword) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE refresh_token = ?",
-    //   [user.username, refreshToken, user.hashedPassword, refreshToken],
-    // );
+    await db.poolBuyer.query(
+      "UPDATE lazada_user SET refresh_token = ? WHERE username = ?",
+      [refreshToken, username],
+    );
 
     return { accessToken, refreshToken };
   } catch (err) {

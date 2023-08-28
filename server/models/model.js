@@ -83,11 +83,11 @@ database.getLazadaUser = (role, username) => {
   }
 };
 
-database.insertLazadaUser = async (role, username, salt, hashedPassword, shop_name) => {
+database.insertLazadaUser = async (role, username, hashedPassword, shop_name) => {
   try {
     // Insert the user into the lazada_user table
-    const query = `INSERT INTO lazada_user (username, salt, password_hash) VALUES (?, ?, ?)`;
-    const values = [username, salt, hashedPassword];
+    const query = `INSERT INTO lazada_user (username, password_hash) VALUES (?, ?)`;
+    const values = [username, hashedPassword];
 
     // Insert the user into the buyer or seller table based on their role
     if (role === 'buyer') {
