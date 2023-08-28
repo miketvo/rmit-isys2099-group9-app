@@ -89,10 +89,11 @@ apiRouter.post("/register", async (req, res) => {
     console.log(`hashedPassword: ${hashedPassword}`);
 
     // Insert the user into the database
-    await model.insertLazadaUser(role, username, salt, hashedPassword, shop_name);
+    model.insertLazadaUser(role, username, salt, hashedPassword, shop_name);
 
     // Retrieve the user from the database
-    const user = await model.getLazadaUser(role, username);
+    const user =  model.getLazadaUser(role, username);
+    console.log(`user: ${user}`);
 
     // Generate tokens
     const tokens = await generateTokens(user);

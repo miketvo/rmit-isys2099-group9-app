@@ -91,11 +91,11 @@ database.insertLazadaUser = async (role, username, salt, hashedPassword, shop_na
 
     // Insert the user into the buyer or seller table based on their role
     if (role === 'buyer') {
-      await db.poolBuyer.query(query, values);
+      db.poolBuyer.query(query, values);
       return database.insertBuyer(username);
 
     } else if (role === 'seller') {
-      await db.poolSeller.query(query, values);
+      db.poolSeller.query(query, values);
       return database.insertSeller(username, shop_name);
 
     } else {
