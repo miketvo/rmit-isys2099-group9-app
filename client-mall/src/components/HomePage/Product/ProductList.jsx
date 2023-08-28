@@ -1,5 +1,6 @@
+import {BACKEND_PROXY} from "../../../utils/config.jsx";
 import { useEffect, useState } from "react";
-import ProductCard from "./ProductCard"; // Import your ProductCard component
+import ProductCard from "./ProductCard";
 
 const ProductList = () => {
   // State to store the list of products
@@ -8,7 +9,7 @@ const ProductList = () => {
   // Function to fetch products from the API
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:3000/product");
+      const response = await fetch(`${BACKEND_PROXY}/api/product`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
