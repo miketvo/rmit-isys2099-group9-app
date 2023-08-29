@@ -316,7 +316,7 @@ DELIMITER ;
  */
 
 /*
- sp_place_buyer_order(order_quantity: int, OUT result: int)
+ sp_return_product_from_buyer_order(buyer_order_id: int, OUT result: int)
 
  OUT result:
     -1 on rollback
@@ -396,6 +396,29 @@ END $$
 DELIMITER ;
 
 
+/*
+ TRIGGER trig_reject_buyer_order AFTER UPDATE ON buyer_order:
+
+ When a buyer order status is changed from 'P' (Pending) to 'R' (Rejected) - essentially meaning a buyer is rejecting
+ their pending buyer order, call the stored procedure sp_return_product_from_buyer_order(). This trigger fails if
+ sp_return_product_from_buyer_order() returns an error value in its OUT result parameter. Refer to the CREATE PROCEDURE
+ sp_return_product_from_buyer_order() statement above to see all error values.
+
+ The trigger only execute its changes if and only if sp_return_product_from_buyer_order returns a success (0) value in
+ its OUT result parameter.
+
+ Additional feature: This trigger also detect if there are any illegal changes of buyer order status:
+    - 'A' to 'A': Order already accepted. Fails the trigger.
+    - 'R' to 'R': Order already rejected. Fails the trigger.
+    - 'P' to 'P': Order already pending. Fails the trigger.
+    - 'R' to 'P': Reopening rejected buyer order should be illegal. Fails the trigger.
+    - 'R' to 'A': Accepting rejected buyer order should be illegal. Fails the trigger.
+    - 'A' to 'P': Reopening accepted buyer order should be illegal. Fails the trigger.
+    - 'A' to 'R': Rejecting accepted buyer order should be illegal. Fails the trigger.
+
+ Note: Refer to the CREATE TABLE buyer_order in tables.sql for the detailed meaning of 'P', 'A', and 'R' buyer order
+ statuses.
+ */
 DROP TRIGGER IF EXISTS trig_reject_buyer_order;
 DELIMITER $$
 CREATE TRIGGER trig_reject_buyer_order AFTER UPDATE ON buyer_order
