@@ -5,6 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const apiRouter = require("./apiRouter");
+const authRouter = require("./routes/authRoutes");
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(
 apiRouter.use(cookieParser());
 
 app.use("/api", apiRouter);
+app.use("api/auth", authRouter);
 
 app.get("/", (req, res) => {
   return res.json("Server is running");
