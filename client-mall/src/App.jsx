@@ -27,8 +27,11 @@ function App() {
           <Route exact path="/register" element={<RegisterPage />} />
 
           <Route exact path="/" element={<HomePage />} />
-          <Route exact path="/seller-dashboard" element={<SellerDashboardPage />} />
-
+          <Route
+            exact
+            path="/seller-dashboard"
+            element={<SellerDashboardPage />}
+          />
 
           <Route exact path="/" element={<PrivateRouter />}>
             <Route exact path="/:page" element={<PageRender />} />

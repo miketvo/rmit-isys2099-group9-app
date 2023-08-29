@@ -2,7 +2,11 @@ import SellerDashboardComponent from "../components/Dashboard/SellerDashboardCom
 import Layout from "../components/Dashboard/Layout.jsx";
 
 const SellerDashboardPage = () => {
-  return <Layout><SellerDashboardComponent /></Layout>;
+  return (
+    <Layout>
+      <SellerDashboardComponent />
+    </Layout>
+  );
 };
 
 export default SellerDashboardPage;
