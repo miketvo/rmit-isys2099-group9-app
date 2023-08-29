@@ -7,10 +7,10 @@ VALUES ('mike', '', '');
 
 
 -- Lazada user (buyer and seller)
-INSERT INTO lazada_user (username, salt, refresh_token, password_hash)
-VALUES ('tony', '', '', ''),
-       ('loi', '', '', ''),
-       ('mike', '', '', '');
+INSERT INTO lazada_user (username, refresh_token, password_hash)
+VALUES ('tony', '', ''),
+       ('loi', '', ''),
+       ('mike', '', '');
 
 INSERT INTO buyer (username)
 VALUES ('tony');
