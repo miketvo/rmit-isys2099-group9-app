@@ -2,12 +2,12 @@
 const { setTokenCookie, verifyToken } = require('../utils')
 
 const authenticate = async (req, res) => {
-    const { refreshToken, accessToken } = req.cookies;
+    const { accessToken, refreshToken } = req.cookies;
 
     try {
         if (accessToken) {
             const payload = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
-            req.user = payload.user;
+            req.username = payload.username;
             res.status(200).json({ message: 'User authenticated', user: req.username });
 
         } else {
@@ -18,14 +18,14 @@ const authenticate = async (req, res) => {
             console.log(`username with the token ${user.username}`);
 
             if (!user.refresh_token) {
-                throw new CustomError.UnauthenticatedError(
+                throw new Error(
                     "Authentication Invalid"
                 );
             }
 
             setTokenCookie(user.refresh_token, user.username);
 
-            req.user = payload.user;
+            req.username = payload.username;
         } 
     } catch (err) {
         console.error(err);

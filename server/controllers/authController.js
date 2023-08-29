@@ -1,20 +1,26 @@
 const express = require("express");
-const apiRouter = express.Router();
-
-const { db, model } = require("./models");
-const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const cookieParser = require("cookie-parser");
-const { generateTokens, setTokenCookie } = require("./utils");
+const app = express();
+app.use(cookieParser());
 
-apiRouter.use(cookieParser());
+const { db, model } = require("../models");
+const { hashSync, genSaltSync, compareSync } = require("bcrypt");
+const { generateTokens, setTokenCookie } = require("../utils");
+
+const normalCharRegex = /^[A-Za-z0-9._-]*$/;
 
 // Endpoint for /register
-apiRouter.post("/register", async (req, res) => {
+const register = async (req, res) => {
   try {
     const username = req.body.username;
     const password = req.body.password;
     const role = req.body.role;
     const shop_name = req.body.shop_name;
+
+    // prevent SQL injection
+    if (!username.match(normalCharRegex)) {
+      throw new Error("The username must not have strange characters");
+    }
 
     console.log(`username: ${username}`);
     console.log(`password: ${password}`);
@@ -51,10 +57,10 @@ apiRouter.post("/register", async (req, res) => {
     console.error("error: " + err.stack);
     res.status(500).send("Error inserting user into database");
   }
-});
+};
 
 // Endpoint for /login
-apiRouter.post("/login", async (req, res) => {
+const login = async (req, res) => {
   try {
     const username = req.body.username;
     const password = req.body.password;
@@ -63,7 +69,7 @@ apiRouter.post("/login", async (req, res) => {
     console.log(`password: ${password}`);
 
     if (!username || !password) {
-      return res.sendStatus(400);
+      return res.sendStatus(400).send('Please provide a username and password');
     }
 
     let role;
@@ -75,35 +81,27 @@ apiRouter.post("/login", async (req, res) => {
     }
     console.log("role: " + role);
 
-    if (!username || !password || !role) {
-      return res.sendStatus(400);
-    }
-
     // Retrieve the user from the database
     let user = await model.getLazadaUser(role, username);
     if (!user) {
       return res.status(401).send("User not found");
     }
 
-    try {
-      const [results] = await db.poolSeller.query(`SELECT * FROM lazada_user WHERE username = ?`, [username]);
-      user = results[0];
-    } catch (err) {
-      console.error("error: " + err.stack);
-      throw err;
-    }
+    const [results] = await db.poolSeller.query(`SELECT * FROM lazada_user WHERE username = ?`, [username]);
+    user = results[0];
     
     console.log("login user's password_hash: " + user.password_hash);
-
-    // Hash the password
-    // const salt = genSaltSync(10);
-    // const hashedPassword = hashSync(password, salt);
 
     // Compare the provided password with the stored hashed password
     const passwordMatches = compareSync(password, user.password_hash);
 
     if (!passwordMatches) {
       return res.status(401).send("Incorrect password");
+    }
+
+    if (user.refresh_token) {
+      res.cookie('refreshToken', user.refresh_token, { httpOnly: true });
+      return res.status(200).json({ message: 'User authenticated', user: username});
     }
 
     // Generate tokens
@@ -114,9 +112,40 @@ apiRouter.post("/login", async (req, res) => {
     // Set the token as a cookie
     setTokenCookie(res, username);
 
-    res.status(200).send(`User logged in with username: ${username}`);
+    res.status(200).json({ message: 'User authenticated', user: username});
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
-});
+};
+
+// Endpoint for logout
+const logout = async (req, res) => {
+
+  res.cookie("accessToken", "", {
+      httpOnly: true,
+      expires: new Date(0),
+  });
+
+  res.cookie("refreshToken", "", {
+      httpOnly: true,
+      expires: new Date(0),
+  });
+
+  if (req.username) {
+    await db.poolBuyer.query(
+      "UPDATE lazada_user SET refresh_token = NULL WHERE username = ?",
+      [req.username]
+    );
+  } else {
+    return res.status(401).send("User not found");
+  }
+
+  res.status(200).json({ message: `User ${req.username} log out`});
+};
+
+module.exports = {
+  register,
+  login,
+  logout
+}
