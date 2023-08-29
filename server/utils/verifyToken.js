@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
 
-async function verifyToken(token) {
+async function verifyToken(token, secretKey) {
   try {
     // Verify the token
     // eslint-disable-next-line no-undef
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decoded = jwt.verify(token, secretKey);
 
     // If verification is successful, the decoded data is returned
     return decoded;
