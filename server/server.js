@@ -37,7 +37,11 @@ app.use(
 apiRouter.use(cookieParser());
 
 app.use("/api", apiRouter);
-app.use("api/auth", authRouter);
+app.use("/api/auth", authRouter);
+
+app.get("/api/auth", (req, res) => {
+  return res.json("Server Auth Test is running");
+});
 
 app.get("/", (req, res) => {
   return res.json("Server is running");
