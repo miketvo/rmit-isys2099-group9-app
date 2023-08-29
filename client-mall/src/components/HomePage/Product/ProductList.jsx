@@ -1,4 +1,4 @@
-import {BACKEND_PROXY} from "../../../utils/config.jsx";
+import { BACKEND_PROXY } from "../../../utils/config.jsx";
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 

@@ -1,3 +1,13 @@
+/* Import from CSS File */
+@import url("./components/NavBar.css");
+
+@import url("./components/LoginRegister.css");
+
+@import url("./components/SellerDashboard.css");
+
+@import url("./components/PopUp/PopUp.css");
+
+
 * {
     margin: 0;
     padding: 0;
