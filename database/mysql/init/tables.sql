@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS buyer_order
     product_id     INT                  NOT NULL,
     created_date   DATE                 NOT NULL,
     created_time   TIME                 NOT NULL,
-    order_status   ENUM ('P', 'A', 'R') NOT NULL DEFAULT 'P',
+    order_status   ENUM ('P', 'A', 'R') NOT NULL DEFAULT 'P',  -- (P)ending, (A)ccepted, (R)ejected
     fulfilled_date DATE                          DEFAULT NULL,
     fulfilled_time TIME                          DEFAULT NULL,
     buyer          VARCHAR(45)          NOT NULL,
