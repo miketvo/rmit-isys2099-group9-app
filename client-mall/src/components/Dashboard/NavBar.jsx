@@ -30,21 +30,15 @@ const NavBar = () => {
                             </Link>
                         </li>
                         <li className="dash_nav_item">
-                            <Link to="/warehouse">
+                            <Link to="/seller-dashboard">
                                 {IconSetting(<FaBoxesPacking/>, 'white', "30px", "nav_icon")}
-                                <span className="nav_text text-white">Warehouse</span>
+                                <span className="nav_text text-white">Products</span>
                             </Link>
                         </li>
                         <li className="dash_nav_item">
-                            <Link to="/category">
-                                {IconSetting(<BiCategoryAlt/>, 'white', "30px", "nav_icon")}
-                                <span className="nav_text text-white">Category</span>
-                            </Link>
-                        </li>
-                        <li className="dash_nav_item">
-                            <Link to="/order">
+                            <Link to=""> {/* TODO: Insert link here */}
                                 {IconSetting(<FaClipboardUser/>, 'white', "30px", "nav_icon")}
-                                <span className="nav_text text-white">Seller/Buyer</span>
+                                <span className="nav_text text-white">Account</span>
                             </Link>
                         </li>
 

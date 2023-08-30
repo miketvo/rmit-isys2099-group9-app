@@ -7,17 +7,17 @@ const Product = ({ data, compFunction }) => {
 
   const ProductState = {
     title: "",
-    img: "",
+    // img: "",  // TODO: Implement later
     product_description: "",
     category: "",
     price: "",
     width: "",
     length: "",
     height: "",
-    // seller: "",  TODO: Automatically insert seller here according to currently logged in user
+    // seller: "",  // TODO: Automatically insert seller here according to currently logged in user
   };
 
-  const [productData, setProductData] = useState(ProductState);
+  const [productFormData, setproductFormData] = useState(ProductState);
   const {
     title,
     // img,  // TODO: Implement later
@@ -27,17 +27,33 @@ const Product = ({ data, compFunction }) => {
     width,
     height,
     length,
-  } = productData;
+  } = productFormData;
 
-  const handleChangeInput = e => {
+  const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    setProductData(prevState => ({ ...prevState, [name]: value }));
+    const parsedValue =
+      name === "width" || name === "length" || name === "height" ? parseInt(value, 10) : value;
+
+    setproductFormData(prevState => ({...prevState, [name]: parsedValue}))
   };
 
-  const handleSubmitData = e => {
+
+  const handleSubmitData = (e) => {
     e.preventDefault();
 
-    console.log(productData);
+    setproductFormData(prevState => [
+      ...prevState,
+      {
+        id: productFormData.length + 1,
+        ...productFormData
+      }
+    ])
+
+    setPopUpState(prevState => ({
+      ...prevState,
+      state: !prevState.state,
+      created: true
+    }));
   };
 
   const handleClosePopUpForm = () => {
@@ -46,6 +62,8 @@ const Product = ({ data, compFunction }) => {
       state: !prevState.state,
       created: true
     }));
+
+    setproductFormData(ProductState);
   };
 
   return (
@@ -56,45 +74,45 @@ const Product = ({ data, compFunction }) => {
             <div className="mb-3">
               <label className="form-label">Product Title</label>
               <input type="text" className="form-control"
-                     name="warehouse_name" value={title} onChange={handleChangeInput}
+                     name="title" value={title} onChange={handleChangeInput}
               />
             </div>
             <div className="mb-3">
               <label className="form-label">Description</label>
               <input type="text" className="form-control"
-                     name="volume" value={product_description} onChange={handleChangeInput}
+                     name="product_description" value={product_description} onChange={handleChangeInput}
               />
             </div>
             <div className="mb-3">
               <label className="form-label">Category</label>
               <input type="text" className="form-control"
-                     name="province" value={category} onChange={handleChangeInput}
+                     name="category" value={category} onChange={handleChangeInput}
               />
             </div>
             <div className="mb-3">
               <label className="form-label">Price</label>
               <input type="text" className="form-control"
-                     name="city" value={price} onChange={handleChangeInput}
+                     name="price" value={price} onChange={handleChangeInput}
               />
             </div>
           </div>
           <div className="col-6">
             <div className="mb-3">
               <label className="form-label">Width</label>
-              <input type="text" className="form-control"
-                     name="street_number" value={width} onChange={handleChangeInput}
+              <input type="number" className="form-control"
+                     name="width" value={width} onChange={handleChangeInput}
               />
             </div>
             <div className="mb-3">
               <label className="form-label">Length</label>
-              <input type="text" className="form-control"
-                     name="street" value={height} onChange={handleChangeInput}
+              <input type="number" className="form-control"
+                     name="height" value={height} onChange={handleChangeInput}
               />
             </div>
             <div className="mb-3">
               <label className="form-label">Height</label>
-              <input type="text" className="form-control"
-                     name="district" value={length} onChange={handleChangeInput}
+              <input type="number" className="form-control"
+                     name="length" value={length} onChange={handleChangeInput}
               />
             </div>
           </div>

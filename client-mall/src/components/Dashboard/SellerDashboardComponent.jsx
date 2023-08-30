@@ -57,14 +57,14 @@ const SellerDashboardComponent = () => {
 
   const DashboardTabsMap = [
     {
+      id: "product",
+      component: <Product data={productData} compFunction={ProductFunction} />,
+    },
+    {
       id: "inbound order",
       component: (
         <InboundOrder />
       ),
-    },
-    {
-      id: "product",
-      component: <Product data={productData} compFunction={ProductFunction} />,
     },
   ];
 
