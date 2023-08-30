@@ -1,10 +1,8 @@
 /* Import from CSS File */
 @import url("./components/NavBar.css");
-
 @import url("./components/LoginRegister.css");
-
-@import url("./components/SellerDashboard.css");
-
+@import url("./components/SellerDashboard/SellerDashboard.css");
+@import url("./components/SellerDashboard/NavBar.css");
 @import url("./components/PopUp/PopUp.css");
 
 
@@ -25,7 +23,8 @@
     /* ========== Colors ========== */
     --primary-color: #fff;
 
-    /* ========== Height ========== */
+    /* ========== Width ========== */
+    --verticalNavBarWidth: 90px;
 }
 
 a {
