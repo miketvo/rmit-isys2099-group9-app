@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken");
 const db = require("../models/db.js");
 
-async function generateTokens(username) {
+const generateTokens = (username) => {
   try {
     // Check if environment variables are set
     if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
@@ -26,7 +26,7 @@ async function generateTokens(username) {
     console.log(`user for tokens: ${username}`);
 
     // Store the refresh token in the database
-    await db.poolBuyer.query(
+    db.poolBuyer.query(
       "UPDATE lazada_user SET refresh_token = ? WHERE username = ?",
       [refreshToken, username],
     );

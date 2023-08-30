@@ -45,17 +45,16 @@ const register = async (req, res) => {
     model.insertLazadaUser(role, username, hashedPassword, shop_name);
 
     // Generate tokens
-    const tokens = await generateTokens(username);
+    const tokens = generateTokens(username);
 
     console.log(`tokens: ${JSON.stringify(tokens)}`);
 
-    // Set the token as a cookie
     setTokenCookie(res, username);
 
-    res.status(200).send(`User created with username: ${username}`);
+    return res.status(200).send(`User created with username: ${username}`);
   } catch (err) {
     console.error("error: " + err.stack);
-    res.status(500).send("Error inserting user into database");
+    return res.status(500).send("Error inserting user into database");
   }
 };
 
@@ -99,13 +98,13 @@ const login = async (req, res) => {
       return res.status(401).send("Incorrect password");
     }
 
-    // if (user.refresh_token) {
-    //   res.cookie('refreshToken', user.refresh_token, { httpOnly: true });
-    //   return res.status(200).json({ message: 'User authenticated', user: username});
-    // }
+    if (user.refresh_token) {
+      res.cookie('refreshToken', user.refresh_token, { httpOnly: true });
+      return res.status(200).json({ message: 'User authenticated', user: username});
+    }
 
     // Generate tokens
-    const tokens = await generateTokens(username);
+    const tokens = generateTokens(username);
 
     console.log(`tokens: ${JSON.stringify(tokens)}`);
 
@@ -144,19 +143,8 @@ const logout = async (req, res) => {
   res.status(200).json({ message: `User log out`, user: req.username});
 };
 
-const allUsers = async (req, res) => {
-  try {
-    const [results] = await db.poolSeller.query(`SELECT * FROM lazada_user`);
-    return res.json(results);
-  } catch (error) {
-    console.error("error: " + error.stack);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-}
-
 module.exports = {
   register,
   login,
-  logout,
-  allUsers
+  logout
 }

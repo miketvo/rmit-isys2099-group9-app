@@ -8,14 +8,11 @@ const {
 const {
     register,
     login,
-    logout,
-    allUsers
+    logout
 } = require("../controllers/authController");
 
 router.post("/register", register);
 router.post("/login", login);
 router.delete("/logout", authenticate, logout);
-
-router.get("/lazada_user", allUsers);
 
 module.exports = router;
