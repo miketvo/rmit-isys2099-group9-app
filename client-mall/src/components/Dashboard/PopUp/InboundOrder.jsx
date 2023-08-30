@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-const WareHouse = ({ compData, compFunction }) => {
+const InboundOrder = ({ compData, compFunction }) => {
   const { created, wareHouseData } = compData;
   const { setPopUpState, setWareHouseData } = compFunction;
 
@@ -156,7 +156,7 @@ const WareHouse = ({ compData, compFunction }) => {
   );
 };
 
-WareHouse.propTypes = {
+InboundOrder.propTypes = {
   compData: PropTypes.shape({
     created: PropTypes.bool.isRequired,
     wareHouseData: PropTypes.array.isRequired,
@@ -167,4 +167,4 @@ WareHouse.propTypes = {
   }),
 };
 
-export default WareHouse;
+export default InboundOrder;

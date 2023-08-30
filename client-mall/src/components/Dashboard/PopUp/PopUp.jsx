@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import Product from "./Product";
-import WareHouse from "./WareHouse";
+import InboundOrder from "./InboundOrder.jsx";
 
 const PopUp = ({ compData, compFunction }) => {
   const { popUpState, wareHouseData, productData } = compData;
@@ -13,7 +13,7 @@ const PopUp = ({ compData, compFunction }) => {
       <div className="overlay"></div>
       <div className="popup_container p-4">
         {type === "warehouse" && (
-          <WareHouse
+          <InboundOrder
             compData={{ created: created, wareHouseData: wareHouseData }}
             compFunction={{ setPopUpState, setWareHouseData }}
           />

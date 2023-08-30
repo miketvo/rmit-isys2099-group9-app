@@ -1,9 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 
 // Item Component
-import WareHouse from "./Items/WareHouse";
+import InboundOrder from "./Items/InboundOrder";
 import Product from "./Items/Product";
-import Stockpile from "./Items/Stockpile";
 
 // Icons Imported
 import { BiSearch } from "react-icons/bi";
@@ -15,13 +14,7 @@ import PopUp from "./PopUp/PopUp";
 const SellerDashboardComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const result = await await getDataAPI("warehouse");
-        setWareHouseData(result);
-      } catch (error) {
-        // Handle the error
-        console.error("Error fetching data:", error);
-      }
+      // TODO: Wait for BE endpoint and then implement this
     };
 
     fetchData();
@@ -41,14 +34,11 @@ const SellerDashboardComponent = () => {
     fetchData();
   }, []);
 
-  const [wareHouseData, setWareHouseData] = useState([]);
   const [productData, setProductData] = useState([]);
 
   const handleDeleteData = (id, place) => {
     if (place === "warehouse") {
-      setWareHouseData(preState => [
-        ...preState.filter(item => item.id !== id),
-      ]);
+      // TODO: Wait for BE endpoint and then implement this
     }
     if (place === "product") {
       setProductData(preState => [...preState.filter(item => item.id !== id)]);
@@ -63,19 +53,14 @@ const SellerDashboardComponent = () => {
     }));
   };
 
-  const WareHouseFunction = { handleDeleteData };
   const ProductFunction = { handleDeleteData };
 
   const WareHouseTabsMap = [
     {
-      id: "warehouse",
+      id: "inbound-order",
       component: (
-        <WareHouse data={wareHouseData} compFunction={WareHouseFunction} />
+        <InboundOrder />
       ),
-    },
-    {
-      id: "stockpile",
-      component: <Stockpile />,
     },
     {
       id: "product",
@@ -91,8 +76,8 @@ const SellerDashboardComponent = () => {
     type: wareHouseTabs,
   });
 
-  const PopUpData = { popUpState, wareHouseData, productData };
-  const PopUpFunction = { setPopUpState, setWareHouseData, setProductData };
+  const PopUpData = { popUpState, productData };
+  const PopUpFunction = { setPopUpState, setProductData };
 
   return (
     <Fragment>
