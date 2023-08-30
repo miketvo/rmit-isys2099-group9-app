@@ -1,0 +1,46 @@
+/* Vertical Navigation Bar */
+.dash_navbar_vertical {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    z-index: 1000;
+    max-width: var(--verticalNavBarWidth);
+    width: 100%;
+    max-height: 100vh;
+    height: 100%;
+    padding: 10px 14px;
+    background: #B64F4F;
+}
+
+.dash_navbar_vertical .dash-navbar-logo{
+    display: flex;
+    justify-content: center;
+}
+
+.dash_navbar_vertical .dash_navbar_vertical_content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dash_navbar_vertical_content .dash_nav_item {
+    padding: 20px;
+    text-align: center;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.5;
+}
+
+.dash_navbar_vertical_content .dash_nav_item span {
+    font-size: 12px;
+}
+
+/* Horizontal Navigation Bar */
+.dash_top_navbar {
+    height: 65px;
+    box-shadow: 0px 4px 8px 0px rgba(102, 112, 128, 0.16);
+}

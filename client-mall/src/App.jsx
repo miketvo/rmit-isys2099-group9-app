@@ -14,6 +14,7 @@ import PrivateRouter from "./customRouter/PrivateRouter";
 import HomePage from "./components/HomePage/HomePage";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
+import SellerDashboardPage from "./pages/sellerDashboard.jsx";
 
 function App() {
   return (
@@ -26,6 +27,11 @@ function App() {
           <Route exact path="/register" element={<RegisterPage />} />
 
           <Route exact path="/" element={<HomePage />} />
+          <Route
+            exact
+            path="/seller-dashboard"
+            element={<SellerDashboardPage />}
+          />
 
           <Route exact path="/" element={<PrivateRouter />}>
             <Route exact path="/:page" element={<PageRender />} />
