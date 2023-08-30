@@ -112,6 +112,9 @@ Product.propTypes = {
   data: PropTypes.shape({
     created: PropTypes.bool.isRequired,
   }).isRequired,
+  compFunction: PropTypes.shape({
+    setPopUpState: PropTypes.func.isRequired,
+  })
 };
 
 export default Product;
