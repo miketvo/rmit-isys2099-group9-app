@@ -2,7 +2,7 @@ import { BACKEND_PROXY } from "../utils/config";
 
 export const getDataAPI = async (url, token) => {
   try {
-    const response = await fetch(`${BACKEND_PROXY}/${url}`, {
+    const response = await fetch(`${BACKEND_PROXY}/api/${url}`, {
       method: "GET",
       headers: {
         Authorization: token,
@@ -23,7 +23,7 @@ export const getDataAPI = async (url, token) => {
 
 export const postDataAPI = async (url, data, token) => {
   try {
-    const response = await fetch(`${BACKEND_PROXY}/${url}`, {
+    const response = await fetch(`${BACKEND_PROXY}/api/${url}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export const postDataAPI = async (url, data, token) => {
 
 export const patchDataAPI = async (url, data, token) => {
   try {
-    const response = await fetch(`${BACKEND_PROXY}/${url}`, {
+    const response = await fetch(`${BACKEND_PROXY}/api/${url}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export const patchDataAPI = async (url, data, token) => {
 
 export const putDataAPI = async (url, data, token) => {
   try {
-    const response = await fetch(`${BACKEND_PROXY}/${url}`, {
+    const response = await fetch(`${BACKEND_PROXY}/api/${url}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export const putDataAPI = async (url, data, token) => {
 
 export const deleteDataAPI = async (url, token) => {
   try {
-    const response = await fetch(`${BACKEND_PROXY}/${url}`, {
+    const response = await fetch(`${BACKEND_PROXY}/api/${url}`, {
       method: "DELETE",
       headers: {
         Authorization: token,
