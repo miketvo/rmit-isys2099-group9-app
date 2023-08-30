@@ -8,6 +8,7 @@ const apiRouter = require("./apiRouter");
 const authRouter = require("./routes/authRoutes");
 
 const app = express();
+app.use(cookieParser());
 
 // eslint-disable-next-line no-undef
 const SERVER_PORT = process.env.SERVER_PORT;

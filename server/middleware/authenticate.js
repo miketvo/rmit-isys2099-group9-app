@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 const { setTokenCookie, verifyToken } = require('../utils')
+const { db } = require('../models');
 
-const authenticate = async (req, res) => {
-    const { accessToken, refreshToken } = req.cookie;
+const authenticate = async (req, res, next) => {
+    const { accessToken, refreshToken } = req.cookies;
 
     console.log('access token: ' + accessToken);
     try {
@@ -10,13 +11,16 @@ const authenticate = async (req, res) => {
             const payload = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
             req.username = payload.username;
             res.status(200).json({ message: 'User authenticated', user: req.username });
-
+            return next();
         } else {
             const payload = verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
-            const [results] = await db.poolSeller.query(`SELECT * FROM lazada_user WHERE username = ?`, [req.username]);
+            console.log(`username with the token ${payload.username}`);
+
+            const [results] = await db.poolSeller.query(`SELECT * FROM lazada_user WHERE username = ?`, [payload.username]);
             user = results[0];
-            console.log(`username with the token ${user.username}`);
+
+            console.log(`auth user ${user}`);
 
             if (!user.refresh_token) {
                 throw new Error(
@@ -27,6 +31,8 @@ const authenticate = async (req, res) => {
             setTokenCookie(res, user.username);
 
             req.username = payload.username;
+
+            next();
         } 
     } catch (err) {
         console.error(err);

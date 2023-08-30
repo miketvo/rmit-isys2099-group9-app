@@ -121,6 +121,8 @@ const login = async (req, res) => {
 // Endpoint for logout
 const logout = async (req, res) => {
 
+  console.log(`${req.username} logged out`);
+
   res.cookie("accessToken", "", {
       httpOnly: true,
       expires: new Date(0),

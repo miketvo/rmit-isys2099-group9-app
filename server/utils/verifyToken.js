@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
  * For example, you could use req.username to get the username of the authenticated user.
  */
 
-const verifyToken = ({ token, secretKey }) => {
+const verifyToken = ( token, secretKey ) => {
   try {
     // Verify the token
     const decoded = jwt.verify(token, secretKey);
