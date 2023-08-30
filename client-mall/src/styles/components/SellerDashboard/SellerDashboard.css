@@ -1,0 +1,105 @@
+.dashboard_wrapper{
+    width: 100%;
+    height: 100%;
+}
+
+/* Warehouse Tabs */
+.dashboard_wrapper .dashboard_tabs .tab_header {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard_tabs .tab_header .tab_item {
+    position: relative;
+    padding: 0px 20px;
+    height: 60px;
+    line-height: 50px;
+    z-index: 2;
+    cursor: pointer;
+    color: #222;
+    font-weight: 600;
+    background: #D9D9D9;
+    margin-right: 15px;
+}
+
+.dashboard_tabs .tab_header .tab_item::before {
+    content: "";
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    width: 25px;
+    height: 5px;
+    background: #888;
+    border-radius: 10px;
+}
+
+.dashboard_tabs .tab_header .tab_item.active {
+    color: black;
+    background: #D38484;
+}
+
+.dashboard_tabs .tab_header .tab_item.active::before {
+    background: black;
+}
+
+
+/* Warehouse Items (Table) */
+.dashboard_table,
+.product_table {
+    height: fit-content;
+    max-height: 75vh;
+
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.dashboard_table table {
+    width: 100%;
+    table-layout: fixed;
+    min-width: 1000px;
+}
+
+.product_table table {
+    width: 100%;
+    table-layout: fixed;
+    min-width: 1500px;
+}
+
+.dashboard_wrapper thead th {
+    position: sticky;
+    top: 0;
+    background-color: #B64F4F;
+    color: #fff;
+    font-size: 15px;
+}
+
+.dashboard_wrapper th,
+.dashboard_wrapper td {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+}   
+
+.dashboard_wrapper td img {
+    width: 120px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+    border: 3px solid #ced0d2;
+}
+
+table th:nth-last-child(1),
+table td:nth-last-child(1) {
+    position: sticky;
+    right: 0;
+}
+
+table th:nth-last-child(1) {
+    z-index: 2;
+}
