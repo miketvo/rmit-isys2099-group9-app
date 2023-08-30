@@ -55,9 +55,9 @@ const SellerDashboardComponent = () => {
 
   const ProductFunction = { handleDeleteData };
 
-  const WareHouseTabsMap = [
+  const DashboardTabsMap = [
     {
-      id: "inbound-order",
+      id: "inbound order",
       component: (
         <InboundOrder />
       ),
@@ -68,12 +68,12 @@ const SellerDashboardComponent = () => {
     },
   ];
 
-  const [wareHouseTabs, setWareHouseTab] = useState(WareHouseTabsMap[0].id);
+  const [DashboardTabs, setDashboardTabs] = useState(DashboardTabsMap[0].id);
 
   const [popUpState, setPopUpState] = useState({
     state: false,
     created: false,
-    type: wareHouseTabs,
+    type: DashboardTabs,
   });
 
   const PopUpData = { popUpState, productData };
@@ -86,14 +86,14 @@ const SellerDashboardComponent = () => {
           <div className="warehouse_header d-flex flex-rows justify-content-between align-items-center">
             <div className="dashboard_tabs">
               <ul className="tab_header">
-                {WareHouseTabsMap.map(tab => (
+                {DashboardTabsMap.map(tab => (
                   <li
                     className={`tab_item ${
-                      wareHouseTabs === tab.id ? "active" : ""
+                      DashboardTabs === tab.id ? "active" : ""
                     }`}
                     key={tab.id}
                     onClick={() => {
-                      setWareHouseTab(tab.id);
+                      setDashboardTabs(tab.id);
                       setPopUpState(prevState => ({
                         ...prevState,
                         type: tab.id,
@@ -170,10 +170,10 @@ const SellerDashboardComponent = () => {
             </div>
           </div>
 
-          <div className="warehouse_body">
-            {WareHouseTabsMap.map(
+          <div className="dashboard_body">
+            {DashboardTabsMap.map(
               tab =>
-                tab.id === wareHouseTabs && (
+                tab.id === DashboardTabs && (
                   <Fragment key={tab.id}>{tab.component}</Fragment>
                 ),
             )}
