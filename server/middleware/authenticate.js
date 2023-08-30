@@ -5,6 +5,7 @@ const { db } = require('../models');
 const authenticate = async (req, res, next) => {
     const { accessToken, refreshToken } = req.cookies;
 
+    console.log('\n');
     console.log('access token: ' + accessToken);
     try {
         if (!accessToken) {
@@ -14,12 +15,14 @@ const authenticate = async (req, res, next) => {
             return next();
         } else {
             const payload = verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-
+            
+            console.log('\n');
             console.log(`username with the token ${payload.username}`);
 
             const [results] = await db.poolSeller.query(`SELECT * FROM lazada_user WHERE username = ?`, [payload.username]);
             user = results[0];
 
+            console.log('\n');
             console.log(`auth user ${user}`);
 
             if (!user.refresh_token) {

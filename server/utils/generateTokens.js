@@ -22,7 +22,8 @@ const generateTokens = (username) => {
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "7d" },
     );
-
+    
+    console.log('\n');
     console.log(`user for tokens: ${username}`);
 
     // Store the refresh token in the database

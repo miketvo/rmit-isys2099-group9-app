@@ -21,7 +21,7 @@ const register = async (req, res) => {
     if (!username.match(normalCharRegex)) {
       throw new Error("The username must not have strange characters");
     }
-
+    console.log('\n');
     console.log(`username: ${username}`);
     console.log(`password: ${password}`);
     console.log(`role: ${role}`);
@@ -39,6 +39,7 @@ const register = async (req, res) => {
     const salt = genSaltSync(10);
     const hashedPassword = hashSync(password, salt);
 
+    console.log('\n');
     console.log(`hashedPassword: ${hashedPassword}`);
 
     // Insert the user into the database
@@ -47,6 +48,7 @@ const register = async (req, res) => {
     // Generate tokens
     const tokens = generateTokens(username);
 
+    console.log('\n');
     console.log(`tokens: ${JSON.stringify(tokens)}`);
 
     setTokenCookie(res, username);

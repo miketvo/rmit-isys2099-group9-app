@@ -4,6 +4,7 @@ const setTokenCookie = (res, username) => {
 
   const tokens = generateTokens(username)
 
+  console.log('\n');
   console.log('access token: ', tokens.accessToken);
   console.log('refresh token: ', tokens.refreshToken);
 
@@ -24,6 +25,7 @@ const setTokenCookie = (res, username) => {
       expires: new Date(Date.now() + longerExp),
   });
 
+  console.log('\n');
   console.log('response accessToken cookie and refreshToken cookie');
 }
 
