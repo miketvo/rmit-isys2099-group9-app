@@ -27,11 +27,18 @@ const generateTokens = (username) => {
     console.log(`user for tokens: ${username}`);
 
     // Store the refresh token in the database
-    db.poolBuyer.query(
-      "UPDATE lazada_user SET refresh_token = ? WHERE username = ?",
-      [refreshToken, username],
-    );
-
+    if (username === 'admin') {
+      db.poolWHAdmin.query(
+        "UPDATE wh_admin SET refresh_token = ? WHERE username = ?",
+        [refreshToken, username],
+      );
+    } else {
+      db.poolBuyer.query(
+        "UPDATE lazada_user SET refresh_token = ? WHERE username = ?",
+        [refreshToken, username],
+      );
+    }
+    
     return { accessToken, refreshToken };
   } catch (err) {
     console.error(err);

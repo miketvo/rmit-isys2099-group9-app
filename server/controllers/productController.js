@@ -17,6 +17,26 @@ const getAllProducts = async (req, res) => {
     }
 };
 
+const getAllProductsASC = async (req, res) => {
+    try {
+        const [results] = await db.poolWHAdmin.query(`SELECT * FROM product ORDER BY price ASC`);
+        return res.json(results);
+    } catch (error) {
+        console.error("error: " + error.stack);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+const getAllProductsDSC = async (req, res) => {
+    try {
+        const [results] = await db.poolWHAdmin.query(`SELECT * FROM product ORDER BY price DESC`);
+        return res.json(results);
+    } catch (error) {
+        console.error("error: " + error.stack);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 const getProductById = async (req, res) => {
     try {
         let productID = req.params.productID;
@@ -33,12 +53,28 @@ const getProductById = async (req, res) => {
     }
 }
 
+const getProductByTitle = async (req, res) => {
+    try {
+        let productTitle = req.body.title;
+        const [results] = await db.poolWHAdmin.query(`
+            SELECT * FROM product WHERE title LIKE CONCAT('%', ?, '%')
+        `, [productTitle]);
+        if (results.length === 0) {
+            return res.status(404).json({ error: "Product not found" });
+        }
+        return res.json(results);
+    } catch (error) {
+        console.error("error: " + error.stack);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+// TODO: Review Insert Product on MongoDB
 const createProduct = async (req, res) => {
     try {
         const seller = req.username;
         const { 
             title, 
-            image, 
             product_description, 
             category, 
             price, 
@@ -50,7 +86,7 @@ const createProduct = async (req, res) => {
         // For Postman Testing
         // const { 
         //     title, 
-        //     image, 
+        //      
         //     product_description, 
         //     category, 
         //     price, 
@@ -59,12 +95,11 @@ const createProduct = async (req, res) => {
         //     height,
         //     seller, 
         // } = req.body;
-        const query = `INSERT INTO product (title, image, product_description, category, price, width, length, height, seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const query = `INSERT INTO product (title,  product_description, category, price, width, length, height, seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const result = await db.poolWHAdmin.query(
             query, 
             [
                 title, 
-                image, 
                 product_description, 
                 category, 
                 price, 
@@ -85,7 +120,6 @@ const updateProductById = async (req, res) => {
         const id = req.params.id;
         const { 
             title, 
-            image, 
             product_description, 
             category, 
             price, 
@@ -96,7 +130,7 @@ const updateProductById = async (req, res) => {
         // For Postman Testing
         // const { 
         //     title, 
-        //     image, 
+        //      
         //     product_description, 
         //     category, 
         //     price, 
@@ -109,8 +143,7 @@ const updateProductById = async (req, res) => {
         const result = await db.poolWHAdmin.query(
             query, 
             [
-                title, 
-                image, 
+                title,  
                 product_description, 
                 category, 
                 price, 
@@ -145,7 +178,10 @@ const deleteProductById = async (req, res) => {
 
 module.exports = {
     getAllProducts,
+    getAllProductsASC,
+    getAllProductsDSC,
     getProductById,
+    getProductByTitle,
     createProduct,
     updateProductById,
     deleteProductById
