@@ -17,6 +17,9 @@ userRouter.get("/sellers/:username", userController.getSellerByUsername);
 // Update a buyer's username
 userRouter.put("/buyers/:username", userController.updateBuyerUsername);
 
+// Update a admin's username
+userRouter.put("/admin/:username", userController.updateAdminUsername);
+
 // Update a seller's username and/or shop name
 userRouter.put("/sellers/:username", userController.updateSeller);
 

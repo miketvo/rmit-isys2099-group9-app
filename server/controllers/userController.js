@@ -75,6 +75,25 @@ const userController = {
         }
     },
 
+    // Update a admin's username
+    updateAdminUsername: async (req, res) => {
+        try {
+            const oldUsername = req.params.username;
+            const { newUsername } = req.body;
+
+            // prevent SQL injection
+            if (!newUsername.match(normalCharRegex)) {
+                throw new Error("The new username must not have strange characters");
+            }
+
+            await db.poolWHAdmin.query(`UPDATE wh_admin SET username = ? WHERE username = ?`, [newUsername, oldUsername]);
+            res.json({ message: "Admin updated successfully" });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    },
+
     // Update a seller's username and/or shop name
     updateSeller: async (req, res) => {
         try {
