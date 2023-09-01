@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const apiRouter = require("./apiRouter");
 const authRouter = require("./routes/authRoutes");
 const productRouter = require("./routes/productRoutes");
+const userRouter = require("./routes/userRoutes");
 
 const app = express();
 app.use(cookieParser());
@@ -41,6 +42,7 @@ apiRouter.use(cookieParser());
 app.use("/api", apiRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
+app.use("/api/user", userRouter);
 
 app.get("/api/auth", (req, res) => {
   return res.json("Server Auth Test is running");

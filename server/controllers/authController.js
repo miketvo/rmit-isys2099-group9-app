@@ -27,7 +27,7 @@ const register = async (req, res) => {
     console.log(`role: ${role}`);
     console.log(`shop_name: ${shop_name}`);
 
-    if(await model.getLazadaUser(role, username)) {
+    if(await model.getLazadaUserByRole(role, username)) {
       return res.status(409).send('Username already exists');
     };
 
@@ -75,39 +75,36 @@ const login = async (req, res) => {
       return res.status(400).send('Please provide a username and password');
     }
 
-    // Check for admin login
-    if (username === 'admin' && password === 'admin') {
-      // Generate tokens
-      const tokens = generateTokens(username);
+    let role, user;
 
-      console.log(`tokens: ${JSON.stringify(tokens)}`);
-
-      // Set the token as a cookie
-      setTokenCookie(res, username);
-
-      req.role = 'admin';
-      
-      return res.status(200).json({ message: 'Admin authenticated', user: username});
-    }
-
-    let role;
-    let seller = await model.getSeller(username);
-    if (seller) {
+    // Retrieve the user from the database
+    if (await model.getSeller(username)) {
       role = "seller";
+      user = await model.getSeller(username);
+
     } else if (await model.getBuyer(username)) {
       role = "buyer";
+      user = await model.getBuyer(username);
+
+    } else if (await model.getWHAdmin(username)) {
+      role = "admin";
+      user = await model.getWHAdmin(username);
+
     }
     console.log("role: " + role);
 
-    // Retrieve the user from the database
-    let user = await model.getLazadaUser(role, username);
     if (!user) {
       return res.status(401).send("User not found");
     }
 
-    const [results] = await db.poolSeller.query(`SELECT * FROM lazada_user WHERE username = ?`, [username]);
+    let results = [];
+    if (role === 'admin') {
+      [results] = await model.getWHAdmin(username);
+    } else {
+      [results] = await model.getLazadaUser(username);
+    }
     user = results[0];
-    
+
     console.log("login user's password_hash: " + user.password_hash);
 
     // Compare the provided password with the stored hashed password
