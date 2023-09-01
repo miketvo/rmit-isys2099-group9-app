@@ -53,6 +53,8 @@ const register = async (req, res) => {
 
     setTokenCookie(res, username);
 
+    req.role = role;
+
     return res.status(200).send(`User created with username: ${username}`);
   } catch (err) {
     console.error("error: " + err.stack);
@@ -82,6 +84,8 @@ const login = async (req, res) => {
 
       // Set the token as a cookie
       setTokenCookie(res, username);
+
+      req.role = 'admin';
       
       return res.status(200).json({ message: 'Admin authenticated', user: username});
     }
@@ -90,7 +94,7 @@ const login = async (req, res) => {
     let seller = await model.getSeller(username);
     if (seller) {
       role = "seller";
-    } else {
+    } else if (await model.getBuyer(username)) {
       role = "buyer";
     }
     console.log("role: " + role);
@@ -125,6 +129,8 @@ const login = async (req, res) => {
 
     // Set the token as a cookie
     setTokenCookie(res, username);
+
+    req.role = role;
 
     return res.status(200).json({ message: 'User authenticated', user: username});
   } catch (e) {

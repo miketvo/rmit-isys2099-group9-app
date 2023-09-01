@@ -31,32 +31,6 @@ apiRouter.get("/product", async (req, res) => {
 });
 
 {
-  /* API Endpoint for all buyer users */
-}
-apiRouter.get("/buyer", async (req, res) => {
-  try {
-    const [results] = await db.poolBuyer.query(`SELECT * FROM buyer`);
-    return res.json(results);
-  } catch (error) {
-    console.error("error: " + error.stack);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-{
-  /* API Endpoint for all seller users */
-}
-apiRouter.get("/seller", async (req, res) => {
-  try {
-    const [results] = await db.poolSeller.query(`SELECT * FROM seller`);
-    return res.json(results);
-  } catch (error) {
-    console.error("error: " + error.stack);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-{
   /* API Endpoint for all lazada users */
 }
 apiRouter.get("/lazada_user", async (req, res) => {
