@@ -38,8 +38,9 @@ const checkSeller = async (req, res, next) => {
 const checkAdmin = async (req, res, next) => {
     try {
         const username = req.username;
+
         // Check if the user is an admin by querying the wh_admin table
-        if (username === 'admin') {
+        if (await model.getWHAdmin(username)) {
             // If the user is an admin, call the next middleware function
             next();
         } else {

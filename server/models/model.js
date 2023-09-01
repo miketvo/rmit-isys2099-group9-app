@@ -115,6 +115,8 @@ database.getLazadaUserByRole = (role, username) => {
     return database.getBuyer(username);
   } else if (role === "admin") {
     return database.getWHAdmin(username);
+  } else if (role === "lazada_user") {
+    return database.getLazadaUser(username);
   }
 };
 

@@ -54,6 +54,7 @@ const register = async (req, res) => {
     setTokenCookie(res, username);
 
     req.role = role;
+    req.username = username;
 
     return res.status(200).send(`User created with username: ${username}`);
   } catch (err) {
@@ -80,16 +81,13 @@ const login = async (req, res) => {
     // Retrieve the user from the database
     if (await model.getSeller(username)) {
       role = "seller";
-      user = await model.getSeller(username);
-
+      user = await model.getSeller(username)
     } else if (await model.getBuyer(username)) {
       role = "buyer";
-      user = await model.getBuyer(username);
-
+      user = await model.getBuyer(username)
     } else if (await model.getWHAdmin(username)) {
       role = "admin";
-      user = await model.getWHAdmin(username);
-
+      user = await model.getWHAdmin(username)
     }
     console.log("role: " + role);
 
@@ -97,37 +95,38 @@ const login = async (req, res) => {
       return res.status(401).send("User not found");
     }
 
-    let results = [];
-    if (role === 'admin') {
-      [results] = await model.getWHAdmin(username);
+    // Get user password
+    let existingUser;
+    if (role === "seller" || role === "buyer") {
+      existingUser = await model.getLazadaUserByRole("lazada_user", username);
     } else {
-      [results] = await model.getLazadaUser(username);
+      existingUser = await model.getLazadaUserByRole(role, username);
     }
-    user = results[0];
 
-    console.log("login user's password_hash: " + user.password_hash);
+    console.log("login user's password_hash: " + existingUser.password_hash);
 
     // Compare the provided password with the stored hashed password
-    const passwordMatches = compareSync(password, user.password_hash);
+    const passwordMatches = compareSync(password, existingUser.password_hash);
 
     if (!passwordMatches) {
       return res.status(401).send("Incorrect password");
     }
 
-    if (user.refresh_token) {
-      res.cookie('refreshToken', user.refresh_token, { httpOnly: true });
+    if (existingUser.refresh_token) {
+      res.cookie('refreshToken', existingUser.refresh_token, { httpOnly: true });
       return res.status(200).json({ message: 'User authenticated', user: username});
     }
 
     // Generate tokens
-    const tokens = generateTokens(username);
+    const tokens = generateTokens(username, role);
 
     console.log(`tokens: ${JSON.stringify(tokens)}`);
 
     // Set the token as a cookie
-    setTokenCookie(res, username);
+    setTokenCookie(res, username, role);
 
     req.role = role;
+    req.username = username;
 
     return res.status(200).json({ message: 'User authenticated', user: username});
   } catch (e) {
@@ -151,8 +150,13 @@ const logout = async (req, res) => {
       expires: new Date(0),
   });
 
-  if (req.username) {
-    await db.poolBuyer.query(
+  if (req.role === "admin") {
+    await db.poolWHAdmin.query(
+      "UPDATE wh_admin SET refresh_token = NULL WHERE username = ?",
+      [req.username]
+    );
+  } else if (req.role === "lazada_user") {
+    await db.poolSeller.query(
       "UPDATE lazada_user SET refresh_token = NULL WHERE username = ?",
       [req.username]
     );

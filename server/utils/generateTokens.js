@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken");
 const db = require("../models/db.js");
 
-const generateTokens = (username) => {
+const generateTokens = (username, role) => {
   try {
     // Check if environment variables are set
     if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
@@ -27,7 +27,7 @@ const generateTokens = (username) => {
     console.log(`user for tokens: ${username}`);
 
     // Store the refresh token in the database
-    if (username === 'admin') {
+    if (role === 'admin') {
       db.poolWHAdmin.query(
         "UPDATE wh_admin SET refresh_token = ? WHERE username = ?",
         [refreshToken, username],
