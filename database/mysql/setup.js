@@ -91,6 +91,7 @@ async function executeSetupScript(connection, scriptPath) {
       scripts = [
         "reset.sql",
         "init/tables.sql",
+        "init/indexing.sql",
         "init/business_rules.sql",
         "init/users.sql",
       ];
@@ -98,6 +99,7 @@ async function executeSetupScript(connection, scriptPath) {
       scripts = [
         "reset.sql",
         "init/tables.sql",
+        "init/indexing.sql",
         "init/business_rules.sql",
         "init/users.sql",
         "init/mock_data.sql",
