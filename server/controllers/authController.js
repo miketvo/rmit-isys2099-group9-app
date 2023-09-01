@@ -56,7 +56,7 @@ const register = async (req, res) => {
     req.role = role;
     req.username = username;
 
-    return res.status(200).send(`User created with username: ${username}`);
+    return res.status(200).send(`User ${role} created with username: ${username}`);
   } catch (err) {
     console.error("error: " + err.stack);
     return res.status(500).send("Error inserting user into database");
@@ -112,7 +112,7 @@ const login = async (req, res) => {
       return res.status(401).send("Incorrect password");
     }
 
-    if (existingUser.refresh_token) {
+    if (existingUser.refresh_token && existingUser.refresh_token !== null) {
       res.cookie('refreshToken', existingUser.refresh_token, { httpOnly: true });
       return res.status(200).json({ message: 'User authenticated', user: username});
     }
@@ -138,7 +138,17 @@ const login = async (req, res) => {
 // Endpoint for logout
 const logout = async (req, res) => {
 
-  console.log(`${req.username} logged out`);
+  console.log(`${req.username} logged out with role ${req.role}`);
+
+  if (req.role === "admin") {
+    await model.deleteWHAdminToken(req.username);
+
+  } else if (req.role === "lazada_user") {
+    await model.deleteLazadaUserToken(req.username);
+
+  } else {
+    return res.status(401).send("User not found");
+  }
 
   res.cookie("accessToken", "", {
       httpOnly: true,
@@ -150,21 +160,7 @@ const logout = async (req, res) => {
       expires: new Date(0),
   });
 
-  if (req.role === "admin") {
-    await db.poolWHAdmin.query(
-      "UPDATE wh_admin SET refresh_token = NULL WHERE username = ?",
-      [req.username]
-    );
-  } else if (req.role === "lazada_user") {
-    await db.poolSeller.query(
-      "UPDATE lazada_user SET refresh_token = NULL WHERE username = ?",
-      [req.username]
-    );
-  } else {
-    return res.status(401).send("User not found");
-  }
-
-  res.status(200).json({ message: `User log out`, user: req.username});
+  return res.status(200).json({ message: `User log out`, user: req.username});
 };
 
 module.exports = {

@@ -102,6 +102,19 @@ database.insertWHAdmin = (username, password_hash) => {
   });
 };
 
+database.deleteWHAdminToken = async username => {
+  try {
+    const [results] = await db.poolWHAdmin.query(
+      `UPDATE wh_admin SET refresh_token = NULL WHERE username = ?`,
+      [username]
+    );
+    return results[0];
+  } catch (err) {
+    console.error("error: " + err.stack);
+    throw err;
+  }
+}
+
 {
   /* 
 Endpoints for Lazada User
@@ -167,5 +180,18 @@ database.insertLazadaUser = async (role, username, hashedPassword, shop_name) =>
     console.error("error: " + err.stack);
   }
 };
+
+database.deleteLazadaUserToken = async username => {
+  try {
+    const [results] = await db.poolSeller.query(
+      `UPDATE lazada_user SET refresh_token = NULL WHERE username = ?`,
+      [username]
+    );
+    return results[0];
+  } catch (err) {
+    console.error("error: " + err.stack);
+    throw err;
+  }
+}
 
 module.exports = database;

@@ -43,4 +43,17 @@ apiRouter.get("/lazada_user", async (req, res) => {
   }
 });
 
+{
+  /* API Endpoint for all lazada users */
+}
+apiRouter.get("/wh_admin", async (req, res) => {
+  try {
+    const [results] = await db.poolWHAdmin.query(`SELECT * FROM wh_admin`);
+    return res.json(results);
+  } catch (error) {
+    console.error("error: " + error.stack);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = apiRouter;
