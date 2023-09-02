@@ -114,7 +114,12 @@ const login = async (req, res) => {
     }
 
     if (existingUser.refresh_token && existingUser.refresh_token !== null) {
-      res.cookie('refreshToken', existingUser.refresh_token, { httpOnly: true });
+      res.cookie("refreshToken", existingUser.refreshToken, {
+        httpOnly: true,
+        // secure: true, // later in production
+        samesite: "strict",
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+      });      
       return res.status(200).json({ message: `User ${username} authenticated`, username: username, role: role });
     }
 
