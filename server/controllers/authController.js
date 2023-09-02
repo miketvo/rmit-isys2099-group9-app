@@ -142,10 +142,10 @@ const logout = async (req, res) => {
   console.log(`${req.username} logged out with role ${req.role}`);
 
   if (req.role === "admin") {
-    await model.deleteWHAdminToken(req.username);
+    model.deleteWHAdminToken(req.username);
 
   } else if (req.role === "lazada_user") {
-    await model.deleteLazadaUserToken(req.username);
+    model.deleteLazadaUserToken(req.username);
 
   } else {
     return res.status(401).send("User not found");
