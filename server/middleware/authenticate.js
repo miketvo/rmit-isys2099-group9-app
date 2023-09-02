@@ -7,6 +7,8 @@ const authenticate = async (req, res, next) => {
 
     console.log('\n');
     console.log('access token: ' + accessToken);
+    console.log('refresh token: ' + refreshToken);
+
     try {
         if (!accessToken && !refreshToken) {
             res.status(403).send('Authentication Ivalid');
@@ -16,6 +18,7 @@ const authenticate = async (req, res, next) => {
             req.username = payload.username;
             res.status(200).json({ message: 'User authenticated', user: req.username });
             return next();
+
         } else {
             const payload = verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET);
             

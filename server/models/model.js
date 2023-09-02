@@ -145,7 +145,7 @@ database.getLazadaUser = async (username) => {
   }
 }
 
-database.insertLazadaUser = async (role, username, hashedPassword, shop_name) => {
+database.insertLazadaUserByRole = async (role, username, hashedPassword, shop_name) => {
   try {
     const queryMall = `INSERT INTO lazada_user (username, password_hash) VALUES (?, ?)`;
 
@@ -155,14 +155,14 @@ database.insertLazadaUser = async (role, username, hashedPassword, shop_name) =>
 
     if (role === 'buyer') {
       // Insert the user into the lazada_user table
-      db.poolBuyer.query(queryMall, values);
+      await db.poolBuyer.query(queryMall, values);
 
       // Insert the user into the buyer table
       database.insertBuyer(username);
 
     } else if (role === 'seller') {
       // Insert the user into the lazada_user table
-      db.poolSeller.query(queryMall, values);
+      await db.poolSeller.query(queryMall, values);
 
       // Insert the user into the seller table
       database.insertSeller(username, shop_name);

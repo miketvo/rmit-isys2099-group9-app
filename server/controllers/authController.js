@@ -44,15 +44,15 @@ const register = async (req, res) => {
     console.log(`hashedPassword: ${hashedPassword}`);
 
     // Insert the user into the database
-    model.insertLazadaUser(role, username, hashedPassword, shop_name);
+    model.insertLazadaUserByRole(role, username, hashedPassword, shop_name);
 
     // Generate tokens
-    const tokens = generateTokens(username);
+    // const tokens = generateTokens(username);
 
-    console.log('\n');
-    console.log(`tokens: ${JSON.stringify(tokens)}`);
+    // console.log('\n');
+    // console.log(`tokens: ${JSON.stringify(tokens)}`);
 
-    setTokenCookie(res, username);
+    // setTokenCookie(res, username);
 
     req.role = role;
     req.username = username;
