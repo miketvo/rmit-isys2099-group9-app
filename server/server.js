@@ -48,6 +48,14 @@ app.get("/api/auth", (req, res) => {
   return res.json("Server Auth Test is running");
 });
 
+app.get("/api/product", (req, res) => {
+  return res.json("Server Product Test is running");
+});
+
+app.get("/api/user", (req, res) => {
+  return res.json("Server User Test is running");
+});
+
 app.get("/", (req, res) => {
   return res.json("Server is running");
 });

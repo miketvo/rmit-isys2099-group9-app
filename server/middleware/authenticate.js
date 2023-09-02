@@ -9,7 +9,7 @@ const authenticate = async (req, res, next) => {
     console.log('access token: ' + accessToken);
     try {
         if (!accessToken && !refreshToken) {
-            res.status(403).send('Authentication Ivanlid');
+            res.status(403).send('Authentication Ivalid');
 
         } else if (!accessToken) {
             const payload = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);

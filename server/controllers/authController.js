@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 app.use(cookieParser());
 
+// eslint-disable-next-line no-unused-vars
 const { db, model } = require("../models");
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { generateTokens, setTokenCookie } = require("../utils");
@@ -28,7 +29,7 @@ const register = async (req, res) => {
     console.log(`shop_name: ${shop_name}`);
 
     if(await model.getLazadaUserByRole(role, username)) {
-      return res.status(409).send('Username already exists');
+      return res.status(409).json({ message: 'Username already exists', username: username, role: role });
     };
 
     if (!username || !password || !role) {
@@ -56,7 +57,7 @@ const register = async (req, res) => {
     req.role = role;
     req.username = username;
 
-    return res.status(200).send(`User ${role} created with username: ${username}`);
+    return res.status(200).json({message: `User ${role} created with username: ${username}`, username: username, role: role });
   } catch (err) {
     console.error("error: " + err.stack);
     return res.status(500).send("Error inserting user into database");
@@ -114,7 +115,7 @@ const login = async (req, res) => {
 
     if (existingUser.refresh_token && existingUser.refresh_token !== null) {
       res.cookie('refreshToken', existingUser.refresh_token, { httpOnly: true });
-      return res.status(200).json({ message: 'User authenticated', user: username});
+      return res.status(200).json({ message: `User ${username} authenticated`, username: username, role: role });
     }
 
     // Generate tokens
@@ -128,7 +129,7 @@ const login = async (req, res) => {
     req.role = role;
     req.username = username;
 
-    return res.status(200).json({ message: 'User authenticated', user: username});
+    return res.status(200).json({ message: `User ${username} authenticated`, username: username, role: role });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -160,7 +161,7 @@ const logout = async (req, res) => {
       expires: new Date(0),
   });
 
-  return res.status(200).json({ message: `User log out`, user: req.username});
+  return res.status(200).json({ message: `User ${req.username} log out`, username: req.username, role: req.role });
 };
 
 module.exports = {

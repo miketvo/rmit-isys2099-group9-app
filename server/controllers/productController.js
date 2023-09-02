@@ -44,7 +44,7 @@ const getProductById = async (req, res) => {
             SELECT * FROM product where id = ?
         `, [productID]);
         if (results.length === 0) {
-            return res.status(404).json({ error: "Product not found" });
+            return res.status(404).json({ error: `Product with id: ${productID} not found` });
         }
         return res.json(results);
     } catch (error) {
@@ -60,7 +60,7 @@ const getProductByTitle = async (req, res) => {
             SELECT * FROM product WHERE title LIKE CONCAT('%', ?, '%')
         `, [productTitle]);
         if (results.length === 0) {
-            return res.status(404).json({ error: "Product not found" });
+            return res.status(404).json({ error: `Product ${productTitle} not found` });
         }
         return res.json(results);
     } catch (error) {
@@ -108,7 +108,14 @@ const createProduct = async (req, res) => {
                 height, 
                 seller
             ]);
-        res.status(201).json({ id: result.insertId });
+        res.status(201).json({ 
+            id: result.insertId, 
+            title: result.title, 
+            product_description: result.product_description, 
+            category: result.category, 
+            price: result.price,
+            seller: seller, 
+        });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -153,7 +160,15 @@ const updateProductById = async (req, res) => {
                 seller,
                 id
             ]);
-        res.json({ message: "Product updated", result: result });
+        res.json({ 
+            message: "Product updated", 
+            id: result.insertId, 
+            title: result.title, 
+            product_description: result.product_description, 
+            category: result.category, 
+            price: result.price,
+            seller: seller, 
+        });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -170,7 +185,7 @@ const deleteProductById = async (req, res) => {
         }
         const query=`DELETE FROM product WHERE id = ?`;
         await db.poolWHAdmin.query(query,[productID]);
-        res.json({message:"Product deleted"});
+        res.json({message:"Product deleted", id: productID});
     } catch(error){
         res.status(400).json({error:error.message});
     }
