@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const express = require("express");
 const productRouter = express.Router();
 
@@ -12,15 +13,22 @@ const {
     deleteProductById
 } = require("../controllers/productController");
 
-productRouter.get('/products', getAllProducts);
-productRouter.get('/productsASC', getAllProductsASC);
-productRouter.get('/productsDSC', getAllProductsDSC);
+const { authenticate } = require("../middleware/authenticate");
+const {
+    checkBuyer,
+    checkSeller,
+    checkAdmin
+} = require("../middleware/checkRoles");
 
-productRouter.get('/products/:id', getProductById);
-productRouter.get('/products/:title', getProductByTitle);
+productRouter.get('/products', authenticate, getAllProducts);
+productRouter.get('/productsASC', authenticate, getAllProductsASC);
+productRouter.get('/productsDSC', authenticate, getAllProductsDSC);
 
-productRouter.post('/create-product', createProduct);
-productRouter.put('/update-product', updateProductById);
-productRouter.delete('/delete-product', deleteProductById);
+productRouter.get('/products/:id', authenticate, getProductById);
+productRouter.get('/products/:title', authenticate, getProductByTitle);
+
+productRouter.post('/create-product', authenticate, checkSeller, createProduct);
+productRouter.put('/update-product', authenticate, checkSeller, updateProductById);
+productRouter.delete('/delete-product', authenticate, checkSeller, deleteProductById);
 
 module.exports = productRouter;

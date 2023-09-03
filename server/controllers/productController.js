@@ -39,7 +39,7 @@ const getAllProductsDSC = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
-        let productID = req.params.productID;
+        let productID = req.params.id;
         const [results] = await db.poolWHAdmin.query(`
             SELECT * FROM product where id = ?
         `, [productID]);
@@ -95,7 +95,7 @@ const createProduct = async (req, res) => {
         //     height,
         //     seller, 
         // } = req.body;
-        const query = `INSERT INTO product (title,  product_description, category, price, width, length, height, seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const query = `INSERT INTO view_product_noid (title,  product_description, category, price, width, length, height, seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
         const result = await db.poolWHAdmin.query(
             query, 
             [
@@ -176,7 +176,7 @@ const updateProductById = async (req, res) => {
 
 const deleteProductById = async (req, res) => {
     try{
-        let productID = req.params.productID;
+        let productID = req.params.id;
         const [results] = await db.poolWHAdmin.query(`
             SELECT * FROM product where id = ?
         `, [productID]);
