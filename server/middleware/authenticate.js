@@ -13,11 +13,11 @@ const authenticate = async (req, res, next) => {
         if (!accessToken && !refreshToken) {
             res.status(403).send('Authentication Ivalid');
 
-        } else if (!accessToken) {
-            const payload = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
-            req.username = payload.username;
-            res.status(200).json({ message: 'User authenticated', user: req.username });
-            return next();
+        // } else if (accessToken) {
+        //     const payload = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
+        //     req.username = payload.username;
+        //     res.status(200).json({ message: 'User authenticated', user: req.username });
+        //     next();
 
         } else {
             const payload = verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET);

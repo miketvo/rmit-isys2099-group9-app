@@ -113,15 +113,16 @@ const login = async (req, res) => {
       return res.status(401).send("Incorrect password");
     }
 
-    if (existingUser.refresh_token && existingUser.refresh_token !== null) {
-      res.cookie("refreshToken", existingUser.refreshToken, {
-        httpOnly: true,
-        // secure: true, // later in production
-        samesite: "strict",
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-      });      
-      return res.status(200).json({ message: `User ${username} authenticated`, username: username, role: role });
-    }
+    // If the refresh token exists
+    // if (existingUser.refresh_token && existingUser.refresh_token !== null) {
+    //   res.cookie("refreshToken", existingUser.refreshToken, {
+    //     httpOnly: true,
+    //     // secure: true, // later in production
+    //     samesite: "strict",
+    //     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    //   });      
+    //   return res.status(200).json({ message: `User ${username} authenticated`, username: username, role: role });
+    // }
 
     // Generate tokens
     const tokens = generateTokens(username, role);
@@ -147,10 +148,10 @@ const logout = async (req, res) => {
   console.log(`${req.username} logged out with role ${req.role}`);
 
   if (req.role === "admin") {
-    model.deleteWHAdminToken(req.username);
+    await model.deleteWHAdminToken(req.username);
 
   } else if (req.role === "lazada_user") {
-    model.deleteLazadaUserToken(req.username);
+    await model.deleteLazadaUserToken(req.username);
 
   } else {
     return res.status(401).send("User not found");
