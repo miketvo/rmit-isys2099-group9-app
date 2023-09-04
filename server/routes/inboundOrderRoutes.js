@@ -6,7 +6,7 @@ const {
     createInboundOrder,
     getAllInboundOrder,
     getInboundOrderByID,
-    updateInboundOrderByID,
+    updateInboundOrder,
     deleteInboundOrder,
     fulfillInboundOrder
 } = require("../controllers/inboundOrderController")
@@ -18,9 +18,9 @@ const {
     checkAdmin
 } = require("../middleware/checkRoles");
 
-inboundOrderRouter.put('/', authenticate, createInboundOrder);
+inboundOrderRouter.put('/create', authenticate, createInboundOrder);
 inboundOrderRouter.get('/', authenticate, getAllInboundOrder);
-inboundOrderRouter.post('/', authenticate, getInboundOrderByID);
-inboundOrderRouter.post('/:id', authenticate, updateInboundOrderByID);
-inboundOrderRouter.delete('/:id', authenticate,deleteInboundOrder);
-inboundOrderRouter.post('/:id', fulfillInboundOrder);
+inboundOrderRouter.post('/:id', authenticate, getInboundOrderByID);
+inboundOrderRouter.post('/update/:id', authenticate, updateInboundOrder);
+inboundOrderRouter.delete('/delete/:id', authenticate,deleteInboundOrder);
+inboundOrderRouter.post('/fulfill/:id', fulfillInboundOrder);

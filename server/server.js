@@ -8,6 +8,8 @@ const apiRouter = require("./apiRouter");
 const authRouter = require("./routes/authRoutes");
 const productRouter = require("./routes/productRoutes");
 const userRouter = require("./routes/userRoutes");
+const inboundOrderRouter = require("./routes/inboundOrderRoutes");
+const productCategoryRouter = require("./routes/productCategoryRoutes");
 
 const app = express();
 app.use(cookieParser());
@@ -43,6 +45,8 @@ app.use("/api", apiRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
 app.use("/api/user", userRouter);
+app.use("/api/inbound-order", inboundOrderRouter);
+app.use("/api/product-category", productCategoryRouter);
 
 app.get("/api/auth", (req, res) => {
   return res.json("Server Auth Test is running");

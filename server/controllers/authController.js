@@ -50,15 +50,16 @@ const register = async (req, res) => {
     model.insertLazadaUserByRole(role, username, hashedPassword, shop_name);
 
     // Generate tokens
-    const tokens = generateTokens(username, role, shop_name);
+    // const tokens = generateTokens(username, role, shop_name);
 
-    console.log('\n');
-    console.log(`Tokens: ${JSON.stringify(tokens)}`);
+    // console.log('\n');
+    // console.log(`Tokens: ${JSON.stringify(tokens)}`);
 
-    setTokenCookie(res, username, role, shop_name);
+    // setTokenCookie(res, username, role, shop_name);
 
     req.role = role;
     req.username = username;
+    req.role = role
 
     return res.status(200).json({
       message: `User ${role} created with username: ${username}`, 

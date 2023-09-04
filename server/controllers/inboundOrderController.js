@@ -94,7 +94,7 @@ const getInboundOrderByID = async (req, res) => {
     }
 };
 
-const updateInboundOrderByID = async (req, res) => {
+const updateInboundOrder = async (req, res) => {
     const inboundOrderID = req.params.id;
     const seller = req.username
     const { quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time } = req.body;
@@ -177,7 +177,7 @@ module.exports = {
     createInboundOrder,
     getAllInboundOrder,
     getInboundOrderByID,
-    updateInboundOrderByID,
+    updateInboundOrder,
     deleteInboundOrder,
     fulfillInboundOrder
 }

@@ -20,15 +20,15 @@ const {
     checkAdmin
 } = require("../middleware/checkRoles");
 
-productRouter.get('/products', authenticate, getAllProducts);
+productRouter.get('/', authenticate, getAllProducts);
 productRouter.get('/productsASC', authenticate, getAllProductsASC);
 productRouter.get('/productsDSC', authenticate, getAllProductsDSC);
 
-productRouter.get('/products/:id', authenticate, getProductById);
-productRouter.get('/products/:title', authenticate, getProductByTitle);
+productRouter.get('/:id', authenticate, getProductById);
+productRouter.get('/:title', authenticate, getProductByTitle);
 
-productRouter.post('/create-product', authenticate, checkSeller, createProduct);
-productRouter.put('/update-product', authenticate, checkSeller, updateProductById);
-productRouter.delete('/delete-product', authenticate, checkSeller, deleteProductById);
+productRouter.post('/create', authenticate, checkSeller, createProduct);
+productRouter.put('/update/:id', authenticate, checkSeller, updateProductById);
+productRouter.delete('/delete/:id', authenticate, checkSeller, deleteProductById);
 
 module.exports = productRouter;
