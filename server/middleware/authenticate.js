@@ -13,11 +13,11 @@ const authenticate = async (req, res, next) => {
         if (!accessToken && !refreshToken) {
             res.status(403).send('Authentication Ivalid');
 
-        } else if (!accessToken) {
-            const payload = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
-            req.username = payload.username;
-            res.status(200).json({ message: 'User authenticated', user: req.username });
-            return next();
+        // } else if (accessToken) {
+        //     const payload = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
+        //     req.username = payload.username;
+        //     res.status(200).json({ message: 'User authenticated', user: req.username });
+        //     next();
 
         } else {
             const payload = verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET);
@@ -25,17 +25,12 @@ const authenticate = async (req, res, next) => {
             console.log('\n');
             console.log(`username with the token ${payload.username}`);
 
-            let user, role;
-            if (await model.getWHAdmin(payload.username)) {
-                user = await model.getWHAdmin(payload.username);
-                role = "admin";
-            } else if (await model.getLazadaUser(payload.username)) {
-                user = await model.getLazadaUser(payload.username);
-                role = "lazada_user";
-            }
+            const lazada_user = await model.getLazadaUser(payload.username);
+            const wh_admin = await model.getWHAdmin(payload.username);
+            const user = wh_admin ? wh_admin : lazada_user;
 
             console.log('\n');
-            console.log(`auth user ${user.username} refresh token ${user.refresh_token} `);
+            console.log(`Auth user ${user.username} refresh token ${user.refresh_token} `);
 
             if (!user.refresh_token) {
                 throw new Error(
@@ -43,10 +38,11 @@ const authenticate = async (req, res, next) => {
                 );
             }
 
-            setTokenCookie(res, user.username, role);
+            setTokenCookie(res, user.username, payload.role, payload.shop_name);
 
             req.username = payload.username;
-            req.role = role;
+            req.role = payload.role;
+            req.shop_name = payload.shop_name;
 
             next();
         } 

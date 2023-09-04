@@ -18,10 +18,10 @@ userRouter.get("/sellers", authenticate, checkAdmin, userController.getAllSeller
 userRouter.get("/admins", authenticate, checkAdmin, userController.getAllWHAdmin);
 
 // Get buyer by username
-userRouter.get("/buyers/:username", authenticate, checkAdmin, checkBuyer, userController.getBuyerByUsername);
+userRouter.get("/buyers/:username", authenticate, checkBuyer, userController.getBuyerByUsername);
 
 // Get seller by username
-userRouter.get("/sellers/:username", authenticate, checkAdmin, checkSeller, userController.getSellerByUsername);
+userRouter.get("/sellers/:username", authenticate, checkSeller, userController.getSellerByUsername);
 
 // Get wh admin by username
 userRouter.get("/admins/:username", authenticate, checkAdmin, userController.getWHAdminByUsername);
