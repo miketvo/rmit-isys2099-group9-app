@@ -48,6 +48,7 @@ TODO: Write this
      - Execute the setup SQL scripts located in the `database/mysql/` directory in the following order:
        - `source reset.sql` (Warning - this will wipe all existing data)
        - `source init/tables.sql`
+       - `source init/indexing.sql`
        - `source init/business_rules.sql`
        - `source init/users.sql`
        - `source init/mock_data.sql` (Optional - for testing purpose only)

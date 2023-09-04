@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS wh_admin
 CREATE TABLE IF NOT EXISTS lazada_user
 (
     username      VARCHAR(45),
-    salt          VARCHAR(255),
     refresh_token VARCHAR(255),
     password_hash VARCHAR(255) NOT NULL,
     CONSTRAINT lazada_user_pk PRIMARY KEY (username)
@@ -79,7 +78,6 @@ CREATE TABLE IF NOT EXISTS product
 (
     id                  INT AUTO_INCREMENT,
     title               VARCHAR(45) NOT NULL,
-    image               BLOB,
     product_description TEXT,
     category            VARCHAR(45),
     price               DECIMAL(6, 2),
@@ -141,7 +139,7 @@ CREATE TABLE IF NOT EXISTS buyer_order
     product_id     INT                  NOT NULL,
     created_date   DATE                 NOT NULL,
     created_time   TIME                 NOT NULL,
-    order_status   ENUM ('P', 'A', 'R') NOT NULL DEFAULT 'P',
+    order_status   ENUM ('P', 'A', 'R') NOT NULL DEFAULT 'P',  -- (P)ending, (A)ccepted, (R)ejected
     fulfilled_date DATE                          DEFAULT NULL,
     fulfilled_time TIME                          DEFAULT NULL,
     buyer          VARCHAR(45)          NOT NULL,

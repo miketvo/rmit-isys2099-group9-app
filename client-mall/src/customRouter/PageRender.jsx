@@ -5,6 +5,7 @@ const generatePage = pageName => {
   const pageComponent = lazy(() =>
     import(`../pages/${pageName}.jsx`)
       .then(module => {
+        console.log(module)
         return { default: module.default };
       })
       .catch(() => {
@@ -27,7 +28,7 @@ const NotFound = () => (
 
 const PageRender = () => {
   const { page, id, subPage, subId } = useParams();
-
+  console.log(id)
   let pageName = "";
 
   if (id) {
@@ -43,6 +44,7 @@ const PageRender = () => {
   } else {
     pageName = `${page}`;
   }
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       {generatePage(pageName)}

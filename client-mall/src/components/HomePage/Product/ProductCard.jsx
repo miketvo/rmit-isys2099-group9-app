@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import {Link} from "react-router-dom"
 
 const ProductCard = ({ product }) => {
   return (
@@ -12,11 +13,14 @@ const ProductCard = ({ product }) => {
         alt="Product"
       />
       {/* Product details */}
-      <div className="card-body p-4">
+      <div className="card-body p-2">
         <div className="text-center">
           {/* Product name */}
-          <h5 className="fw-bolder">{product.title}</h5>
-          {/* Product price */}${product.price}
+          <Link to={`/products/${product.id}`} className="fw-bolder">{product.title}</Link>
+        </div>
+        <div className="text-center mt-2">
+          {/* Product price */}
+          ${product.price}
         </div>
       </div>
       {/* Product actions */}

@@ -1,3 +1,10 @@
+/* Import from CSS File */
+@import url("./components/NavBar.css");
+@import url("./components/LoginRegister.css");
+@import url("./components/SellerDashboard/SellerDashboard.css");
+@import url("./components/SellerDashboard/NavBar.css");
+@import url("./components/PopUp/PopUp.css");
+
 * {
     margin: 0;
     padding: 0;
@@ -15,9 +22,13 @@
     /* ========== Colors ========== */
     --primary-color: #fff;
 
-    /* ========== Height ========== */
+    /* ========== Width ========== */
+    --verticalNavBarWidth: 90px;
 }
 
+ul {
+    list-style: none;
+}
 a {
     text-decoration: none !important;
     color: black;
