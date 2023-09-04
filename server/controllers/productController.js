@@ -1,12 +1,6 @@
 require("express");
 const { db } = require("../models");
 
-// const LocalStorage = require('node-localstorage').LocalStorage;
-// const localStorage = new LocalStorage('');
-
-// const cart = JSON.parse(localStorage.getItem('cart')) || {};
-// const cartItemCount = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-
 const getAllProducts = async (req, res) => {
     try {
         const [results] = await db.poolWHAdmin.query(`SELECT * FROM product`);
@@ -190,6 +184,8 @@ const deleteProductById = async (req, res) => {
         res.status(400).json({error:error.message});
     }
 }
+
+//  TODO: Implement GET product attributes
 
 module.exports = {
     getAllProducts,

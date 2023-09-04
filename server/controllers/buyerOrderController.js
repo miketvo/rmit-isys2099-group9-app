@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* TODO:
 
 CRUD
@@ -50,8 +51,39 @@ const { db, model } = require("../models");
 
 // Buyer Order
 
+const placeOrder = async (req, res) => {
+    const order_product_id = req.params.id;
+    const buyer_username = req.username;
+    const { order_quantity } = req.body;
+    try {
+        const results = await db.poolBuyer.query(
+            'CALL sp_place_buyer_order(?, ?, ?, @result); SELECT @result;',
+            [order_quantity, order_product_id, buyer_username]
+        );
+        const result = results[1][0]['@result'];
+        switch (result) {
+            case -1:
+                res.status(500).send('An error occurred while processing your request');
+                break;
+            case 0:
+                res.status(200).send('Order placed successfully');
+                break;
+            case 1:
+                res.status(400).send('Not enough stockpile');
+                break;
+            case 2:
+                res.status(400).send('Product or buyer does not exist');
+                break;
+            default:
+                res.status(500).send('An unknown error occurred');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred while processing your request');
+    }
+};
 
-const getAllBuyerOrder = async (req, res) => {
+const getAllBuyerOrders = async (req, res) => {
     try {
         const [results] = await db.poolBuyer.query(`SELECT * FROM buyer_order`);
         return res.json(results);
@@ -79,8 +111,8 @@ const getBuyerOrderByID = async (req, res) => {
 
 const updateBuyerOrder = async (req, res) => {
     const buyerOrderID = req.params.id;
-    const buyer = req.username
-    const { quantity, product_id, created_date, created_time, order_status || 'P', fulfilled_date || null , fulfilled_time || null } = req.body;
+    const buyer = req.username;
+    const { quantity, product_id, created_date, created_time, order_status, fulfilled_date, fulfilled_time } = req.body;
     const result = await db.poolBuyer.query(
         'UPDATE buyer_order SET quantity = ?, product_id = ?, created_date = ?, created_time = ?, order_status=?, fulfilled_date=?, fulfilled_time=?, buyer=? WHERE id=?',
         [quantity || 0 , product_id || 0 , created_date || null , created_time || null , order_status || 'P', fulfilled_date || null , fulfilled_time || null , buyer , buyerOrderID],
@@ -119,8 +151,8 @@ const deleteBuyerOrder = (req, res) => {
 };
 
 module.exports = {
-
-    getAllBuyerOrder,
+    placeOrder,
+    getAllBuyerOrders,
     getBuyerOrderByID,
     updateBuyerOrder,
     deleteBuyerOrder
