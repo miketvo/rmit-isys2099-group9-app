@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken");
 const db = require("../models/db.js");
 
-const generateTokens = (username, role) => {
+const generateTokens = (username, role, shop_name) => {
   try {
     // Check if environment variables are set
     if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
@@ -11,20 +11,20 @@ const generateTokens = (username, role) => {
 
     // Generate an access token
     const accessToken = jwt.sign(
-      { username: username },
+      { username: username, role: role, shop_name: shop_name},
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "30m" },
     );
 
     // Generate a refresh token
     const refreshToken = jwt.sign(
-      { username: username },
+      { username: username, role: role, shop_name: shop_name},
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "7d" },
     );
     
     console.log('\n');
-    console.log(`user for tokens: ${username}`);
+    console.log(`User for tokens: ${username}`);
 
     // Store the refresh token in the database
     if (role === 'admin') {

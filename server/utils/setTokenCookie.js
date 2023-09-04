@@ -1,8 +1,8 @@
 const generateTokens = require('./generateTokens');
 
-const setTokenCookie = (res, username, role) => {
+const setTokenCookie = (res, username, role, shop_name) => {
 
-  const tokens = generateTokens(username, role)
+  const tokens = generateTokens(username, role, shop_name)
 
   console.log('\n');
   console.log('access token: ', tokens.accessToken);
