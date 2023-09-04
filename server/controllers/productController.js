@@ -39,7 +39,7 @@ const getAllProductsDSC = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
-        let productID = req.params.productID;
+        let productID = req.params.id;
         const [results] = await db.poolWHAdmin.query(`
             SELECT * FROM product where id = ?
         `, [productID]);
