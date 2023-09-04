@@ -12,7 +12,8 @@ const {
     getAllWarehouse,
     getWarehouseByID,
     updateWarehouse,
-    deleteWarehouse
+    deleteWarehouse,
+    moveProduct
 } = require('../controllers/warehouseController');
 
 warehouseRouter.post('/create', authenticate, checkAdmin, createWarehouse);
@@ -20,5 +21,6 @@ warehouseRouter.get('/', authenticate, getAllWarehouse);
 warehouseRouter.get('/:id', authenticate, getWarehouseByID);
 warehouseRouter.put('/update/:id', authenticate, checkAdmin, updateWarehouse);
 warehouseRouter.delete('/delete/:id', authenticate, checkAdmin, deleteWarehouse);
+warehouseRouter.post('/move-product', authenticate, checkAdmin, moveProduct);
 
 module.exports = warehouseRouter;

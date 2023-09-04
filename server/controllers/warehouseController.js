@@ -105,10 +105,33 @@ const deleteWarehouse = (req, res) => {
     });
 };
 
+const moveProduct = async (req, res) => {
+    try {
+        const { move_product, move_quantity, from_warehouse, to_warehouse } = req.body;
+        const result = await db.poolWHAdmin.query(
+            'CALL sp_move_product(?, ?, ?, ?, @result)',
+            [move_product, move_quantity, from_warehouse, to_warehouse]
+        );
+        const [[{ result: resultCode }]] = await db.poolWHAdmin.query('SELECT @result as result');
+        if (resultCode === 0) {
+            res.status(200).json({ message: 'Product moved successfully' });
+        } else if (resultCode === 1) {
+            res.status(400).json({ error: 'Invalid input' });
+        } else if (resultCode === 2) {
+            res.status(400).json({ error: 'Invalid operation' });
+        } else {
+            res.status(500).json({ error: 'An error occurred while moving the product' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     createWarehouse,
     getAllWarehouse,
     getWarehouseByID,
     updateWarehouse,
-    deleteWarehouse
+    deleteWarehouse,
+    moveProduct
 }
