@@ -4,6 +4,14 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+const apiRouter = require("./apiRouter");
+const authRouter = require("./routes/authRoutes");
+const productRouter = require("./routes/productRoutes");
+const userRouter = require("./routes/userRoutes");
+const inboundOrderRouter = require("./routes/inboundOrderRoutes");
+const productCategoryRouter = require("./routes/productCategoryRoutes");
+const warehouseRouter = require("./routes/warehouseRoutes");
+
 const app = express();
 app.use(cookieParser());
 
@@ -33,14 +41,6 @@ app.use(
 );
 
 apiRouter.use(cookieParser());
-
-const apiRouter = require("./apiRouter");
-const authRouter = require("./routes/authRoutes");
-const productRouter = require("./routes/productRoutes");
-const userRouter = require("./routes/userRoutes");
-const inboundOrderRouter = require("./routes/inboundOrderRoutes");
-const productCategoryRouter = require("./routes/productCategoryRoutes");
-const warehouseRouter = require("./routes/warehouseRoutes");
 
 app.use("/api", apiRouter);
 app.use("/api/auth", authRouter);

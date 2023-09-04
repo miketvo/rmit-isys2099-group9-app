@@ -24,3 +24,5 @@ inboundOrderRouter.post('/:id', authenticate, getInboundOrderByID);
 inboundOrderRouter.post('/update/:id', authenticate, updateInboundOrder);
 inboundOrderRouter.delete('/delete/:id', authenticate,deleteInboundOrder);
 inboundOrderRouter.post('/fulfill/:id', fulfillInboundOrder);
+
+module.exports = inboundOrderRouter;
