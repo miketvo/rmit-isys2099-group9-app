@@ -1,5 +1,7 @@
 import { useState } from "react";
-import {useNavigate, Link} from "react-router-dom"
+import {Link} from "react-router-dom"
+import { postDataAPI } from "../../../../client-mall/src/api/apiRequest";
+import { toast } from "react-hot-toast";
 
 const RegisterComponent = () => {
   const initialState = {
@@ -7,33 +9,37 @@ const RegisterComponent = () => {
     password: ""
   };
   const [registerState, setLoginState] = useState(initialState);
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const {username, password} = registerState;
-
-  const navigate = useNavigate();
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { username, password } = registerState;
 
   // Functions
-  const handleChangeInput = (e) => {
-    const {name, value} = e.target;
-    setLoginState(prevState => ({...prevState, [name]: value}))
-  }
+  const handleChangeInput = e => {
+    const { name, value } = e.target;
+    setLoginState(prevState => ({ ...prevState, [name]: value }));
+  };
 
-  const handleLoginUser = (e) => {
+  const handleRegisterUser = async(e) => {
     e.preventDefault();
 
     if (confirmPassword === password) {
-      console.log(registerState)
-      localStorage.setItem("firstLogin", JSON.stringify({username: username, accessToken: "2937569823659816723946"}));
-
-      navigate("/")
+      try {
+        const response = await postDataAPI("auth/register", {username: username, password: password, role: "admin"})
+        if (response.data) {
+          toast.success(`Register Successfully!`)
+        }
+      } catch (error) {
+        toast.error('Register Failed!')
+      }
+    } else {
+      toast.error("Your confirmed password does not match")
     }
-  }
+  };
 
   return (
     <div className="login_wrapper container">
       <div className="login_container d-flex justify-content-center align-items-center h-100">
         <div className="login_inner_container d-flex flex-column p-5 text-center">
-          <form className="mt-2 mb-5 pb-5" onSubmit={handleLoginUser}>
+          <form className="mt-2 mb-5 pb-5" onSubmit={handleRegisterUser}>
             <div className="form_title">
               <h2 className="fw-bold mb-2 text-uppercase">Register</h2>
               <p className="mb-5">Get started with your first account!</p>

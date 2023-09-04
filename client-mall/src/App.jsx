@@ -30,14 +30,13 @@ function App() {
           <Route exact path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn}/>} />
           <Route exact path="/register" element={<RegisterPage/>} />
 
-          <Route exact path="/" element={<HomePage />} />
-          <Route
-            exact
-            path="/seller"
-            element={<SellerDashboardPage />}
-          />
-
           <Route exact path="/" element={<PrivateRouter />}>
+            <Route exact path="/" element={<HomePage />} />
+            <Route
+              exact
+              path="/seller"
+              element={<SellerDashboardPage />}
+            />
             <Route exact path="/products/:id" element={<DetailProductPage />} />
 
             <Route exact path="/:page" element={<PageRender />} />

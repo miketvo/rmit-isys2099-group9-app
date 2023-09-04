@@ -25,7 +25,8 @@ const DetailProductComponent = () => {
     useEffect(() => {
         const fetchDetailProduct = async() => {
             try {
-                const response = await getDataAPI(`product/products/${id}`)
+                const response = await getDataAPI(`product/${id}`)
+                console.log(response.data)
                 setDetailProduct(response?.data[0])
             } catch (error) {
                 console.error("Error fetching products:", error);

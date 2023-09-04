@@ -11,12 +11,13 @@ import { IconSetting } from "../../utils/IconSetting";
 
 import { getDataAPI } from "../../api/apiRequest";
 import PopUp from "./PopUp/PopUp";
+import NavBar from "./NavBar";
 const SellerDashboardComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await await getDataAPI("product");
-        setProductData(result);
+        const result = await getDataAPI("product");
+        setProductData(result.data);
       } catch (error) {
         // Handle the error
         console.error("Error fetching data:", error);
@@ -73,6 +74,7 @@ const SellerDashboardComponent = () => {
 
   return (
     <Fragment>
+      <NavBar />
       <div className="dashboard_wrapper mt-3">
         <div className="container">
           <div className="warehouse_header d-flex flex-rows justify-content-between align-items-center">

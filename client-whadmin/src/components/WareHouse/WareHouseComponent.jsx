@@ -2,37 +2,25 @@ import { Fragment, useEffect, useState } from "react"
 
 // Item Component
 import WareHouse from "./Items/WareHouse"
-import Product from "./Items/Product"
-import Stockpile from "./Items/Stockpile"
+import Product from "./Items/ProductAttributes"
 
 // Icons Imported
-import {BiSearch} from "react-icons/bi"
 import {IoAddOutline} from "react-icons/io5"
 import { IconSetting } from "../../utils/IconSettings"
 
-import {getDataAPI} from "../../api/fetchAPI"
 import PopUp from "./PopUp/PopUp"
+import Categories from "./Items/Categories"
+import MoveProduct from "./Items/MoveProduct"
+import { getDataAPI } from "../../api/apiRequest"
+
+
 const WareHouseComponent = () => {
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const result = await await getDataAPI('warehouse');
-          setWareHouseData(result)
-      } catch (error) {
-          // Handle the error
-          console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-          const result = await await getDataAPI('product');
-          setProductData(result)
+          const result = await getDataAPI('warehouse');
+          setWareHouseData(result.data)
       } catch (error) {
           // Handle the error
           console.error('Error fetching data:', error);
@@ -43,15 +31,12 @@ const WareHouseComponent = () => {
   }, []);
   
   const [wareHouseData, setWareHouseData] = useState([])
-  const [productData, setProductData] = useState([])
 
   const handleDeleteData = (id, place) => {
     if (place === "warehouse") {
       setWareHouseData(preState => [...preState.filter((item) => item.id !== id)])
     }
-    if (place === "product") {
-      setProductData(preState => [...preState.filter((item) => item.id !== id)])
-    }
+    
   }
 
   const handlePopUpForm = () => {
@@ -71,12 +56,16 @@ const WareHouseComponent = () => {
       component: <WareHouse data={wareHouseData} compFunction={WareHouseFunction}/>
     },
     {
-      id: 'stockpile',
-      component: <Stockpile />
+      id: 'categories',
+      component: <Categories/>
     },
     {
-      id: 'product',
-      component: <Product data={productData} compFunction={ProductFunction}/>
+      id: 'product_attribute',
+      component: <Product compFunction={ProductFunction}/>
+    },
+    {
+      id: 'move_product',
+      component: <MoveProduct />
     }
   ]
 
@@ -88,8 +77,8 @@ const WareHouseComponent = () => {
     type: wareHouseTabs
   })
 
-  const PopUpData = {popUpState, wareHouseData, productData}
-  const PopUpFunction = {setPopUpState, setWareHouseData, setProductData}
+  const PopUpData = {popUpState, wareHouseData}
+  const PopUpFunction = {setPopUpState, setWareHouseData}
 
 
   
@@ -109,36 +98,11 @@ const WareHouseComponent = () => {
                       setPopUpState(prevState => ({...prevState, type: tab.id}))
                       }}
                     >
-                      <span className="text-capitalize">{tab.id}</span>
+                      <span className="text-capitalize">{(tab.id).replace(/_/g, ' ')}</span>
                     </li>
                   ))
                 }
               </ul>
-            </div>
-
-            <div className="">
-              <div className="input-group">
-                <div className="input-group-btn search-panel">
-                    <div className="btn btn-default dropdown-toggle" id="filterDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <span id="search_concept">Filter by</span> <span className="caret"></span>
-                    </div>
-                    <ul className="dropdown-menu" aria-labelledby="filterDropdown">
-                      <li><a href="#contains">Contains</a></li>
-                      <li><a href="#its_equal">It&apos;s equal</a></li>
-                      <li><a href="#greather_than">Greather than &gt;</a></li>
-                      <li><a href="#less_than">Less than &lt;    </a></li>
-                      <li className="divider"></li>
-                      <li><a href="#all">Anything</a></li>
-                    </ul>
-                </div>
-                <input type="hidden" name="search_param" value="all" id="search_param" />         
-                <input type="text" className="form-control" name="x" placeholder="Search term..." />
-                <span className="input-group-btn">
-                    <button className="btn btn-default" type="button">
-                      {IconSetting(<BiSearch/>, "black", "16px")}
-                    </button>
-                </span>
-              </div>
             </div>
 
             <div className="">
@@ -157,7 +121,7 @@ const WareHouseComponent = () => {
                     <Fragment key={tab.id}>
                       {tab.component}
                     </Fragment>
-                  )
+                )
               ))
             }
           </div>
