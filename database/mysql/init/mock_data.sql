@@ -3,14 +3,14 @@ USE isys2099_group9_app;
 
 -- Warehouse admin
 INSERT INTO wh_admin (username, refresh_token, password_hash)
-VALUES ('mike', '', '');
+VALUES ('admin', '', 'admin');
 
 
 -- Lazada user (buyer and seller)
 INSERT INTO lazada_user (username, refresh_token, password_hash)
-VALUES ('tony', '', ''),
-       ('loi', '', ''),
-       ('mike', '', '');
+VALUES ('tony', '', 'tony'),
+       ('loi', '', 'loi'),
+       ('mike', '', 'mike');
 
 INSERT INTO buyer (username)
 VALUES ('tony');

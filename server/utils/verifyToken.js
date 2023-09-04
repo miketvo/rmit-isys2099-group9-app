@@ -1,10 +1,18 @@
+
 const jwt = require("jsonwebtoken");
 
-async function verifyToken(token) {
+/**
+ * @description This middleware function verifies the provided JSON Web Token (JWT) and assigns the payload to req.username.
+ * The payload of a JWT typically contains information about the user (username in this case), 
+ * and any other data that was included when the token was created. 
+ * By assigning this payload.username to req.username, this data becomes easily accessible in route handlers. 
+ * For example, you could use req.username to get the username of the authenticated user.
+ */
+
+const verifyToken = ( token, secretKey ) => {
   try {
     // Verify the token
-    // eslint-disable-next-line no-undef
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decoded = jwt.verify(token, secretKey);
 
     // If verification is successful, the decoded data is returned
     return decoded;

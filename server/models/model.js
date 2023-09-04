@@ -70,33 +70,106 @@ database.insertSeller = (username, shop_name) => {
 };
 
 {
+  /* Endpoints for WH Admin */
+}
+database.getWHAdmin = async username => {
+  try {
+    const [results] = await db.poolWHAdmin.query(
+      `SELECT * FROM wh_admin WHERE username = ?`,
+      [username]
+    );
+    return results[0];
+  } catch (err) {
+    console.error("error: " + err.stack);
+    throw err;
+  }
+};
+
+database.insertWHAdmin = (username, password_hash) => {
+  return new Promise((resolve, reject) => {
+    db.poolWHAdmin.query(
+      `INSERT INTO wh_admin (username, password_hash) VALUES (?, ?)`,
+      [username, password_hash],
+      (err, results) => {
+        if (err) {
+          console.error("error: " + err.stack);
+          reject(err);
+          return;
+        }
+        resolve(results.insertId);
+      },
+    );
+  });
+};
+
+database.deleteWHAdminToken = async username => {
+  try {
+    await db.poolWHAdmin.query(
+      `UPDATE wh_admin SET refresh_token = NULL WHERE username = ?`,
+      [username]
+    );
+  } catch (err) {
+    console.error("error: " + err.stack);
+    throw err;
+  }
+}
+
+{
   /* 
 Endpoints for Lazada User
 TODO: Grant SELECT permissions on lazada_user table
 */
 }
-database.getLazadaUser = (role, username) => {
+database.getLazadaUserByRole = (role, username) => {
   if (role === "seller") {
     return database.getSeller(username);
   } else if (role === "buyer") {
     return database.getBuyer(username);
+  } else if (role === "admin") {
+    return database.getWHAdmin(username);
+  } else if (role === "lazada_user") {
+    return database.getLazadaUser(username);
   }
 };
 
-database.insertLazadaUser = async (role, username, hashedPassword, shop_name) => {
+database.getLazadaUser = async (username) => {
   try {
-    // Insert the user into the lazada_user table
-    const query = `INSERT INTO lazada_user (username, password_hash) VALUES (?, ?)`;
+    const [results] = await db.poolSeller.query(
+      `SELECT * FROM lazada_user WHERE username = ?`,
+      [username]
+    );
+    return results[0];
+  } catch (err) {
+    console.error("error: " + err.stack);
+    throw err;
+  }
+}
+
+database.insertLazadaUserByRole = async (role, username, hashedPassword, shop_name) => {
+  try {
+    const queryMall = `INSERT INTO lazada_user (username, password_hash) VALUES (?, ?)`;
+
     const values = [username, hashedPassword];
 
-    // Insert the user into the buyer or seller table based on their role
+    // Insert the user into the table based on their role
+
     if (role === 'buyer') {
-      db.poolBuyer.query(query, values);
-      return database.insertBuyer(username);
+      // Insert the user into the lazada_user table
+      await db.poolBuyer.query(queryMall, values);
+
+      // Insert the user into the buyer table
+      database.insertBuyer(username);
 
     } else if (role === 'seller') {
-      db.poolSeller.query(query, values);
-      return database.insertSeller(username, shop_name);
+      // Insert the user into the lazada_user table
+      await db.poolSeller.query(queryMall, values);
+
+      // Insert the user into the seller table
+      database.insertSeller(username, shop_name);
+
+    } else if (role === 'admin') {
+      // Insert the user into the wh_admin table
+      database.insertWHAdmin(username, hashedPassword);
 
     } else {
       throw new Error('Invalid role');
@@ -107,5 +180,16 @@ database.insertLazadaUser = async (role, username, hashedPassword, shop_name) =>
   }
 };
 
+database.deleteLazadaUserToken = async username => {
+  try {
+    await db.poolSeller.query(
+      `UPDATE lazada_user SET refresh_token = NULL WHERE username = ?`,
+      [username]
+    );
+  } catch (err) {
+    console.error("error: " + err.stack);
+    throw err;
+  }
+}
 
 module.exports = database;
