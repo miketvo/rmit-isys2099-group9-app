@@ -63,7 +63,7 @@ const getProductByTitle = async (req, res) => {
     }
 }
 
-// TODO: Review Insert Product on MongoDB
+// TODO: Review Insert Product on MongoDB with product attributes associated
 const createProduct = async (req, res) => {
     try {
         const seller = req.username;

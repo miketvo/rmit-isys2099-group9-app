@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* TODO:
+/*
 
 CRUD
 poolSeller: isys2099_group9_app_seller_user

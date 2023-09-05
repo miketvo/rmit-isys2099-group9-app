@@ -49,14 +49,6 @@ const register = async (req, res) => {
     // Insert the user into the database
     model.insertLazadaUserByRole(role, username, hashedPassword, shop_name);
 
-    // Generate tokens
-    // const tokens = generateTokens(username, role, shop_name);
-
-    // console.log('\n');
-    // console.log(`Tokens: ${JSON.stringify(tokens)}`);
-
-    // setTokenCookie(res, username, role, shop_name);
-
     req.role = role;
     req.username = username;
     req.role = role
@@ -121,18 +113,7 @@ const login = async (req, res) => {
     if (!passwordMatches) {
       return res.status(401).send("Incorrect password");
     }
-
-    // If the refresh token exists
-    // if (existingUser.refresh_token && existingUser.refresh_token !== null) {
-    //   res.cookie("refreshToken", existingUser.refreshToken, {
-    //     httpOnly: true,
-    //     // secure: true, // later in production
-    //     samesite: "strict",
-    //     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-    //   });      
-    //   return res.status(200).json({ message: `User ${username} authenticated`, username: username, role: role });
-    // }
-
+    
     // Generate tokens
     const tokens = generateTokens(username, role, shop_name);
 

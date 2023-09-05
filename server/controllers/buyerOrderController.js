@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* TODO:
+/*
 
 CRUD
 poolBuyer: isys2099_group9_app_buyer_user
@@ -85,7 +85,10 @@ const placeOrder = async (req, res) => {
 
 const getAllBuyerOrders = async (req, res) => {
     try {
-        const [results] = await db.poolBuyer.query(`SELECT * FROM buyer_order`);
+        const [results] = await db.poolBuyer.query(`
+        SELECT buyer_order.*, product.title AS product_title, product.category AS category, product.price AS price
+        FROM buyer_order JOIN product ON buyer_order.product_id = product.id
+        `);
         return res.json(results);
     } catch (error) {
         console.error("error: " + error.stack);
@@ -97,7 +100,9 @@ const getBuyerOrderByID = async (req, res) => {
     try {
         let buyerOrderID = req.params.id;
         const [results] = await db.poolBuyer.query(`
-            SELECT * FROM buyer_order where id = ?
+            SELECT buyer_order.*, product.title AS product_title, product.category AS category, product.price AS price
+            FROM buyer_order JOIN product ON buyer_order.product_id = product.id
+            WHERE buyer_order.id = ?
         `, [buyerOrderID]);
         if (results.length === 0) {
             return res.status(404).json({ error: `Buyer order with id: ${buyerOrderID} not found` });
@@ -109,33 +114,83 @@ const getBuyerOrderByID = async (req, res) => {
     }
 };
 
-const updateBuyerOrder = async (req, res) => {
-    const buyerOrderID = req.params.id;
-    const buyer = req.username;
-    const { quantity, product_id, created_date, created_time, order_status, fulfilled_date, fulfilled_time } = req.body;
-    const result = await db.poolBuyer.query(
-        'UPDATE buyer_order SET quantity = ?, product_id = ?, created_date = ?, created_time = ?, order_status=?, fulfilled_date=?, fulfilled_time=?, buyer=? WHERE id=?',
-        [quantity || 0 , product_id || 0 , created_date || null , created_time || null , order_status || 'P', fulfilled_date || null , fulfilled_time || null , buyer , buyerOrderID],
-        (error) => {
-            if (error) {
-                console.error(error);
-                res.status(500).send('An error occurred while updating a buyer order');
-            } else {
-                res.status(201).json({
-                    message: `Buyer order with ID: ${buyerOrderID} updated`,
-                    id: buyerOrderID,
-                    quantity: result.quantity,
-                    product_id: result.product_id,
-                    created_date: result.created_date,
-                    created_time: result.created_time,
-                    order_status: result.order_status || 'P',
-                    fulfilled_date: result.fulfilled_date || null,
-                    fulfilled_time: result.fulfilled_time || null,
-                    buyer: result.buyer
-                });
-            }
+const getBuyerOrderByCategory = async (req, res) => {
+    try {
+        let category = req.params.category;
+        const [results] = await db.poolBuyer.query(`
+            SELECT buyer_order.*, product.title AS product_title, product.category AS category, product.price AS price
+            FROM buyer_order JOIN product ON buyer_order.product_id = product.id
+            WHERE product.category = ?
+        `, [category]);
+        return res.json(results);
+    } catch (error) {
+        console.error("error: " + error.stack);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+const getBuyerOrderByStatus = async (req, res) => {
+    try {
+        let status = req.params.status;
+        const [results] = await db.poolBuyer.query(`
+            SELECT buyer_order.*, product.title AS product_title, product.category AS category, product.price AS price
+            FROM buyer_order JOIN product ON buyer_order.product_id = product.id
+            WHERE order_status = ?
+        `, [status]);
+        return res.json(results);
+    } catch (error) {
+        console.error("error: " + error.stack);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+const updateBuyerOrderQuantity = async (req, res) => {
+    try {
+        let buyerOrderID = req.params.id;
+        let { quantity } = req.body;
+        const [results] = await db.poolBuyer.query(`
+            UPDATE buyer_order SET quantity = ? WHERE id = ?
+        `, [quantity, buyerOrderID]);
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: `Buyer order with id: ${buyerOrderID} not found` });
         }
-    );
+        return res.json({ message: `Quantity of buyer order with id: ${buyerOrderID} updated successfully` });
+    } catch (error) {
+        console.error("error: " + error.stack);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+const updateBuyerOrderStatusAccept = async (req, res) => {
+    try {
+        let buyerOrderID = req.params.id;
+        const [results] = await db.poolBuyer.query(`
+            UPDATE buyer_order SET order_status = 'A' WHERE id = ?
+        `, [buyerOrderID]);
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: `Buyer order with id: ${buyerOrderID} not found` });
+        }
+        return res.json({ message: `Status of buyer order with id: ${buyerOrderID} updated to accepted` });
+    } catch (error) {
+        console.error("error: " + error.stack);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+const updateBuyerOrderStatusReject = async (req, res) => {
+    try {
+        let buyerOrderID = req.params.id;
+        const [results] = await db.poolBuyer.query(`
+            UPDATE buyer_order SET order_status = 'R' WHERE id = ?
+        `, [buyerOrderID]);
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: `Buyer order with id: ${buyerOrderID} not found` });
+        }
+        return res.json({ message: `Status of buyer order with id: ${buyerOrderID} updated to rejected` });
+    } catch (error) {
+        console.error("error: " + error.stack);
+        return res.status(500).json({ error: "Internal server error" });
+    }
 };
 
 const deleteBuyerOrder = (req, res) => {
@@ -154,6 +209,10 @@ module.exports = {
     placeOrder,
     getAllBuyerOrders,
     getBuyerOrderByID,
-    updateBuyerOrder,
+    getBuyerOrderByCategory,
+    getBuyerOrderByStatus,
+    updateBuyerOrderQuantity,
+    updateBuyerOrderStatusAccept,
+    updateBuyerOrderStatusReject,
     deleteBuyerOrder
 }
