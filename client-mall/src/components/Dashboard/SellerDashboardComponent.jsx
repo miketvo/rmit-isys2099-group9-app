@@ -7,19 +7,11 @@ import Product from "./Items/Product";
 // Icons Imported
 import { BiSearch } from "react-icons/bi";
 import { IoAddOutline } from "react-icons/io5";
-import { IconSetting } from "../../utils/IconSettings";
+import { IconSetting } from "../../utils/IconSetting";
 
-import { getDataAPI } from "../../api/fetchAPI";
+import { getDataAPI } from "../../api/apiRequest";
 import PopUp from "./PopUp/PopUp";
 const SellerDashboardComponent = () => {
-  useEffect(() => {
-    const fetchData = async () => {
-      // TODO: Wait for BE endpoint and then implement this
-    };
-
-    fetchData();
-  }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {

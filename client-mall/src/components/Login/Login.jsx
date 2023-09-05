@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types"
 
-const LoginComponent = () => {
+import { toast } from "react-hot-toast";
+import { postDataAPI } from "../../api/apiRequest";
+
+
+const LoginComponent = ({setIsLoggedIn}) => {
   const initialState = {
     username: "",
     password: "",
@@ -11,6 +16,9 @@ const LoginComponent = () => {
   const { username, password } = loginState;
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   // Functions
   const handleChangeInput = e => {
@@ -18,20 +26,18 @@ const LoginComponent = () => {
     setLoginState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleLoginUser = e => {
+  const handleLoginUser = async(e) => {
     e.preventDefault();
-
-    if (username === "user01" && password === "123456789") {
-      console.log(loginState);
-      localStorage.setItem(
-        "firstLogin",
-        JSON.stringify({
-          username: username,
-          accessToken: "2937569823659816723946",
-        }),
-      );
-
-      navigate("/");
+    try {
+      const response = await postDataAPI("auth/login", loginState)
+      if (response.data) {
+        localStorage.setItem("userInfo", JSON.stringify({username: response.data?.username, role: response.data?.role}));
+        toast.success(`Login Successfully! Welcome back ${response.data?.username}`);
+        setIsLoggedIn(true);
+        navigate(`${from}`, {replace: true});
+      }
+    } catch (error) {
+      toast.error('Login failed. Please check your username and password.')
     }
   };
 
@@ -91,6 +97,10 @@ const LoginComponent = () => {
       </div>
     </div>
   );
+};
+
+LoginComponent.propTypes = {
+  setIsLoggedIn: PropTypes.func.isRequired, // setIsLoggedIn should be a function and is required.
 };
 
 export default LoginComponent;
