@@ -7,12 +7,6 @@ poolBuyer: isys2099_group9_app_buyer_user
 query for creating ib_ord: put
 CALL sp_place_buyer_order(?, ?, ?, (OUT?)), []
 
- OUT result:
-    -1 on rollback
-    0 on successful commit
-    1 on not enough stockpile
-    2 on product_id or buyer_id not exist
-
 query retrive: get
 - SELECT * FROM buyer_order;
 
@@ -51,38 +45,38 @@ const { db, model } = require("../models");
 
 // Buyer Order
 
+/*
+ sp_place_buyer_order(order_quantity: int, order_product_id: int, buyer_username: varchar(45), OUT result: int)
+
+ OUT result:
+    -1 on rollback
+    0 on successful commit
+    1 on not enough stockpile
+    2 on product_id or buyer_id not exist
+ */
 const placeOrder = async (req, res) => {
-    const order_product_id = req.params.id;
-    const buyer_username = req.username;
-    const { order_quantity } = req.body;
     try {
-        const results = await db.poolBuyer.query(
-            'CALL sp_place_buyer_order(?, ?, ?, @result); SELECT @result;',
+        const order_product_id = req.params.id;
+        const buyer_username = req.username;
+        const { order_quantity } = req.body;
+        await db.poolBuyer.query(
+            'CALL sp_place_buyer_order(?, ?, ?, @result)',
             [order_quantity, order_product_id, buyer_username]
         );
-        const result = results[1][0]['@result'];
-        switch (result) {
-            case -1:
-                res.status(500).send('An error occurred while processing your request');
-                break;
-            case 0:
-                res.status(200).send('Order placed successfully');
-                break;
-            case 1:
-                res.status(400).send('Not enough stockpile');
-                break;
-            case 2:
-                res.status(400).send('Product or buyer does not exist');
-                break;
-            default:
-                res.status(500).send('An unknown error occurred');
+        const [[{ result: resultCode }]] = await db.poolBuyer.query('SELECT @result as result');
+        if (resultCode === 0) {
+            return res.status(200).json({ message: 'Order placed successfully', result: resultCode });
+        } else if (resultCode === 1) {
+            return res.status(400).json({ error: 'Not enough stockpile', result: resultCode });
+        } else if (resultCode === 2) {
+            return res.status(400).json({ error: 'Product or buyer does not exist', result: resultCode });
         }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('An error occurred while processing your request');
+        return res.status(500).json({ error: 'An error occurred while processing your request', result: resultCode });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
-
+    
 const getAllBuyerOrders = async (req, res) => {
     try {
         const [results] = await db.poolBuyer.query(`

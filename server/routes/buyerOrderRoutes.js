@@ -30,6 +30,6 @@ buyerOrderRoutes.get('/status/:status', authenticate, checkBuyer, getBuyerOrderB
 buyerOrderRoutes.put('/:id/quantity', authenticate, checkBuyer, updateBuyerOrderQuantity);
 buyerOrderRoutes.put('/:id/accept', authenticate, checkBuyer, updateBuyerOrderStatusAccept);
 buyerOrderRoutes.put('/:id/reject', authenticate, checkBuyer, updateBuyerOrderStatusReject);
-buyerOrderRoutes.delete('/:id', authenticate, checkBuyer, deleteBuyerOrder);
+buyerOrderRoutes.delete('/delete/:id', authenticate, checkBuyer, deleteBuyerOrder);
 
 module.exports = buyerOrderRoutes;
