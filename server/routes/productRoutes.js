@@ -25,7 +25,7 @@ productRouter.get('/productsASC', authenticate, getAllProductsASC);
 productRouter.get('/productsDSC', authenticate, getAllProductsDSC);
 
 productRouter.get('/:id', authenticate, getProductById);
-productRouter.get('/:title', authenticate, getProductByTitle);
+productRouter.get('/title/:title', authenticate, getProductByTitle);
 
 productRouter.post('/create', authenticate, checkSeller, createProduct);
 productRouter.put('/update/:id', authenticate, checkSeller, updateProductById);

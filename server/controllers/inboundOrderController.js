@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* TODO:
+/*
 
 CRUD
 poolSeller: isys2099_group9_app_seller_user
@@ -16,13 +16,6 @@ For inbound orders, Seller can:
 
 query fulfill: post
 - CALL sp_fulfill_inbound_order(?, ?), [inbound_order_id, result];
-
- OUT result:
-    -1 on rollback (500)
-    0 on successful commit (200)
-    1 on no available warehouses (all wh full) or inbound order already fulfilled (DUP)
-    2 on inbound_order_id does not exist (404)
-
 */
 
 require("express");
@@ -134,43 +127,35 @@ const deleteInboundOrder = (req, res) => {
     });
 };
 
+/*
+sp_fulfill_inbound_order(inbound_order_id: int, OUT result: int)
+
+OUT result:
+    -1 on rollback (500)
+    0 on successful commit (200)
+    1 on no available warehouses (all wh full) or inbound order already fulfilled (DUP)
+    2 on inbound_order_id does not exist (404)
+
+*/
 const fulfillInboundOrder = async (req, res) => {
-    const { id } = req.params;
-    await db.poolSeller.query(
-        'CALL sp_fulfill_inbound_order(?, @result)',
-        [id],
-        (error) => {
-            if (error) {
-                console.error(error);
-                res.status(500).send('An error occurred while fulfilling an inbound order');
-            } else {
-                db.poolSeller.query('SELECT @result', (error, results) => {
-                    if (error) {
-                        console.error(error);
-                        res.status(500).send('An error occurred while retrieving the result of the stored procedure');
-                    } else {
-                        const result = results[0]['@result'];
-                        switch(result) {
-                            case -1:
-                                res.status(500).json({ message: 'Rollback occurred during fulfillment' });
-                                break;
-                            case 0:
-                                res.status(200).json({ message: 'Inbound order successfully committed' });
-                                break;
-                            case 1:
-                                res.status(400).json({ message: 'No available warehouses or inbound order already fulfilled' });
-                                break;
-                            case 2:
-                                res.status(404).json({ message: 'Inbound order ID does not exist' });
-                                break;
-                            default:
-                                res.status(500).json({ message: 'An unknown error occurred' });
-                        }
-                    }
-                });
-            }
+    try {
+        const { id } = req.params;
+        await db.poolSeller.query(
+            'CALL sp_fulfill_inbound_order(?, @result)',
+            [id]
+        );
+        const [[{ result: resultCode }]] = await db.poolSeller.query('SELECT @result as result');
+        if (resultCode === 0) {
+            return res.status(200).json({ message: 'Inbound order successfully committed', result: resultCode });
+        } else if (resultCode === 1) {
+            return res.status(400).json({ error: 'No available warehouses or inbound order already fulfilled', result: resultCode });
+        } else if (resultCode === 2) {
+            return res.status(404).json({ error: 'Inbound order ID does not exist', result: resultCode });
         }
-    );
+        return res.status(500).json({ error: 'An error occurred while fulfilling an inbound order', result: resultCode });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
 module.exports = {

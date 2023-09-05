@@ -18,7 +18,7 @@ const {
 productCategoryRouter.post('/', authenticate, checkAdmin, createProductCategory);
 productCategoryRouter.get('/', authenticate, getAllProductCategory);
 productCategoryRouter.get('/:category_name', authenticate, getProductCategoryByName);
-productCategoryRouter.put('/:category_name', authenticate, checkAdmin, updateProductCategory);
-productCategoryRouter.delete('/:category_name', authenticate, checkAdmin, deleteProductCategory);
+productCategoryRouter.put('/update/:category_name', authenticate, checkAdmin, updateProductCategory);
+productCategoryRouter.delete('/delete/:category_name', authenticate, checkAdmin, deleteProductCategory);
 
 module.exports = productCategoryRouter;
