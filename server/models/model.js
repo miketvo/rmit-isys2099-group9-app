@@ -117,7 +117,6 @@ database.deleteWHAdminToken = async username => {
 {
   /* 
 Endpoints for Lazada User
-TODO: Grant SELECT permissions on lazada_user table
 */
 }
 database.getLazadaUserByRole = (role, username) => {

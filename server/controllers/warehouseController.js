@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /*
-TODO:
 
 poolWHAdmin
 
@@ -9,11 +8,6 @@ CRUD warehouses
 query moveProduct:
 CALL sp_move_product(?,?,?,(OUT?)), []
 
- OUT result:
-    -1 on rollback
-    0 on successful commit
-    1 on data not exists or illegal operation
-    2 on illegal argument value
 */
 
 const { db, model } = require("../models");
@@ -93,18 +87,42 @@ const updateWarehouse = async (req, res) => {
     );
 };
 
-const deleteWarehouse = (req, res) => {
-    const { id } = req.params;
-    db.poolWHAdmin.query('DELETE FROM warehouse WHERE id = ?', [id], (error) => {
-        if (error) {
-            console.error(error);
-            res.status(500).send('An error occurred while deleting a warehouse');
-        } else {
-            res.status(200).send(`Warehouse with ID: ${id} deleted`);
+/*
+ sp_delete_warehouse(warehouse_id: int, OUT result: int)
+
+ OUT result:
+    -1 on rollback
+    0 on successful commit
+    1 on warehouse not empty or not exist
+ */
+const deleteWarehouse = async (req, res) => {
+    try {
+        let warehouseID = req.params.id;
+        const [results] = await db.poolWHAdmin.query(`
+            CALL sp_delete_warehouse(?, @result)
+        `, [warehouseID]);
+        const [[{ result: resultCode }]] = await db.poolWHAdmin.query(`SELECT @result`);
+        if (resultCode === 1) {
+            return res.status(400).json({ error: `Warehouse with id: ${warehouseID} not empty or not exist`, result: resultCode });
+        } else if (resultCode === -1) {
+            return res.status(500).json({ error: "Internal server error", result: resultCode });
         }
-    });
+        return res.json({ message: `Warehouse with id: ${warehouseID} deleted successfully`, result: resultCode });
+    } catch (error) {
+        console.error("error: " + error.stack);
+        return res.status(500).json({ error: "Internal server error" });
+    }
 };
 
+/*
+ sp_move_product(product_id: int, move_quantity: int, from_warehouse: int, to_warehouse: int, OUT result: int)
+
+ OUT result:
+    -1 on rollback
+    0 on successful commit
+    1 on data not exists or illegal operation
+    2 on illegal argument value
+*/
 const moveProduct = async (req, res) => {
     try {
         const { move_product, move_quantity, from_warehouse, to_warehouse } = req.body;
@@ -114,14 +132,13 @@ const moveProduct = async (req, res) => {
         );
         const [[{ result: resultCode }]] = await db.poolWHAdmin.query('SELECT @result as result');
         if (resultCode === 0) {
-            res.status(200).json({ message: 'Product moved successfully' });
+            return res.status(200).json({ message: 'Product moved successfully', result: resultCode });
         } else if (resultCode === 1) {
-            res.status(400).json({ error: 'Invalid input' });
+            return res.status(400).json({ error: 'Data not exists or illegal operation', result: resultCode });
         } else if (resultCode === 2) {
-            res.status(400).json({ error: 'Invalid operation' });
-        } else {
-            res.status(500).json({ error: 'An error occurred while moving the product' });
+            return res.status(400).json({ error: 'Illegal argument value', result: resultCode });
         }
+        return res.status(500).json({ error: 'An error occurred while moving the product', result: resultCode });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
