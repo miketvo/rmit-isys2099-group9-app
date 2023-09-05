@@ -5,21 +5,34 @@ import InboundOrder from "./Items/InboundOrder";
 import Product from "./Items/Product";
 
 // Icons Imported
-import { BiSearch } from "react-icons/bi";
 import { IoAddOutline } from "react-icons/io5";
 import { IconSetting } from "../../utils/IconSetting";
 
 import { getDataAPI } from "../../api/apiRequest";
 import PopUp from "./PopUp/PopUp";
-import NavBar from "./NavBar";
-const SellerDashboardComponent = () => {
+
+import BuyerOrder from "./Items/BuyerOrder";
+
+// Import Mock data
+import { buyerOrderMockData, inboundOrderMockData } from "../../api/mock_data";
+
+
+
+const DashboardComponent = () => {
+  const [productData, setProductData] = useState([]);
+  const [buyerOrderData, setBuyerOrderData] = useState([]);
+  const [inboundOrderData, setInboundOrderData] = useState([]);
+
+  const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role
+
+
+  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getDataAPI("product");
         setProductData(result.data);
       } catch (error) {
-        // Handle the error
         console.error("Error fetching data:", error);
       }
     };
@@ -27,14 +40,19 @@ const SellerDashboardComponent = () => {
     fetchData();
   }, []);
 
-  const [productData, setProductData] = useState([]);
+  useEffect(() => {
+    setBuyerOrderData(buyerOrderMockData)
+  }, [buyerOrderData])
 
+  useEffect(() => {
+    setInboundOrderData(inboundOrderMockData)
+  }, [buyerOrderData])
+
+
+  // Function
   const handleDeleteData = (id, place) => {
-    if (place === "warehouse") {
-      // TODO: Wait for BE endpoint and then implement this
-    }
-    if (place === "product") {
-      setProductData(preState => [...preState.filter(item => item.id !== id)]);
+    if (place === "buyerOrder") {
+      setBuyerOrderData(preState => [...preState.filter(item => item.id !== id)]);
     }
   };
 
@@ -47,19 +65,30 @@ const SellerDashboardComponent = () => {
   };
 
   const ProductFunction = { handleDeleteData };
+  const BuyerOrderFunction = { handleDeleteData };
 
-  const DashboardTabsMap = [
-    {
-      id: "product",
-      component: <Product data={productData} compFunction={ProductFunction} />,
-    },
-    {
-      id: "inbound order",
-      component: (
-        <InboundOrder />
-      ),
-    },
-  ];
+
+  const DashboardTabsMap = userRole === "buyer" ?
+    [
+      {
+        id: "buyer order",
+        component: <BuyerOrder data={buyerOrderData} compFunction={BuyerOrderFunction} />,
+      }
+    ]
+    :
+    [
+      {
+        id: "product",
+        component: <Product data={productData} compFunction={ProductFunction} />,
+      }
+      ,
+      {
+        id: "inbound order",
+        component: (
+          <InboundOrder data={inboundOrderData} compFunction={ProductFunction}/>
+        ),
+      },
+    ];
 
   const [DashboardTabs, setDashboardTabs] = useState(DashboardTabsMap[0].id);
 
@@ -74,8 +103,7 @@ const SellerDashboardComponent = () => {
 
   return (
     <Fragment>
-      <NavBar />
-      <div className="dashboard_wrapper mt-3">
+      <div className="dashboard_wrapper mt-5">
         <div className="container">
           <div className="warehouse_header d-flex flex-rows justify-content-between align-items-center">
             <div className="dashboard_tabs">
@@ -98,62 +126,6 @@ const SellerDashboardComponent = () => {
                   </li>
                 ))}
               </ul>
-            </div>
-
-            <div className="">
-              <div className="input-group">
-                <div className="input-group-btn search-panel">
-                  <div
-                    className="btn btn-default dropdown-toggle"
-                    id="filterDropdown"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    <span id="search_concept">Filter by</span>{" "}
-                    <span className="caret"></span>
-                  </div>
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="filterDropdown"
-                  >
-                    <li>
-                      <a href="#contains">Contains</a>
-                    </li>
-                    <li>
-                      <a href="#its_equal">It&apos;s equal</a>
-                    </li>
-                    <li>
-                      <a href="#greather_than">Greather than &gt;</a>
-                    </li>
-                    <li>
-                      <a href="#less_than">Less than &lt; </a>
-                    </li>
-                    <li className="divider"></li>
-                    <li>
-                      <a href="#all">Anything</a>
-                    </li>
-                  </ul>
-                </div>
-                <input
-                  type="hidden"
-                  name="search_param"
-                  value="all"
-                  id="search_param"
-                />
-                <input
-                  type="text"
-                  className="form-control"
-                  name="x"
-                  placeholder="Search term..."
-                />
-                <span className="input-group-btn">
-                  <button className="btn btn-default" type="button">
-                    {IconSetting(<BiSearch />, "black", "16px")}
-                  </button>
-                </span>
-              </div>
             </div>
 
             <div className="">
@@ -182,4 +154,4 @@ const SellerDashboardComponent = () => {
   );
 };
 
-export default SellerDashboardComponent;
+export default DashboardComponent;

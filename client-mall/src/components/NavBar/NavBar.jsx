@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { toast } from "react-hot-toast";
 
 
-import {AiOutlineShoppingCart} from "react-icons/ai";
+import {MdDashboard} from "react-icons/md";
 import {FiSearch} from "react-icons/fi"
 
 import { FaCircleUser } from "react-icons/fa6";
@@ -14,6 +14,8 @@ import { useState } from "react";
 
 
 const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
+  const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role
+  console.log(userRole)
   const handleLogOut = async() => {
     const userData = JSON.parse(localStorage.getItem("userInfo"))?.username
     try {
@@ -100,10 +102,10 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
             </div>
 
             <div className="d-flex">
-              <Link to="/cart" className="btn btn-outline-dark"> 
+              <Link to="/dashboard" className="btn btn-outline-dark"> 
                 <span>   
-                  {IconSetting(<AiOutlineShoppingCart/>, "", "", "me-2")}
-                  Cart
+                  {IconSetting(<MdDashboard/>, "", "", "me-2")}
+                  Dashboard
                   <span className="badge bg-dark text-white ms-1 rounded-pill">
                     0
                   </span>

@@ -1,10 +1,11 @@
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import {useParams} from "react-router-dom"
 
 import {GrAdd} from "react-icons/gr"
 import {BiMinus} from "react-icons/bi"
 import { getDataAPI } from "../../api/apiRequest"
-import { useState } from "react"
+
+import {toast} from "react-hot-toast"
 
 const DetailProductComponent = () => {
     const {id} = useParams()
@@ -35,7 +36,10 @@ const DetailProductComponent = () => {
         fetchDetailProduct()
     }, [id])
 
-    console.log(detailProduct)
+
+    const handleCreateOrder = () => {
+        toast.success("Create an Order")
+    }
     return (
         <div className="detail_product mt-5">
             <div className="container shadow-sm p-3 mb-5 bg-body-tertiary rounded">
@@ -59,6 +63,7 @@ const DetailProductComponent = () => {
                         </div>
                         <hr />
                         <div className="">
+                            <small>Price: </small>
                             <h5>$ {detailProduct.price}</h5>
                         </div>
                         <hr />
@@ -66,20 +71,25 @@ const DetailProductComponent = () => {
                             <div className="d-flex align-items-center">
                                 <span className="me-4">Quantity: </span>
                                 <div className="d-flex">
-                                    <button className="btn btn-outline-secondary" onClick={() => setQuantity(preCount => preCount + 1)}>
-                                        <GrAdd/>
-                                    </button>
-                                    <input className="form-control w-25" type="text" placeholder="Default input" aria-label="default input example"
-                                    value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-                                    <button className="btn btn-outline-secondary" onClick={() => setQuantity(preCount => preCount - 1)}>
+                                    <button className="btn btn-outline-secondary me-2" onClick={() => {quantity > 0 && setQuantity(quantity - 1)}}>
                                         <BiMinus />
+                                    </button>
+                                    <input className="form-control w-25" type="number" inputMode="numeric" aria-label="default input example"
+                                    value={quantity || 0} onChange={(e) => {
+                                        const newValue = e.target.value;
+                                        const parsedValue = newValue ? parseInt(newValue, 10) : 0;
+                                        setQuantity(parsedValue);
+                                    }} 
+                                    />
+                                    <button className="btn btn-outline-secondary ms-2" onClick={() => setQuantity(quantity + 1)}>
+                                        <GrAdd/>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         <div className="mt-4">
-                            <button className="btn btn-outline-primary">Add to Cart</button>
+                            <button className="btn btn-outline-primary" onClick={handleCreateOrder}>Place Order</button>
                         </div>
                     </div>
                 </div>

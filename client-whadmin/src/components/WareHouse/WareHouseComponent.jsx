@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react"
 
 // Item Component
 import WareHouse from "./Items/WareHouse"
-import Product from "./Items/ProductAttributes"
+import ProductAttributes from "./Items/ProductAttributes"
 
 // Icons Imported
 import {IoAddOutline} from "react-icons/io5"
@@ -15,6 +15,8 @@ import { getDataAPI } from "../../api/apiRequest"
 
 
 const WareHouseComponent = () => {
+  const [wareHouseData, setWareHouseData] = useState([]);
+  const [productCategoryData, setProductCategoryData] = useState([]);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -29,8 +31,23 @@ const WareHouseComponent = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+          const result = await getDataAPI('product-category');
+          setProductCategoryData(result.data)
+      } catch (error) {
+          // Handle the error
+          console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
   
-  const [wareHouseData, setWareHouseData] = useState([])
 
   const handleDeleteData = (id, place) => {
     if (place === "warehouse") {
@@ -48,6 +65,7 @@ const WareHouseComponent = () => {
   }
 
   const WareHouseFunction = {handleDeleteData}
+  const ProductCategoryFunction = {handleDeleteData}
   const ProductFunction = {handleDeleteData}
 
   const WareHouseTabsMap = [
@@ -57,11 +75,11 @@ const WareHouseComponent = () => {
     },
     {
       id: 'categories',
-      component: <Categories/>
+      component: <Categories compData={productCategoryData} compFunction={ProductCategoryFunction}/>
     },
     {
       id: 'product_attribute',
-      component: <Product compFunction={ProductFunction}/>
+      component: <ProductAttributes compFunction={ProductFunction}/>
     },
     {
       id: 'move_product',

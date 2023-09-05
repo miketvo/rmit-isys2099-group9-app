@@ -17,7 +17,7 @@ const MoveProduct = () => {
         },
     ]
     return (
-        <div className="move_product mt-4">
+        <div className="move_product mt-3">
             <form className="container_fluid">
                 <div className="row g-2">
                     <OptionComponent name="Seller" data={data} />
@@ -28,7 +28,7 @@ const MoveProduct = () => {
                     <div className="d-flex">
                         <div className="col-5">
                             <select className="form-select" aria-label="Default select example">
-                                <option selected>Open this select menu</option>
+                                <option value="">Open this select menu</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>
@@ -39,7 +39,7 @@ const MoveProduct = () => {
                         </div>
                         <div className="col-5">
                             <select className="form-select" aria-label="Default select example">
-                                <option selected>Open this select menu</option>
+                                <option value="">Open this select menu</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>

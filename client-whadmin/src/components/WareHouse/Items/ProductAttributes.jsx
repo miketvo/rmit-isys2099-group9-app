@@ -1,9 +1,9 @@
 // import PropTypes from 'prop-types';
 
-const Product = ({compData, compFunction}) => {
+const ProductAttributes = ({compData, compFunction}) => {
   const {handleDeleteData} = compFunction
   return (
-    <div className="product_attribute_table d-flex mt-4">
+    <div className="product_attribute_table d-flex mt-3">
       <table className="table table-striped table-hover">
         <thead>
           <tr>
@@ -69,4 +69,4 @@ const Product = ({compData, compFunction}) => {
 //   }).isRequired
 // };
 
-export default Product
+export default ProductAttributes

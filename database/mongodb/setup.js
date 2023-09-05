@@ -2,7 +2,7 @@ const { MongoClient, ServerApiVersion } = require("mongodb");
 const { createCollections } = require("./collections");
 const { insertMockData } = require("./mockData");
 
-const connectionUri = "mongodb://127.0.0.1:27017/"; // Putting localhost here will NOT work
+const connectionUri = "mongodb+srv://user01:user0123456789@cluster0.rvqafdr.mongodb.net/"; // Putting localhost here will NOT work
 const databaseName = "isys2099_group9_app";
 const client = new MongoClient(connectionUri, {
   serverApi: {

@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 
 
 const OptionComponent = ({name, data}) => {
-  const [optionValue, setOptionValue] = useState()
+  const [optionValue, setOptionValue] = useState("")
   return (
     <Fragment>
       <div className="col-4">
@@ -15,12 +15,12 @@ const OptionComponent = ({name, data}) => {
             <select className="form-select" aria-label="Default select example"
             value={optionValue}
             onChange={(e) => setOptionValue(e.target.value)}>
-                <option selected>Open this select menu</option>
-                {
-                  data?.map((item, idx) => (
-                    <option value={item.value} key={idx}>{item.name}</option>
-                  ))
-                }
+                <option value="">Open this select menu</option>
+                {data?.map((item, idx) => (
+                  <option value={item.value} key={idx}>
+                    {item.name}
+                  </option>
+                ))}
             </select>
           </div>
         </div>

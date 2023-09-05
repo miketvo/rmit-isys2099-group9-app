@@ -9,7 +9,7 @@ import TestImg from "../../../images/potato.jpg";
 const Product = ({ data, compFunction }) => {
   const { handleDeleteData } = compFunction;
   return (
-    <div className="product_table d-flex mt-4">
+    <div className="product_table d-flex mt-2">
       <table className="table table-striped table-hover">
         <thead>
           <tr>

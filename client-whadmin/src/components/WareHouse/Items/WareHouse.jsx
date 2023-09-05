@@ -8,7 +8,7 @@ const WareHouse = ({data, compFunction}) => {
     const {handleDeleteData} = compFunction;
 
     return (
-        <div className="warehouse_table mt-4">
+        <div className="warehouse_table mt-3">
             <table className="table table-striped table-hover">
                 <thead>
                     <tr>
