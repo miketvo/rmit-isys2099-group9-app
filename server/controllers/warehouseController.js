@@ -18,16 +18,18 @@ const createWarehouse = async (req, res) => {
         const { warehouse_name, volume, province, city, district, street, street_number } = req.body;
         const query = `INSERT INTO warehouse (warehouse_name, volume, province, city, district, street, street_number) VALUES (?, ?, ?, ?, ?, ?, ?)`;
         const result = await db.poolWHAdmin.query(query, [warehouse_name, volume, province, city, district, street, street_number]);
+        
+        console.log("\n"+result[0]);
         res.status(201).json({
-            message: `Warehouse with ID: ${result.insertId} created`,
-            id: result.insertId,
-            warehouse_name: result.warehouse_name,
-            volume: result.volume,
-            province: result.province,
-            city: result.city,
-            district: result.district,
-            street: result.street,
-            street_number: result.street_number
+            message: `Warehouse with ID: ${result[0].insertId} created`,
+            id: result[0].insertId,
+            warehouse_name: warehouse_name,
+            volume: volume,
+            province: province,
+            city: city,
+            district: district,
+            street: street,
+            street_number: street_number
         });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -71,16 +73,17 @@ const updateWarehouse = async (req, res) => {
                 console.error(error);
                 res.status(500).send('An error occurred while updating a warehouse');
             } else {
+                console.log("\n"+result[0]);
                 res.status(201).json({
                     message: `Warehouse with ID: ${warehouseID} updated`,
                     id: warehouseID,
-                    warehouse_name: result.warehouse_name,
-                    volume: result.volume,
-                    province: result.province,
-                    city: result.city,
-                    district: result.district,
-                    street: result.street,
-                    street_number: result.street_number
+                    warehouse_name: warehouse_name,
+                    volume: volume,
+                    province: province,
+                    city: city,
+                    district: district,
+                    street: street,
+                    street_number: street_number
                 });
             }
         }

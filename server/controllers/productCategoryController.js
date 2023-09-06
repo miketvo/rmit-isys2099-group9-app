@@ -7,10 +7,13 @@ const createProductCategory = async (req, res) => {
         const { category_name, parent } = req.body;
         const query = `INSERT INTO product_category (category_name, parent) VALUES (?, ?)`;
         const result = await db.poolWHAdmin.query(query, [category_name, parent]);
+
+        console.log("\n"+result[0]);
+
         res.status(201).json({
             message: `Product category with name: ${category_name} created`,
-            category_name: result.category_name,
-            parent: result.parent,
+            category_name: category_name,
+            parent: parent,
         });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -56,7 +59,7 @@ const updateProductCategory = async (req, res) => {
             } else {
                 res.status(201).json({
                     message: `Product category with name: ${categoryName} updated`,
-                    parent: result.parent,
+                    parent: parent,
                     category_name: categoryName
                 });
             }
