@@ -16,7 +16,7 @@ const { db, model } = require("../models");
 const createWarehouse = async (req, res) => {
     try {
         const { warehouse_name, volume, province, city, district, street, street_number } = req.body;
-        const query = `INSERT INTO warehouse (warehouse_name, volume, province, city, district, street, street_number) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        const query = `INSERT INTO view_warehouse_noid (warehouse_name, volume, province, city, district, street, street_number) VALUES (?, ?, ?, ?, ?, ?, ?)`;
         const result = await db.poolWHAdmin.query(query, [warehouse_name, volume, province, city, district, street, street_number]);
         
         console.log("\n"+result[0]);
