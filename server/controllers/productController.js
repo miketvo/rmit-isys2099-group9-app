@@ -77,18 +77,6 @@ const createProduct = async (req, res) => {
             height, 
         } = req.body;
 
-        // For Postman Testing
-        // const { 
-        //     title, 
-        //      
-        //     product_description, 
-        //     category, 
-        //     price, 
-        //     width, 
-        //     length, 
-        //     height,
-        //     seller, 
-        // } = req.body;
         const query = `INSERT INTO view_product_noid (title,  product_description, category, price, width, length, height, seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
         const result = await db.poolWHAdmin.query(
             query, 
@@ -102,12 +90,16 @@ const createProduct = async (req, res) => {
                 height, 
                 seller
             ]);
+
+        console.log(result[0]);
+
         res.status(201).json({ 
-            id: result.insertId, 
-            title: result.title, 
-            product_description: result.product_description, 
-            category: result.category, 
-            price: result.price,
+            message: 'Product created successfully',
+            id: result[0].insertId, 
+            title: title, 
+            product_description: product_description, 
+            category: category, 
+            price: price,
             seller: seller, 
         });
     } catch (error) {
@@ -128,18 +120,7 @@ const updateProductById = async (req, res) => {
             length, 
             height, 
         } = req.body;
-        // For Postman Testing
-        // const { 
-        //     title, 
-        //      
-        //     product_description, 
-        //     category, 
-        //     price, 
-        //     width, 
-        //     length, 
-        //     height,
-        //     seller, 
-        // } = req.body;
+
         const query = `UPDATE product SET title = ?, image = ?, product_description = ?, category = ?, price = ?, width = ?, length = ?, height = ?, seller = ? WHERE id = ?`;
         const result = await db.poolWHAdmin.query(
             query, 
@@ -156,11 +137,11 @@ const updateProductById = async (req, res) => {
             ]);
         res.json({ 
             message: "Product updated", 
-            id: result.insertId, 
-            title: result.title, 
-            product_description: result.product_description, 
-            category: result.category, 
-            price: result.price,
+            id: result[0].insertId, 
+            title: title, 
+            product_description: product_description, 
+            category: category, 
+            price: price,
             seller: seller, 
         });
     } catch (error) {

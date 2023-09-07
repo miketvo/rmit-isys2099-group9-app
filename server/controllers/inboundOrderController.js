@@ -45,16 +45,17 @@ const createInboundOrder = async (req, res) => {
                 seller
             ]
         );
+
         res.status(201).json({
-            message: `Inbound order with ID: ${result.insertId} updated`, 
-            id: result.insertId, 
-            quantity: result.quantity, 
-            product_id: result.product_id, 
-            created_date: result.created_date, 
-            created_time: result.created_time, 
-            fulfilled_date: result.fulfilled_date, 
-            fulfilled_time: result.fulfilled_time, 
-            seller: result.seller
+            message: `Inbound order with ID: ${result[0].insertId} updated`, 
+            id: result[0].insertId, 
+            quantity: quantity, 
+            product_id: product_id, 
+            created_date: created_date, 
+            created_time: created_time, 
+            fulfilled_date: fulfilled_date, 
+            fulfilled_time: fulfilled_time, 
+            seller: seller
         });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -91,7 +92,7 @@ const updateInboundOrder = async (req, res) => {
     const inboundOrderID = req.params.id;
     const seller = req.username
     const { quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time } = req.body;
-    const result = await db.poolSeller.query(
+    let result = await db.poolSeller.query(
         'UPDATE inbound_order SET quantity = ?, product_id = ?, created_date = ?, created_time = ?, fulfilled_date = ?, fulfilled_time = ?, seller = ? WHERE id = ?',
         [quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time, seller, inboundOrderID],
         (error) => {
@@ -99,15 +100,17 @@ const updateInboundOrder = async (req, res) => {
                 console.error(error);
                 res.status(500).send('An error occurred while updating an inbound order');
             } else {
+                console.log(result);
+                result = result[0];
                 res.status(201).json({
                     message: `Inbound order with ID: ${inboundOrderID}} updated`, 
-                    quantity: result.quantity, 
-                    product_id: result.product_id, 
-                    created_date: result.created_date, 
-                    created_time: result.created_time, 
-                    fulfilled_date: result.fulfilled_date, 
-                    fulfilled_time: result.fulfilled_time,
-                    seller: result.seller,
+                    quantity: quantity, 
+                    product_id: product_id, 
+                    created_date: created_date, 
+                    created_time: created_time, 
+                    fulfilled_date: fulfilled_date, 
+                    fulfilled_time: fulfilled_time,
+                    seller: seller,
                     id: inboundOrderID
                 });            
             }

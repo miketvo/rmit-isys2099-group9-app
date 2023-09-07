@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 //apiRouter.js
 const express = require("express");
 const apiRouter = express.Router();
 
-const { db } = require("./models");
+const { db, model } = require("./models");
 
 {
   /* API Endpoint for all warehouses */
@@ -53,6 +54,16 @@ apiRouter.get("/wh_admin", async (req, res) => {
   } catch (error) {
     console.error("error: " + error.stack);
     return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+apiRouter.get('/products', async (req, res) => {
+  try {
+    const [results] = await db.poolWHAdmin.query(`SELECT * FROM product`);
+    return res.json(results);
+  } catch (error) {
+      console.error("error: " + error.stack);
+      return res.status(500).json({ error: "Internal server error" });
   }
 });
 
