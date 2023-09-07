@@ -14,12 +14,12 @@ import { useState } from "react";
 
 
 const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
-  const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role
-  console.log(userRole)
+  // const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role
+
   const handleLogOut = async() => {
-    const userData = JSON.parse(localStorage.getItem("userInfo"))?.username
+    const username = JSON.parse(localStorage.getItem("userInfo")).username
     try {
-      const response = await deleteDataAPI("auth/logout", {username: userData});
+      const response = await deleteDataAPI("auth/logout", {username: username});
       if (response.data) {
         localStorage.removeItem("userInfo")
         toast.success(`Log Out Successfully`);

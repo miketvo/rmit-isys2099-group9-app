@@ -1,7 +1,10 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+
+import { BiEdit } from "react-icons/bi"
+import { ImBin2 } from "react-icons/im"
 
 const ProductAttributes = ({compData, compFunction}) => {
-  const {handleDeleteData} = compFunction
+  const {handleOpenEditedMode, handleDeleteData} = compFunction
   return (
     <div className="product_attribute_table d-flex mt-3">
       <table className="table table-striped table-hover">
@@ -15,28 +18,23 @@ const ProductAttributes = ({compData, compFunction}) => {
           </tr>
         </thead>
         <tbody>
-          {/* {
-            data?.map((item) => {
+          {
+            compData?.map((item) => {
+              console.log(item.required)
                 return(
-                    <tr key={item.id}>
-                        <th scope="row">{item.id}</th>
-                        <td>{item.title}</td>
-                        <td>
-                          <img src={TestImg} alt="" />
-                        </td>
-                        <td>{item.product_description}</td>
-                        <td>{item.category}</td>
-                        <td>{item.price}</td>
-                        <td>{item.width}</td>
-                        <td>{item.height}</td>
-                        <td>{item.length}</td>
-                        <td>{item.seller}</td>
+                    <tr key={item.attribute_name}>
+                        <td>{item.attribute_name}</td>
+                        <td>{item.attribute_type}</td>
+                        <td>{item.required === false ? "No" : "Yes"}</td>
+                        <td>{item.category ? item.category : ""}</td>
+                        
                         <td className="sticky_action">
-                            <span className="btn btn-primary">
+                            <span className="btn btn-primary"
+                            onClick={() => handleOpenEditedMode({attribute_name: item.attribute_name, place: "product_attribute"})}>
                                 <BiEdit />
                             </span>
                             <span className="btn btn-warning ms-2"
-                            onClick={() => handleDeleteData(item.id, "product")}>
+                            onClick={() => handleDeleteData({attribute_name: item.attribute_name, place: "product_attribute"})}>
                                 <ImBin2 />
                             </span>
                         </td>
@@ -44,29 +42,28 @@ const ProductAttributes = ({compData, compFunction}) => {
                     </tr>
                 )
             })
-          } */}
+          }
         </tbody>
       </table>
     </div>
   )
 }
 
-// Product.propTypes = {
-//   data: PropTypes.arrayOf(PropTypes.shape({
-//     id: PropTypes.number.isRequired,
-//     title: PropTypes.string.isRequired,
-//     image: PropTypes.string,
-//     product_description: PropTypes.string,
-//     category: PropTypes.string.isRequired,
-//     price: PropTypes.string.isRequired,
-//     width: PropTypes.number.isRequired,
-//     height: PropTypes.number.isRequired,
-//     length: PropTypes.number.isRequired,
-//     seller: PropTypes.string.isRequired
-//   })).isRequired,
-//   compFunction: PropTypes.shape({
-//     handleDeleteData: PropTypes.func.isRequired
-//   }).isRequired
-// };
+ProductAttributes.propTypes = {
+  compData: PropTypes.arrayOf(
+    PropTypes.shape({
+      attribute_name: PropTypes.string.isRequired,
+      attribute_type: PropTypes.string.isRequired,
+      required: PropTypes.bool.isRequired,
+      category: PropTypes.string,
+
+    })
+  ).isRequired,
+  compFunction: PropTypes.shape({
+    handleDeleteData: PropTypes.func.isRequired,
+    handleOpenEditedMode: PropTypes.func.isRequired
+  }).isRequired,
+};
+
 
 export default ProductAttributes

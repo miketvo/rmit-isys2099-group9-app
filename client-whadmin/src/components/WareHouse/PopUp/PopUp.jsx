@@ -1,21 +1,41 @@
 import PropTypes from 'prop-types';
 
-import Product from "./Product";
+
 import WareHouse from "./WareHouse";
+import Categories from './Categories';
+import { Fragment } from 'react';
+import ProductAttributes from './ProductAttributes';
 
 
 const PopUp = ({compData, compFunction}) => {
-    const {popUpState, wareHouseData, productData} = compData;
-    const {created, type} = popUpState;
-    const {setPopUpState, setWareHouseData, setProductData} = compFunction;
+    const {popUpState, productCategoryData, editedWarehouseData, editedProductCategoryData, editedProductAttributeData} = compData;
+    const {setPopUpState, setWareHouseData, setProductCategoryData, setProductAttributesData} = compFunction;
+
+    const {created, edited, type} = popUpState;
+
 
     return (
         <div className="popup_wrapper">
             <div className="overlay"></div>
-            <div className="popup_container p-4">
-                {type === "warehouse" && <WareHouse compData={{created: created, wareHouseData: wareHouseData}} compFunction={{setPopUpState, setWareHouseData}} />}
-                {type === "product" && <Product data={{created: created, productData: productData}} compFunction={{setPopUpState, setProductData}}/>}
-            </div>
+
+            <Fragment>
+                {type === "warehouse" && 
+                    <WareHouse compData={{created: created, edited: edited, editedWarehouseData: editedWarehouseData}} 
+                            compFunction={{setPopUpState, setWareHouseData}} 
+                    />
+                }
+                {type === "categories" && 
+                    <Categories compData={{created: created, edited: edited, productCategoryData: productCategoryData, editedProductCategoryData: editedProductCategoryData}} 
+                                compFunction={{setPopUpState, setProductCategoryData}}
+                    />
+                }
+                {
+                type === "product_attribute" && 
+                    <ProductAttributes compData={{created: created, edited: edited, productCategoryData: productCategoryData, editedProductAttributeData: editedProductAttributeData}}
+                                        compFunction={{setPopUpState, setProductAttributesData}}
+                    />
+                }
+            </Fragment>
         </div>
     )
 }
@@ -24,15 +44,21 @@ PopUp.propTypes = {
     compData: PropTypes.shape({
         popUpState: PropTypes.shape({
             created: PropTypes.bool.isRequired,
-            type: PropTypes.oneOf(["warehouse", "product"]).isRequired,
+            edited: PropTypes.bool.isRequired,
+            type: PropTypes.oneOf(["warehouse", "product", "categories","product_attribute"]).isRequired,
         }).isRequired,
-        wareHouseData: PropTypes.array.isRequired,
-        productData: PropTypes.array.isRequired,
+        productCategoryData: PropTypes.array,
+        productAttributesData: PropTypes.array,
+        editedWarehouseData: PropTypes.object,
+        editedProductCategoryData: PropTypes.object,
+        editedProductAttributeData: PropTypes.object
+        
     }).isRequired,
     compFunction: PropTypes.shape({
         setPopUpState: PropTypes.func.isRequired,
         setWareHouseData: PropTypes.func.isRequired,
-        setProductData: PropTypes.func.isRequired,
+        setProductCategoryData: PropTypes.func.isRequired,
+        setProductAttributesData: PropTypes.func.isRequired,
     }).isRequired,
 };
 

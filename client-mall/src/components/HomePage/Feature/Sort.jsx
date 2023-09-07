@@ -23,8 +23,8 @@ const Sort = () => {
                 <option value="">Default</option>
                 <option value="title">Sort A to Z</option>
                 <option value="-title">Sort Z to A</option>
-                <option value="salary">Salary: Low-High</option>
-                <option value="-salary">Salary: High-Low</option>
+                <option value="price">Price: Low-High</option>
+                <option value="-price">Price: High-Low</option>
             </select>
         </div>
     ) 

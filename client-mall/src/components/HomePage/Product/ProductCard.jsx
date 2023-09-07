@@ -26,11 +26,13 @@ const ProductCard = ({ product }) => {
       {/* Product actions */}
       <div className="card-footer p-4 pt-0 border-top-0 bg-transparent">
         <div className="text-center">
-          <a className="btn btn-outline-dark mt-auto" href="#">
-            Add to Cart
-          </a>
+          <span className="btn btn-outline-dark mt-auto" href="#">
+            Place Order
+          </span>
         </div>
-        <p className="text-center fw-bold pt-2">{product.category}</p>
+        <div className="d-flex justify-content-end mt-4 w-100">
+          <small className="text-end fw-bold ">{product.category}</small>
+        </div>
       </div>
     </div>
   );

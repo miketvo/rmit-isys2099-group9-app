@@ -3,7 +3,7 @@ import { ImBin2 } from "react-icons/im"
 import PropTypes from 'prop-types';
 
 const Categories = ({compData, compFunction}) => {
-  const {handleDeleteData} = compFunction
+  const {handleOpenEditedMode, handleDeleteData} = compFunction
   return (
     <div className="product_category_table w-100 d-flex mt-3">
       <table className="table table-striped table-hover">
@@ -22,11 +22,12 @@ const Categories = ({compData, compFunction}) => {
                         <td>{item.category_name}</td>
                         <td>{item.parent}</td>
                         <td className="sticky_action">
-                            <span className="btn btn-primary">
+                            <span className="btn btn-primary"
+                            onClick={() => handleOpenEditedMode({category_name: item.category_name, place: "categories"})}>
                                 <BiEdit />
                             </span>
                             <span className="btn btn-warning ms-2"
-                            onClick={() => handleDeleteData(item.id, "product")}>
+                            onClick={() => handleDeleteData({category_name: item.category_name, place: "categories"})}>
                                 <ImBin2 />
                             </span>
                         </td>
@@ -47,6 +48,7 @@ Categories.propTypes = {
 
   })).isRequired,
   compFunction: PropTypes.shape({
+    handleOpenEditedMode: PropTypes.func.isRequired,
     handleDeleteData: PropTypes.func.isRequired,
 
   }).isRequired,

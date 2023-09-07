@@ -1,9 +1,9 @@
-import { Fragment, useState } from "react"
+import { Fragment} from "react"
 import PropTypes from "prop-types"
 
 
-const OptionComponent = ({name, data}) => {
-  const [optionValue, setOptionValue] = useState("")
+const OptionComponent = ({name, compData, compState, compFunction}) => {
+
   return (
     <Fragment>
       <div className="col-4">
@@ -13,12 +13,12 @@ const OptionComponent = ({name, data}) => {
           </div>
           <div className="col-9">
             <select className="form-select" aria-label="Default select example"
-            value={optionValue}
-            onChange={(e) => setOptionValue(e.target.value)}>
+            value={compState}
+            onChange={(e) => compFunction(e.target.value)}>
                 <option value="">Open this select menu</option>
-                {data?.map((item, idx) => (
-                  <option value={item.value} key={idx}>
-                    {item.name}
+                {compData.length > 0 && compData?.map((item, idx) => (
+                  <option value={item} key={idx}>
+                    {item}
                   </option>
                 ))}
             </select>
@@ -27,8 +27,8 @@ const OptionComponent = ({name, data}) => {
       </div>
       
       <div className="col-8">
-        <input className="form-control" type="text" placeholder="Disabled input" aria-label="Disabled input example" disabled 
-        value={optionValue}/>
+        <input className="form-control" type="text" aria-label="Disabled input example" disabled 
+        value={compState}/>
       </div>
     </Fragment>
   )
@@ -36,12 +36,9 @@ const OptionComponent = ({name, data}) => {
 
 OptionComponent.propTypes = {
   name: PropTypes.string.isRequired,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      name: PropTypes.string,
-    })
-  ),
+  compState: PropTypes.string,
+  compData: PropTypes.array,
+  compFunction: PropTypes.func.isRequired
 };
 
 export default OptionComponent

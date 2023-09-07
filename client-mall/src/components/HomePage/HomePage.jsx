@@ -60,7 +60,11 @@ const HomePage = () => {
       if (sortCurr) {
         const clonedData = [...products];
         const sortTitle = clonedData.sort((a, b) => {
-          return sortCurr === 'title' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+          return sortCurr === 'title' ? a.title.localeCompare(b.title) : 
+                sortCurr === '-title' ? b.title.localeCompare(a.title) :
+                sortCurr === 'price' ? a.price.localeCompare(b.price) :
+                sortCurr === '-price' ? b.price.localeCompare(a.price) :
+                a.title.localeCompare(b.title)
         })
         setQueryData(sortTitle)
       }

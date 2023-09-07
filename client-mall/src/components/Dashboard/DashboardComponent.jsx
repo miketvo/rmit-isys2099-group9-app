@@ -23,22 +23,39 @@ const DashboardComponent = () => {
   const [buyerOrderData, setBuyerOrderData] = useState([]);
   const [inboundOrderData, setInboundOrderData] = useState([]);
 
-  const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role
+  const [categoryData, setCategoryData] = useState([])
 
+  const [editedData, setEditedData] = useState({})
+
+  const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role
+  const username = JSON.parse(localStorage.getItem("userInfo"))?.username
 
   // Fetch data
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProductData = async () => {
       try {
         const result = await getDataAPI("product");
-        setProductData(result.data);
+        const filteredProductBySeller = result?.data.filter((obj) => obj.seller === username);
+        setProductData(filteredProductBySeller);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchData();
-  }, []);
+    const fetchProductCategoryData = async () => {
+      try {
+        const result = await getDataAPI("product-category");
+        const categoryArray = result.data.map((item) => item.category_name);
+        setCategoryData(categoryArray)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchProductData();
+
+    fetchProductCategoryData();
+  }, [username]);
 
   useEffect(() => {
     setBuyerOrderData(buyerOrderMockData)
@@ -48,13 +65,27 @@ const DashboardComponent = () => {
     setInboundOrderData(inboundOrderMockData)
   }, [buyerOrderData])
 
-
   // Function
   const handleDeleteData = (id, place) => {
     if (place === "buyerOrder") {
       setBuyerOrderData(preState => [...preState.filter(item => item.id !== id)]);
+    } 
+    else if (place === "product") {
+      setProductData(preState => [...preState.filter(item => item.id !== id)]);
     }
   };
+
+  
+  const handleOpenEdited = (id, place) => {
+    if (place === "product") {
+      setEditedData(productData.find(item => item.id === id))
+      setPopUpState(prevState => ({
+        ...prevState,
+        state: !prevState.state,
+        edited: true
+      }));
+    }
+  }
 
   const handlePopUpForm = () => {
     setPopUpState(prevState => ({
@@ -64,8 +95,9 @@ const DashboardComponent = () => {
     }));
   };
 
-  const ProductFunction = { handleDeleteData };
   const BuyerOrderFunction = { handleDeleteData };
+  const ProductFunction = { handleDeleteData, handleOpenEdited };
+  const InboundOrderFunction = {handleDeleteData, handleOpenEdited};
 
 
   const DashboardTabsMap = userRole === "buyer" ?
@@ -73,6 +105,7 @@ const DashboardComponent = () => {
       {
         id: "buyer order",
         component: <BuyerOrder data={buyerOrderData} compFunction={BuyerOrderFunction} />,
+        created: false
       }
     ]
     :
@@ -80,13 +113,13 @@ const DashboardComponent = () => {
       {
         id: "product",
         component: <Product data={productData} compFunction={ProductFunction} />,
+        created: true,
       }
       ,
       {
         id: "inbound order",
-        component: (
-          <InboundOrder data={inboundOrderData} compFunction={ProductFunction}/>
-        ),
+        component: <InboundOrder data={inboundOrderData} compFunction={InboundOrderFunction}/>,
+        created: false
       },
     ];
 
@@ -95,10 +128,11 @@ const DashboardComponent = () => {
   const [popUpState, setPopUpState] = useState({
     state: false,
     created: false,
+    edited: false,
     type: DashboardTabs,
   });
 
-  const PopUpData = { popUpState, productData };
+  const PopUpData = { popUpState, productData, categoryData, editedData };
   const PopUpFunction = { setPopUpState, setProductData };
 
   return (
@@ -128,12 +162,18 @@ const DashboardComponent = () => {
               </ul>
             </div>
 
-            <div className="">
-              <button className="btn btn-success" onClick={handlePopUpForm}>
-                {IconSetting(<IoAddOutline />, "white", "16px")}
-                <span>Create</span>
-              </button>
-            </div>
+            
+            {DashboardTabsMap.map(
+              tab =>
+                tab.id === DashboardTabs && tab.created === true && (
+                  <div className="" key={tab.id}>
+                    <button className="btn btn-success" onClick={handlePopUpForm}>
+                      {IconSetting(<IoAddOutline />, "white", "16px")}
+                      <span>Create</span>
+                    </button>
+                  </div>
+                ),
+            )}
           </div>
 
           <div className="dashboard_body">

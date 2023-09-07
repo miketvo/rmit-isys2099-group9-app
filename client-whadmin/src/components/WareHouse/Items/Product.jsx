@@ -1,15 +1,10 @@
 import PropTypes from "prop-types";
 
-// Icon Imported
-import { BiEdit } from "react-icons/bi";
-import { ImBin2 } from "react-icons/im";
-
 import TestImg from "../../../images/potato.jpg";
 
-const Product = ({ data, compFunction }) => {
-  const { handleDeleteData, handleOpenEdited } = compFunction;
+const Product = ({ compData }) => {
   return (
-    <div className="product_table d-flex mt-2">
+    <div className="warehouse_table d-flex mt-2">
       <table className="table table-striped table-hover">
         <thead>
           <tr>
@@ -23,11 +18,10 @@ const Product = ({ data, compFunction }) => {
             <th>Height</th>
             <th>Length</th>
             <th>Seller</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {data?.map(item => {
+          {compData?.map(item => {
             return (
               <tr key={item.id}>
                 <th scope="row">{item.id}</th>
@@ -42,18 +36,6 @@ const Product = ({ data, compFunction }) => {
                 <td>{item.height}</td>
                 <td>{item.length}</td>
                 <td>{item.seller}</td>
-                <td className="sticky_action">
-                  <span className="btn btn-primary"
-                  onClick={() => handleOpenEdited(item.id, "product")}>
-                    <BiEdit />
-                  </span>
-                  <span
-                    className="btn btn-warning ms-2"
-                    onClick={() => handleDeleteData(item.id, "product")}
-                  >
-                    <ImBin2 />
-                  </span>
-                </td>
               </tr>
             );
           })}
@@ -64,7 +46,7 @@ const Product = ({ data, compFunction }) => {
 };
 
 Product.propTypes = {
-  data: PropTypes.arrayOf(
+  compData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
@@ -77,11 +59,7 @@ Product.propTypes = {
       length: PropTypes.number.isRequired,
       seller: PropTypes.string.isRequired,
     }),
-  ).isRequired,
-  compFunction: PropTypes.shape({
-    handleDeleteData: PropTypes.func.isRequired,
-    handleOpenEdited: PropTypes.func.isRequired
-  }).isRequired,
+  ).isRequired
 };
 
 export default Product;
