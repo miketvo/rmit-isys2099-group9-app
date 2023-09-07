@@ -126,12 +126,13 @@ const deleteWarehouse = async (req, res) => {
     1 on data not exists or illegal operation
     2 on illegal argument value
 */
+
 const moveProduct = async (req, res) => {
     try {
-        const { move_product, move_quantity, from_warehouse, to_warehouse } = req.body;
+        const { product_id, move_quantity, from_warehouse_id, to_warehouse_id } = req.body;
         const result = await db.poolWHAdmin.query(
             'CALL sp_move_product(?, ?, ?, ?, @result)',
-            [move_product, move_quantity, from_warehouse, to_warehouse]
+            [product_id, move_quantity, from_warehouse_id, to_warehouse_id]
         );
         const [[{ result: resultCode }]] = await db.poolWHAdmin.query('SELECT @result as result');
         if (resultCode === 0) {

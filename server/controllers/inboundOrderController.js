@@ -21,27 +21,23 @@ query fulfill: post
 require("express");
 const { db, model } = require("../models");
 
+// TODO: Double check this function
 const createInboundOrder = async (req, res) => {
     try {
         const seller = req.username;
         const { 
             quantity, 
-            product_id, 
-            created_date, 
-            created_time, 
-            fulfilled_date, 
-            fulfilled_time, 
+            product_id,
         } = req.body;
-        const query = `INSERT INTO view_inbound_order_noid (quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time, seller) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        
+        const query = `INSERT INTO view_inbound_order_noid (quantity, product_id, created_date, created_time, seller) VALUES (?, ?, ?, ?, ?)`;
         const result = await db.poolSeller.query( 
             query, 
             [
                 quantity, 
-                product_id, 
-                created_date, 
-                created_time, 
-                fulfilled_date, 
-                fulfilled_time, 
+                product_id,
+                'DATE(SYSDATE())', // TODO: data
+                'TIME(SYSDATE())', // TODO: timestamp 
                 seller
             ]
         );
@@ -51,10 +47,10 @@ const createInboundOrder = async (req, res) => {
             id: result[0].insertId, 
             quantity: quantity, 
             product_id: product_id, 
-            created_date: created_date, 
-            created_time: created_time, 
-            fulfilled_date: fulfilled_date, 
-            fulfilled_time: fulfilled_time, 
+            created_date: Date.now(), // TODO: data
+            created_time: Date.now(), // TODO: timestamp
+            fulfilled_date: 0, 
+            fulfilled_time: 0, 
             seller: seller
         });
     } catch (error) {
@@ -88,13 +84,14 @@ const getInboundOrderByID = async (req, res) => {
     }
 };
 
+// TODO: Double check this function
 const updateInboundOrder = async (req, res) => {
     const inboundOrderID = req.params.id;
     const seller = req.username
-    const { quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time } = req.body;
+    const { quantity } = req.body;
     let result = await db.poolSeller.query(
-        'UPDATE inbound_order SET quantity = ?, product_id = ?, created_date = ?, created_time = ?, fulfilled_date = ?, fulfilled_time = ?, seller = ? WHERE id = ?',
-        [quantity, product_id, created_date, created_time, fulfilled_date, fulfilled_time, seller, inboundOrderID],
+        'UPDATE inbound_order SET quantity = ?, created_date = ?, created_time = ?, seller = ? WHERE id = ?',
+        [quantity, seller, inboundOrderID],
         (error) => {
             if (error) {
                 console.error(error);
@@ -103,13 +100,12 @@ const updateInboundOrder = async (req, res) => {
                 console.log(result);
                 result = result[0];
                 res.status(201).json({
-                    message: `Inbound order with ID: ${inboundOrderID}} updated`, 
+                    message: `Inbound order with ID: ${inboundOrderID} updated`, 
                     quantity: quantity, 
-                    product_id: product_id, 
-                    created_date: created_date, 
-                    created_time: created_time, 
-                    fulfilled_date: fulfilled_date, 
-                    fulfilled_time: fulfilled_time,
+                    created_date: Date.now(), // TODO: data
+                    created_time: Date.now(), // TODO: timestamp
+                    fulfilled_date: 0, 
+                    fulfilled_time: 0, 
                     seller: seller,
                     id: inboundOrderID
                 });            
@@ -140,6 +136,8 @@ OUT result:
     2 on inbound_order_id does not exist (404)
 
 */
+
+// TODO: res.json(fulfill_date, fulfill_time, id of inbound_order)
 const fulfillInboundOrder = async (req, res) => {
     try {
         const { id } = req.params;

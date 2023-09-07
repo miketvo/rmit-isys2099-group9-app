@@ -10,6 +10,8 @@ USE isys2099_group9_app;
     1 on data not exists or illegal operation
     2 on illegal argument value
  */
+
+-- TODO: Please change the name parameter move_product to product_id
 DROP PROCEDURE IF EXISTS sp_move_product;
 DELIMITER $$
 CREATE PROCEDURE sp_move_product(
