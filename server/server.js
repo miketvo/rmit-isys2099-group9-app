@@ -14,6 +14,8 @@ const inboundOrderRouter = require("./routes/inboundOrderRoutes");
 const productCategoryRouter = require("./routes/productCategoryRoutes");
 const warehouseRouter = require("./routes/warehouseRoutes");
 const buyerOrderRouter = require("./routes/buyerOrderRoutes");
+const attributeRouter = require("./routes/attributeRoutes");
+const stockRouter = require("./routes/stockRoutes");
 
 const app = express();
 app.use(cookieParser());
@@ -55,6 +57,8 @@ app.use("/api/inbound-order", inboundOrderRouter);
 app.use("/api/product-category", productCategoryRouter);
 app.use("/api/warehouse", warehouseRouter);
 app.use("/api/buyer-order", buyerOrderRouter);
+app.use("/api/attribute", attributeRouter);
+app.use("/api/stock", stockRouter);
 
 app.get("/", (req, res) => {
   return res.json("Server is running");
