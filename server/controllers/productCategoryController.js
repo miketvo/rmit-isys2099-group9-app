@@ -2,6 +2,7 @@
 const { db, model } = require("../models");
 
 // Product Category
+// TODO: Condition for parent if empty string -> NULL
 const createProductCategory = async (req, res) => {
     try {
         const { category_name, parent } = req.body;
@@ -58,6 +59,8 @@ const getProductCategoryByName = async (req, res) => {
  * If an error occurs during the execution of either update statement, 
  * the transaction is rolled back and an error message is sent in the response.
  */
+
+// TODO: Condition for parent if empty string -> NULL, double check on postman
 const updateProductCategory = async (req, res) => {
     const categoryName = req.params.category_name;
     const { parent } = req.body;

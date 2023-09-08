@@ -62,6 +62,7 @@ const getWarehouseByID = async (req, res) => {
     }
 };
 
+// TODO: Test updateWarehouse endpoint
 const updateWarehouse = async (req, res) => {
     const warehouseID = req.params.id;
     const { warehouse_name, volume, province, city, district, street, street_number } = req.body;

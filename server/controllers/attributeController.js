@@ -1,6 +1,16 @@
 /* eslint-disable no-unused-vars */
 const { db, model } = require("../models");
 
+/* 
+TODO:
+
+* product attribute has many-to-many relationship with product category
+* When create an attribute, you can choose many categories associated with it
+* After inserting an attribute to the product_attribute table with according columns, 
+* Loop through the product categories req.body array and insert to the product_category_attribute_association with category and new attribute.
+
+*/
+
 // Get all product attributes with their associated categories
 const getAllProductAttributesWithCategories = async () => {
     const query = `
@@ -32,6 +42,12 @@ const associateProductAttributeWithCategory = async (attribute, category) => {
 };
 
 // Update an association between a product attribute and a category
+/* 
+TODO:
+
+* When updating the attribute, only update the product_attribute.name 
+* At the same time, update the asscociated category in the pcaa table
+*/
 const updateProductAttributeCategoryAssociation = async (attribute, oldCategory, newCategory) => {
     const query = `UPDATE product_category_attribute_association SET category = ? WHERE attribute = ? AND category = ?`;
     await db.poolWHAdmin.query(query, [newCategory, attribute, oldCategory]);
