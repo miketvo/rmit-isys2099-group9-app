@@ -55,6 +55,14 @@ const createInboundOrder = async (req, res) => {
             product_id,
         } = req.body;
 
+        const [results] = await db.poolWHAdmin.query(`
+            SELECT * FROM product where id = ?
+        `, [product_id]);
+        
+        if (results.length === 0) {
+            return res.status(404).json({ error: `Product with id: ${product_id} not found` });
+        }
+
         const currentDate = new Date();
         const dateString = currentDate.toISOString().slice(0, 10);
         const timeString = currentDate.toTimeString().slice(0, 8);
