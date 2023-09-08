@@ -39,6 +39,10 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Please enter a shop name' });
     }
 
+    if (role === 'seller' && await model.getShopName(shop_name)) {
+      return res.status(409).json({ message: 'Shop name already exists' });
+    }
+
     // Hash the password
     const salt = genSaltSync(10);
     const hashedPassword = hashSync(password, salt);
