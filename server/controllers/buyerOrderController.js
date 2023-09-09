@@ -159,7 +159,7 @@ const updateBuyerOrderStatusAccept = async (req, res) => {
     try {
         let buyerOrderID = req.params.id;
         const [results] = await db.poolBuyer.query(`
-            UPDATE buyer_order SET order_status = 'A' WHERE id = ?
+            UPDATE buyer_order SET order_status = 'A', fulfilled_date = DATE(SYSDATE()), fulfilled_time = TIME(SYSDATE()) WHERE id = ?
         `, [buyerOrderID]);
         if (results.affectedRows === 0) {
             return res.status(404).json({ error: `Buyer order with id: ${buyerOrderID} not found` });
