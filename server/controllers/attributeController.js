@@ -2,7 +2,6 @@
 const { db, model } = require("../models");
 
 /* 
-TODO:
 
 * product attribute has many-to-many relationship with product category
 * When create an attribute, you can choose many categories associated with it
@@ -10,6 +9,39 @@ TODO:
 * Loop through the product categories req.body array and insert to the product_category_attribute_association with category and new attribute.
 
 */
+const createProductAttributeWithCategories = async (req, res) => {
+    try {
+        const { attribute_name, attribute_type, required, categories } = req.body;
+        console.log(`attribute_name: ${attribute_name}, attribute_type: ${attribute_type}, required: ${required}, categories: ${categories}`);
+        
+        // Insert the new attribute into the product_attribute table
+        await db.poolWHAdmin.query(
+            'INSERT INTO product_attribute (attribute_name, attribute_type, required) VALUES (?, ?, ?)',
+            [attribute_name, attribute_type, required]
+        );
+        
+        // Loop through the categories and insert into the product_category_attribute_association table
+        for (const category of categories) {
+            console.log(`Inserting category: ${category}`);
+            await db.poolWHAdmin.query(
+                'INSERT INTO product_category_attribute_association (category, attribute) VALUES (?, ?)',
+                [category, attribute_name]
+            );
+        }
+        
+        res.status(201).json({
+            message: `Product attribute ${attribute_name} created and associated with categories`,
+            attribute_name: attribute_name,
+            attribute_type: attribute_type,
+            required: required,
+            categories: categories
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while creating a product attribute and associating it with categories');
+    }
+};
+
 
 // Get all product attributes with their associated categories
 const getAllProductAttributesWithCategories = async (req, res) => {
@@ -27,35 +59,84 @@ const getAllProductAttributesWithCategories = async (req, res) => {
 };
 
 // Get a product attribute with its associated categories by name
-const getProductAttributeWithCategoriesByName = async (attribute_name) => {
-    const query = `
-        SELECT pa.attribute_name, pa.attribute_type, pa.required, pcaa.category
-        FROM product_attribute pa
-        LEFT JOIN product_category_attribute_association pcaa ON pa.attribute_name = pcaa.attribute
-        WHERE pa.attribute_name = ?
-    `;
-    const [results] = await db.poolWHAdmin.query(query, [attribute_name]);
-    return results;
+const getAllProductAttributesByCategories = async (req, res) => {
+    try {
+        const { categroy } = req.body;
+        const [results] = await db.poolWHAdmin.query(`
+            SELECT pa.attribute_name, pa.attribute_type, pa.required, pcaa.category
+            FROM product_attribute pa
+            JOIN product_category_attribute_association pcaa ON pa.attribute_name = pcaa.attribute
+            WHERE pcaa.category = ?
+        `, [categroy]);
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
-// Update an association between a product attribute and a category
 /* 
-TODO:
 
 * When updating the attribute, only update the product_attribute.name 
 * At the same time, update the asscociated category in the pcaa table
 */
-const updateProductAttributeCategoryAssociation = async (attribute, oldCategory, newCategory) => {
-    const query = `UPDATE product_category_attribute_association SET category = ? WHERE attribute = ? AND category = ?`;
-    await db.poolWHAdmin.query(query, [newCategory, attribute, oldCategory]);
+const updateProductAttributeWithCategories = async (req, res) => {
+    try {
+        const attribute_name = req.params.attribute_name;
+        const { new_attribute_name, categories } = req.body;
+        console.log(`attribute_name: ${attribute_name}, new_attribute_name: ${new_attribute_name}, categories: ${categories}`);
+        
+        // Update the attribute name in the product_attribute table
+        await db.poolWHAdmin.query(
+            'UPDATE product_attribute SET attribute_name = ? WHERE attribute_name = ?',
+            [new_attribute_name, attribute_name]
+        );
+        console.log(`Updated attribute name from ${attribute_name} to ${new_attribute_name}`);
+
+        // Delete old associations in the product_category_attribute_association table
+        await db.poolWHAdmin.query(
+            'DELETE FROM product_category_attribute_association WHERE attribute = ?',
+            [attribute_name]
+        );
+        console.log(`Deleted old associations for attribute ${attribute_name}`);
+
+        // Insert new associations into the product_category_attribute_association table
+        for (const category of categories) {
+            console.log(`Inserting association for category: ${category}`);
+            await db.poolWHAdmin.query(
+                'INSERT INTO product_category_attribute_association (category, attribute) VALUES (?, ?)',
+                [category, new_attribute_name]
+            );
+        }
+        
+        res.status(200).json({
+            message: `Product attribute ${attribute_name} updated and associated with categories`,
+            old_attribute_name: attribute_name,
+            new_attribute_name: new_attribute_name,
+            categories: categories
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while updating a product attribute and associating it with categories');
+    }
 };
 
 // Delete a product attribute
-const deleteProductAttribute = async (req, res) => {
+const deleteProductAttributeWithCategories = async (req, res) => {
     try {
         const attributeName = req.params.attribute_name;
-        const query = `DELETE FROM product_attribute WHERE attribute_name = ?`;
-        await db.poolWHAdmin.query(query, [attributeName]);
+        
+        // Delete associations from product_category_attribute_association
+        await db.poolWHAdmin.query(
+            'DELETE FROM product_category_attribute_association WHERE attribute = ?',
+            [attributeName]
+        );
+        
+        // Delete attribute from product_attribute
+        await db.poolWHAdmin.query(
+            'DELETE FROM product_attribute WHERE attribute_name = ?',
+            [attributeName]
+        );
+        
         res.status(200).json({
             message: `Product attribute with name: ${attributeName} deleted`
         });
@@ -65,8 +146,9 @@ const deleteProductAttribute = async (req, res) => {
 };
 
 module.exports = {
+    createProductAttributeWithCategories,
     getAllProductAttributesWithCategories,
-    getProductAttributeWithCategoriesByName,
-    updateProductAttributeCategoryAssociation,
-    deleteProductAttribute
+    getAllProductAttributesByCategories,
+    updateProductAttributeWithCategories,
+    deleteProductAttributeWithCategories
 }
