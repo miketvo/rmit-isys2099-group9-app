@@ -4,9 +4,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-// Not Protected apiRouter
-const apiRouter = require("./apiRouter");
-
 const authRouter = require("./routes/authRoutes");
 const productRouter = require("./routes/productRoutes");
 const userRouter = require("./routes/userRoutes");
@@ -44,11 +41,6 @@ app.use(
     credentials: true,
   }),
 );
-
-apiRouter.use(cookieParser());
-
-// Not Protected apiRouter
-app.use("/api", apiRouter);
 
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
