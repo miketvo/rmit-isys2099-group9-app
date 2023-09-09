@@ -2,7 +2,7 @@ USE isys2099_group9_app;
 
 
 /*
- sp_move_product(product_id: int, move_quantity: int, from_warehouse: int, to_warehouse: int, OUT result: int)
+ sp_move_product(move_product: int, move_quantity: int, from_warehouse: int, to_warehouse: int, OUT result: int)
 
  OUT result:
     -1 on rollback
@@ -47,7 +47,8 @@ BEGIN
     IF move_quantity > @from_warehouse_product_quantity THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     -- Calculate available space in to_warehouse
-    SELECT w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0)
+    SELECT volume INTO @to_warehouse_total_volume FROM warehouse WHERE id = to_warehouse FOR SHARE;
+    SELECT @to_warehouse_total_volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0)
     INTO @to_warehouse_available_volume
     FROM stockpile s
         LEFT JOIN warehouse w ON s.warehouse_id = w.id
