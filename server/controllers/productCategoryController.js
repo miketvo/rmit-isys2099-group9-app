@@ -124,7 +124,7 @@ const deleteProductCategory = async (req, res) => {
         );
         await db.poolWHAdmin.query('DELETE FROM product_category WHERE category_name = ?', [category_name]);
         await db.poolWHAdmin.query('COMMIT');
-        res.status(200).send(`Product category with name: ${category_name} deleted`);
+        res.status(200).json({ message: `Product category with name: ${category_name} deleted`, category_name: category_name });
     } catch (error) {
         await db.poolWHAdmin.query('ROLLBACK');
         console.error(error);
