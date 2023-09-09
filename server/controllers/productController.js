@@ -33,12 +33,12 @@ const getAllProductsDSC = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
-        let productID = req.params.id;
+        let id = req.params.id;
         const [results] = await db.poolWHAdmin.query(`
             SELECT * FROM product where id = ?
-        `, [productID]);
+        `, [id]);
         if (results.length === 0) {
-            return res.status(404).json({ error: `Product with id: ${productID} not found` });
+            return res.status(404).json({ error: `Product with id: ${id} not found` });
         }
         return res.json(results);
     } catch (error) {
@@ -49,12 +49,12 @@ const getProductById = async (req, res) => {
 
 const getProductByTitle = async (req, res) => {
     try {
-        let productTitle = req.body.title;
+        let title = req.params.title;
         const [results] = await db.poolWHAdmin.query(`
             SELECT * FROM product WHERE title LIKE CONCAT('%', ?, '%')
-        `, [productTitle]);
+        `, [title]);
         if (results.length === 0) {
-            return res.status(404).json({ error: `Product ${productTitle} not found` });
+            return res.status(404).json({ error: `Product ${title} not found` });
         }
         return res.json(results);
     } catch (error) {

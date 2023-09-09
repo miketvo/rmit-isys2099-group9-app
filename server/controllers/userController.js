@@ -40,7 +40,7 @@ const userController = {
     // Get buyer by username
     getBuyerByUsername: async (req, res) => {
         try {
-            const username = req.username;
+            const username = req.params.username;
             const [results] = await db.poolBuyer.query(`SELECT * FROM buyer WHERE username = ?`, [username]);
             if (results.length === 0) {
                 return res.status(404).json({ error: `Buyer ${username} not found`, username: username, role: "buyer" });
@@ -55,7 +55,7 @@ const userController = {
     // Get wh admins by username
     getWHAdminByUsername: async (req, res) => {
         try {
-            const username = req.username;
+            const username = req.params.username;
             const [results] = await db.poolWHAdmin.query(`SELECT * FROM wh_admin WHERE username = ?`, [username]);
             if (results.length === 0) {
                 return res.status(404).json({ error: `Admin ${username} not found`, username: username, role: "admin" });
@@ -70,7 +70,7 @@ const userController = {
     // Get seller by username
     getSellerByUsername: async (req, res) => {
         try {
-            const username = req.username;
+            const username = req.params.username;
             const [results] = await db.poolSeller.query(`SELECT * FROM seller WHERE username = ?`, [username]);
             if (results.length === 0) {
                 return res.status(404).json({ error: `Seller ${username} not found`, username: username, role: "seller" });
