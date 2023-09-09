@@ -55,6 +55,14 @@ const createInboundOrder = async (req, res) => {
             product_id,
         } = req.body;
 
+        const [results] = await db.poolWHAdmin.query(`
+            SELECT * FROM product where id = ?
+        `, [product_id]);
+        
+        if (results.length === 0) {
+            return res.status(404).json({ error: `Product with id: ${product_id} not found` });
+        }
+
         const currentDate = new Date();
         const dateString = currentDate.toISOString().slice(0, 10);
         const timeString = currentDate.toTimeString().slice(0, 8);
@@ -124,49 +132,47 @@ const getInboundOrderByID = async (req, res) => {
 };
 
 const updateInboundOrder = async (req, res) => {
-    const inboundOrderID = req.params.id;
-    const seller = req.username
-    const { quantity } = req.body;
-    const currentDate = new Date();
-    const dateString = currentDate.toISOString().slice(0, 10);
-    const timeString = currentDate.toTimeString().slice(0, 8);
-    console.log('\nCreated Date: ' + dateString + ' ' + timeString);
+    try {
+        const inboundOrderID = req.params.id;
+        const seller = req.username;
+        const { quantity } = req.body;
+        const currentDate = new Date();
+        const dateString = currentDate.toISOString().slice(0, 10);
+        const timeString = currentDate.toTimeString().slice(0, 8);
+        console.log('\nCreated Date: ' + dateString + ' ' + timeString);
 
-    let result = await db.poolSeller.query(
-        'UPDATE inbound_order SET quantity = ?, created_date = CURDATE(), created_time = CURTIME(), seller = ? WHERE id = ?',
-        [quantity, seller, inboundOrderID],
-        (error) => {
-            if (error) {
-                console.error(error);
-                res.status(500).send('An error occurred while updating an inbound order');
-            } else {
-                console.log(result);
-                result = result[0];
-                res.status(201).json({
-                    message: `Inbound order with ID: ${inboundOrderID} updated`, 
-                    quantity: quantity, 
-                    created_date: dateString, 
-                    created_time: timeString, 
-                    fulfilled_date: 0, 
-                    fulfilled_time: 0, 
-                    seller: seller,
-                    id: inboundOrderID
-                });            
-            }
-        }
-    );
+        let result = await db.poolSeller.query(
+            'UPDATE inbound_order SET quantity = ?, created_date = CURDATE(), created_time = CURTIME(), seller = ? WHERE id = ?',
+            [quantity, seller, inboundOrderID]
+        );
+        
+        console.log(result);
+        result = result[0];
+        res.status(201).json({
+            message: `Inbound order with ID: ${inboundOrderID} updated`, 
+            quantity: quantity, 
+            created_date: dateString, 
+            created_time: timeString, 
+            fulfilled_date: 0, 
+            fulfilled_time: 0, 
+            seller: seller,
+            id: inboundOrderID
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while updating an inbound order');
+    }
 };
 
-const deleteInboundOrder = (req, res) => {
+const deleteInboundOrder = async (req, res) => {
     const { id } = req.params;
-    db.poolSeller.query('DELETE FROM inbound_order WHERE id = ?', [id], (error) => {
-        if (error) {
-            console.error(error);
-            res.status(500).send('An error occurred while deleting an inbound order');
-        } else {
-            res.status(200).send(`Inbound order with ID: ${id} deleted`);
-        }
-    });
+    try {
+        await db.poolSeller.query('DELETE FROM inbound_order WHERE id = ?', [id]);
+        res.status(200).send(`Inbound order with ID: ${id} deleted`);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while deleting an inbound order');
+    }
 };
 
 /*
@@ -193,9 +199,6 @@ const fulfillInboundOrder = async (req, res) => {
             const [results] = await db.poolSeller.query(`
                 SELECT * FROM inbound_order where id = ?
             `, [id]);
-            if (results.length === 0) {
-                return res.status(404).json({ error: `Product with id: ${id} not found` });
-            }
             const inboundOrder = results[0];
             return res.status(200).json({
                 message: 'Inbound order successfully committed',

@@ -11,7 +11,6 @@ USE isys2099_group9_app;
     2 on illegal argument value
  */
 
--- TODO: Please change the name parameter move_product to product_id
 DROP PROCEDURE IF EXISTS sp_move_product;
 DELIMITER $$
 CREATE PROCEDURE sp_move_product(
@@ -27,25 +26,33 @@ BEGIN
     DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET _rollback = 1;
     START TRANSACTION;
     SET result = 0;
+    SELECT 'result after initialization:', result;
 
     -- Checks for early termination
     IF move_quantity < 1 THEN SET result = 2; ROLLBACK; LEAVE this_proc; END IF;
+    SELECT 'result after checking move_quantity:', result;
 
     IF from_warehouse = to_warehouse THEN SET result = 2; ROLLBACK; LEAVE this_proc; END IF;
+    SELECT 'result after checking from_warehouse and to_warehouse:', result;
 
     SELECT count(*) INTO @exist_product FROM product WHERE id = move_product FOR SHARE ;
+    SELECT '@exist_product:', @exist_product;
     IF @exist_product = 0 THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT count(*) INTO @exist_from_warehouse FROM warehouse WHERE id = from_warehouse FOR SHARE;
+    SELECT '@exist_from_warehouse:', @exist_from_warehouse;
     IF @exist_from_warehouse = 0 THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT count(*) INTO @exist_to_warehouse FROM warehouse WHERE id = to_warehouse FOR SHARE;
+    SELECT '@exist_to_warehouse:', @exist_to_warehouse;
     IF @exist_to_warehouse = 0 THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT count(*) INTO @from_warehouse_has_product FROM stockpile WHERE product_id = move_product AND warehouse_id = from_warehouse FOR UPDATE;
+    SELECT '@from_warehouse_has_product:', @from_warehouse_has_product;
     IF @from_warehouse_has_product = 0 THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     SELECT quantity INTO @from_warehouse_product_quantity FROM stockpile WHERE product_id = move_product AND warehouse_id = from_warehouse FOR UPDATE;
+    SELECT '@from_warehouse_product_quantity:', @from_warehouse_product_quantity;
     IF move_quantity > @from_warehouse_product_quantity THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
     -- Calculate available space in to_warehouse
@@ -55,37 +62,41 @@ BEGIN
         LEFT JOIN warehouse w ON s.warehouse_id = w.id
         LEFT JOIN product p on s.product_id = p.id
     WHERE w.id = to_warehouse FOR SHARE;
+    
+     -- Calculate the amount of space needed in to_warehouse
+     SELECT move_quantity * width * length * height
+     INTO @move_volume
+     FROM product WHERE id = move_product FOR SHARE;
 
-    -- Calculate the amount of space needed in to_warehouse
-    SELECT move_quantity * width * length * height
-    INTO @move_volume
-    FROM product WHERE id = move_product FOR SHARE;
-
-    IF @to_warehouse_available_volume < @move_volume THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
-
-
-    -- Update the database for the move
-    IF move_quantity = @from_warehouse_product_quantity THEN
-        DELETE FROM stockpile WHERE product_id = move_product AND warehouse_id = from_warehouse;
-    ELSE
-        UPDATE stockpile SET quantity = quantity - move_quantity WHERE product_id = move_product AND warehouse_id = from_warehouse;
-    END IF;
-
-    SELECT count(*) INTO @to_warehouse_has_product FROM stockpile WHERE product_id = move_product AND warehouse_id = to_warehouse FOR UPDATE;
-    IF @to_warehouse_has_product = 0 THEN
-        INSERT INTO stockpile (product_id, warehouse_id, quantity) VALUES (move_product, to_warehouse, move_quantity);
-    ELSE
-        UPDATE stockpile SET quantity = quantity + move_quantity WHERE product_id = move_product AND warehouse_id = to_warehouse;
-    END IF;
+     SELECT '@to_warehouse_available_volume:', @to_warehouse_available_volume, '@move_volume:', @move_volume;
+     IF @to_warehouse_available_volume < @move_volume THEN SET result = 1; ROLLBACK; LEAVE this_proc; END IF;
 
 
-    -- Commit or Rollback
-    IF _rollback THEN
-        SET result = -1;
-        ROLLBACK;
-    ELSE
-        COMMIT;
-    END IF;
+     -- Update the database for the move
+     IF move_quantity = @from_warehouse_product_quantity THEN
+         DELETE FROM stockpile WHERE product_id = move_product AND warehouse_id = from_warehouse;
+     ELSE
+         UPDATE stockpile SET quantity = quantity - move_quantity WHERE product_id = move_product AND warehouse_id = from_warehouse;
+     END IF;
+
+     SELECT count(*) INTO @to_warehouse_has_product FROM stockpile WHERE product_id = move_product AND warehouse_id = to_warehouse FOR UPDATE;
+     SELECT '@to_warehouse_has_product:', @to_warehouse_has_product;
+     IF @to_warehouse_has_product = 0 THEN
+         INSERT INTO stockpile (product_id, warehouse_id, quantity) VALUES (move_product, to_warehouse, move_quantity);
+     ELSE
+         UPDATE stockpile SET quantity = quantity + move_quantity WHERE product_id = move_product AND warehouse_id = to_warehouse;
+     END IF;
+
+
+     -- Commit or Rollback
+     IF _rollback THEN
+         SET result = -1;
+         ROLLBACK;
+     ELSE
+         COMMIT;
+     END IF;
+
+     SELECT 'final result:', result;
 END $$
 DELIMITER ;
 

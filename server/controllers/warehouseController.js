@@ -62,34 +62,35 @@ const getWarehouseByID = async (req, res) => {
     }
 };
 
-// TODO: Test updateWarehouse endpoint
 const updateWarehouse = async (req, res) => {
     const warehouseID = req.params.id;
     const { warehouse_name, volume, province, city, district, street, street_number } = req.body;
-    const result = await db.poolWHAdmin.query(
-        'UPDATE warehouse SET warehouse_name = ?, volume = ?, province = ?, city = ?, district = ?, street = ?, street_number = ? WHERE id = ?',
-        [warehouse_name, volume, province, city, district, street, street_number, warehouseID],
-        (error) => {
-            if (error) {
-                console.error(error);
-                res.status(500).send('An error occurred while updating a warehouse');
-            } else {
-                console.log("\n"+result[0]);
-                res.status(201).json({
-                    message: `Warehouse with ID: ${warehouseID} updated`,
-                    id: warehouseID,
-                    warehouse_name: warehouse_name,
-                    volume: volume,
-                    province: province,
-                    city: city,
-                    district: district,
-                    street: street,
-                    street_number: street_number
-                });
-            }
-        }
-    );
+    console.log(`\nwarehouse_name: ${warehouse_name}, volume: ${volume}, province: ${province}, city: ${city}, district: ${district}, street: ${street}, street_number: ${street_number}`);
+    
+    try {
+        const result = await db.poolWHAdmin.query(
+            'UPDATE warehouse SET warehouse_name = ?, volume = ?, province = ?, city = ?, district = ?, street = ?, street_number = ? WHERE id = ?',
+            [warehouse_name, volume, province, city, district, street, street_number, warehouseID]
+        );
+        
+        console.log("\n"+result[0]);
+        res.status(201).json({
+            message: `Warehouse with ID: ${warehouseID} updated`,
+            id: warehouseID,
+            warehouse_name: warehouse_name,
+            volume: volume,
+            province: province,
+            city: city,
+            district: district,
+            street: street,
+            street_number: street_number
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while updating a warehouse');
+    }
 };
+
 
 /*
  sp_delete_warehouse(warehouse_id: int, OUT result: int)
@@ -136,6 +137,7 @@ const moveProduct = async (req, res) => {
             [product_id, move_quantity, from_warehouse_id, to_warehouse_id]
         );
         const [[{ result: resultCode }]] = await db.poolWHAdmin.query('SELECT @result as result');
+        console.log("\nresult: " + resultCode);
         if (resultCode === 0) {
             return res.status(200).json({ message: 'Product moved successfully', result: resultCode });
         } else if (resultCode === 1) {

@@ -22,7 +22,7 @@ const {
 } = require("../middleware/checkRoles");
 
 // Define your routes here, for example:
-buyerOrderRoutes.post('/create', authenticate, checkBuyer, placeOrder);
+buyerOrderRoutes.post('/create/:id', authenticate, checkBuyer, placeOrder);
 buyerOrderRoutes.get('/', authenticate, checkBuyer, getAllBuyerOrders);
 buyerOrderRoutes.get('/:id', authenticate, checkBuyer, getBuyerOrderByID);
 buyerOrderRoutes.get('/category/:category', authenticate, checkBuyer, getBuyerOrderByCategory);
