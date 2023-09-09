@@ -168,7 +168,7 @@ const deleteInboundOrder = async (req, res) => {
     const { id } = req.params;
     try {
         await db.poolSeller.query('DELETE FROM inbound_order WHERE id = ?', [id]);
-        res.status(200).json({ message: `Inbound order with ID: ${id} deleted` });
+        res.status(200).json({ message: `Inbound order with ID: ${id} deleted`, id: id });
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while deleting an inbound order');

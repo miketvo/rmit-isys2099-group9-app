@@ -138,7 +138,8 @@ const deleteProductAttributeWithCategories = async (req, res) => {
         );
         
         res.status(200).json({
-            message: `Product attribute with name: ${attributeName} deleted`
+            message: `Product attribute with name: ${attributeName} deleted`,
+            attribute_name: attributeName
         });
     } catch (error) {
         res.status(400).json({ error: error.message });

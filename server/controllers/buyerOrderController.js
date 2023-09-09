@@ -191,7 +191,7 @@ const deleteBuyerOrder = async (req, res) => {
     const { id } = req.params;
     try {
         await db.poolBuyer.query('DELETE FROM buyer_order WHERE id = ?', [id]);
-        res.status(200).json({ message: `Buyer order with ID: ${id} deleted` });
+        res.status(200).json({ message: `Buyer order with ID: ${id} deleted`, id: id });
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while deleting a buyer order');
