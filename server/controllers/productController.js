@@ -100,6 +100,9 @@ const createProduct = async (req, res) => {
             product_description: product_description, 
             category: category, 
             price: price,
+            width: width,
+            length: length,
+            height: height,
             seller: seller, 
         });
     } catch (error) {
