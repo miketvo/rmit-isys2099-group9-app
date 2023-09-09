@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom"
 
 import {GrAdd} from "react-icons/gr"
 import {BiMinus} from "react-icons/bi"
-import { getDataAPI } from "../../api/apiRequest"
+import { getDataAPI, postDataAPI } from "../../api/apiRequest"
 
 import {toast} from "react-hot-toast"
 
@@ -22,12 +22,12 @@ const DetailProductComponent = () => {
         seller: ""
     }
     const [detailProduct, setDetailProduct] = useState(initialState)
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(1);
     useEffect(() => {
         const fetchDetailProduct = async() => {
             try {
                 const response = await getDataAPI(`product/${id}`)
-                console.log(response.data)
+            
                 setDetailProduct(response?.data[0])
             } catch (error) {
                 console.error("Error fetching products:", error);
@@ -37,8 +37,16 @@ const DetailProductComponent = () => {
     }, [id])
 
 
-    const handleCreateOrder = () => {
-        toast.success("Create an Order")
+    const handleCreateOrder = async() => {
+        try {
+            const response = await postDataAPI(`buyer-order/create/${id}`, {order_quantity: quantity})
+            if (response.data){          
+                toast.success(response.data?.message)            
+            }
+        } catch (error) {
+            toast.error("Error: ", error)
+        }
+        
     }
     return (
         <div className="detail_product mt-5">
@@ -71,13 +79,13 @@ const DetailProductComponent = () => {
                             <div className="d-flex align-items-center">
                                 <span className="me-4">Quantity: </span>
                                 <div className="d-flex">
-                                    <button className="btn btn-outline-secondary me-2" onClick={() => {quantity > 0 && setQuantity(quantity - 1)}}>
+                                    <button className="btn btn-outline-secondary me-2" onClick={() => {quantity > 1 && setQuantity(quantity - 1)}}>
                                         <BiMinus />
                                     </button>
                                     <input className="form-control w-25" type="number" inputMode="numeric" aria-label="default input example"
-                                    value={quantity || 0} onChange={(e) => {
+                                    value={quantity || 1} onChange={(e) => {
                                         const newValue = e.target.value;
-                                        const parsedValue = newValue ? parseInt(newValue, 10) : 0;
+                                        const parsedValue = newValue ? parseInt(newValue, 10) : 1;
                                         setQuantity(parsedValue);
                                     }} 
                                     />

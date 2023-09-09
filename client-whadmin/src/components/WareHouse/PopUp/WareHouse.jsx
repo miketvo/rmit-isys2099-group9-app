@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 
 
-// import { postDataAPI, putDataAPI } from "../../../api/apiRequest";
-// import {toast} from "react-hot-toast";
+import { postDataAPI, putDataAPI } from "../../../api/apiRequest";
+import {toast} from "react-hot-toast";
 
 const WareHouse = ({compData, compFunction}) => {
     const {created, edited, editedWarehouseData} = compData;
@@ -50,44 +50,44 @@ const WareHouse = ({compData, compFunction}) => {
 
         if (created) {
             // Handle call create warehouse here
-            // try {
-            //     const response = await postDataAPI("warehouse/create", wareHouseFormData)
-            //     if (response.data) {
-            //         // handle add data into setWareHouseData
-            //         setWareHouseData(prevState => [
-            //             ...prevState,
-            //             {...response.data}
-            //         ])
-            //     }
-            // } catch (error) {
-            //     toast.error("Error: ", error)
-            // }
-            
-            setWareHouseData(prevState => [
-                ...prevState,
-                {...wareHouseFormData}
-            ])
+            try {
+                const response = await postDataAPI("warehouse/create", wareHouseFormData)
+                if (response.data) {
+                    // handle add data into setWareHouseData
+                    setWareHouseData(prevState => [
+                        ...prevState,
+                        {...response.data}
+                    ])
 
-          } else if (edited) {
+                    toast.success("Create A Warehouse Successfully!")
+                }
+            } catch (error) {
+                toast.error("Error: ", error)
+            }
+            
+            
+
+        } else if (edited) {
             // Handle call update warehouse here
-            // try {
-            //     const response = await putDataAPI(`warehouse/update/${editedData.id}`, wareHouseFormData)
-            //     if (response.data) {
-            //         // handle update into setWareHouseData by API response
-            //         setWareHouseData((preData) => (preData.map(obj => {
-            //             if(obj.id === editedData.id) {
-            //               console.log(obj)
-            //                 return {
-            //                     ...obj,
-            //                     ...wareHouseFormData
-            //                 }
-            //             }
-            //             return obj;
-            //         })))
-            //     }
-            // } catch (error) {
-            //     toast.error("Error: ", error)
-            // }
+            try {
+                const response = await putDataAPI(`warehouse/update/${editedWarehouseData.id}`, wareHouseFormData)
+                console.log(response)
+                if (response.data) {
+                    // handle update into setWareHouseData by API response
+                    setWareHouseData((preData) => (preData.map(obj => {
+                        if(obj.id === editedWarehouseData.id) {
+                          console.log(obj)
+                            return {
+                                ...obj,
+                                ...wareHouseFormData
+                            }
+                        }
+                        return obj;
+                    })))
+                }
+            } catch (error) {
+                toast.error("Error: ", error)
+            }
 
             setWareHouseData((preData) => (preData.map(obj => {
               if(obj.id === editedWarehouseData.id) {
@@ -100,9 +100,6 @@ const WareHouse = ({compData, compFunction}) => {
               return obj;
             })))
         }
-
-        
-
         handleClosePopUpForm();
     };
 

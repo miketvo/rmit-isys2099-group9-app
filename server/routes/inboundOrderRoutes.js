@@ -18,11 +18,11 @@ const {
     checkAdmin
 } = require("../middleware/checkRoles");
 
-inboundOrderRouter.put('/create', authenticate, checkSeller, createInboundOrder);
+inboundOrderRouter.post('/create', authenticate, checkSeller, createInboundOrder);
 inboundOrderRouter.get('/', authenticate, checkSeller, getAllInboundOrder);
-inboundOrderRouter.post('/:id', authenticate, checkSeller, getInboundOrderByID);
-inboundOrderRouter.post('/update/:id', authenticate, checkSeller, updateInboundOrder);
+inboundOrderRouter.get('/:id', authenticate, checkSeller, getInboundOrderByID);
+inboundOrderRouter.put('/update/:id', authenticate, checkSeller, updateInboundOrder);
 inboundOrderRouter.delete('/delete/:id', authenticate, checkSeller, deleteInboundOrder);
-inboundOrderRouter.post('/fulfill/:id', authenticate, checkSeller, fulfillInboundOrder);
+inboundOrderRouter.put('/fulfill/:id', authenticate, checkSeller, fulfillInboundOrder);
 
 module.exports = inboundOrderRouter;

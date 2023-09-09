@@ -15,7 +15,7 @@ const LoginComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname || "/warehouse";
 
   // Functions
   const handleChangeInput = (e) => {
@@ -26,10 +26,10 @@ const LoginComponent = () => {
   const handleLoginUser = async(e) => {
     e.preventDefault();
     try {
-      const response = await postDataAPI("auth/login", loginState)
+      const response = await postDataAPI("auth/login/whadmin", loginState)
       if (response.data && response.data?.role === "admin") {
         localStorage.setItem("userInfo", JSON.stringify({username: response.data?.username, role: response.data?.role}));
-        toast.success(`Login Successfully! Welcome back ${response.data?.user}`);
+        toast.success(`Login Successfully! Welcome back ${response.data?.username}`);
         navigate(`${from}`, {replace: true});
       }
       else {

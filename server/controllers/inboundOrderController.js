@@ -96,8 +96,8 @@ const createInboundOrder = async (req, res) => {
             product_id: product_id, 
             created_date: dateString,
             created_time: timeString,
-            fulfilled_date: 0, 
-            fulfilled_time: 0, 
+            fulfilled_date: null, 
+            fulfilled_time: null, 
             seller: seller
         });
     } catch (error) {

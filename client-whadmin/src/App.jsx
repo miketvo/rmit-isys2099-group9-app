@@ -9,7 +9,6 @@ import PrivateRouter from "./customRouter/PrivateRouter";
 // Page
 import LoginPage from './pages/login'
 import RegisterPage from './pages/register'
-import HomePage from './components/HomePage/HomePage'
 import Layout from "./components/Layout";
  
 function App() {
@@ -23,8 +22,6 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
 
           <Route path="/" element={<PrivateRouter/>}>
-            <Route exact path="/" element={<HomePage/>} />
-
             <Route exact path="/:page" element={<PageRender />} />
             <Route exact path="/:page/:id" element={<PageRender />} />
             <Route

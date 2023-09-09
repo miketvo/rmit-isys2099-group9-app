@@ -12,7 +12,7 @@
 .popup_wrapper .popup_container {
     position: absolute;
     width: 750px;
-    top: -10%;
+    
     left: 50%;
     transform: translate(-50%, 50%);
     background: #fff;

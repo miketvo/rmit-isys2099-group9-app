@@ -6,7 +6,6 @@ import LazadaImg from "../../images/lazada.jpg"
 import {FaUserCircle} from "react-icons/fa"
 import {FaBoxesPacking} from "react-icons/fa6"
 
-import {IoHome} from "react-icons/io5"
 import { IconSetting } from '../../utils/IconSettings'
 import { deleteDataAPI } from '../../../../client-mall/src/api/apiRequest';
 
@@ -39,12 +38,6 @@ const NavBar = () => {
                 <div className="navbar_vertical_content mt-4">
                     <ul className="navbar-nav flex-column mb-3">
                         <li className="nav_item">
-                            <Link to="/">
-                                {IconSetting(<IoHome/>, 'white', "30px", "nav_icon")}
-                                <span className="nav_text text-white">Home</span>
-                            </Link>
-                        </li>
-                        <li className="nav_item">
                             <Link to="/warehouse">
                                 {IconSetting(<FaBoxesPacking/>, 'white', "30px", "nav_icon")}
                                 <span className="nav_text text-white">Warehouse</span>
@@ -57,15 +50,8 @@ const NavBar = () => {
 
             <div className="navbar navbar-expand-lg navbar-light top_navbar">
                 <div className="container-fluid">
-                    
-                    <div className="navbar_breadcrumb" aria-label="breadcrumb" style={{paddingLeft: "var(--verticalNavBarWidth)"}}>
-                        <ol className="breadcrumb m-0">
-                            <li className="breadcrumb-item"><a href="#">Home</a></li>
-                            <li className="breadcrumb-item active" aria-current="page">Library</li>
-                        </ol>
-                    </div>
-                    
-                    
+                    <div className="navbar_spacer" style={{width: "30px"}}></div>
+
                     <div className="navbar_user d-flex">
                         <div className="d-flex me-4" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span className="nav-link" >

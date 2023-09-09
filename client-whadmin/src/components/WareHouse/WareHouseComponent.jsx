@@ -15,11 +15,9 @@ import Categories from "./Items/Categories"
 import MoveProduct from "./Items/MoveProduct"
 import Product from "./Items/Product"
 
-// Mock data
-import { ProductAttributesMockData } from "../../api/mock_data"
-
 // API
-import { getDataAPI } from "../../api/apiRequest"
+import { deleteDataAPI, getDataAPI } from "../../api/apiRequest"
+import { toast } from "react-hot-toast"
 
 
 
@@ -28,6 +26,7 @@ const WareHouseComponent = () => {
   const [productCategoryData, setProductCategoryData] = useState([]);
   const [productAttributesData, setProductAttributesData] = useState([]);
   const [productsData, setProductsData] = useState([]);
+  
 
   const [editedWarehouseData, setEditedWarehouseData] = useState({})
   const [editedProductCategoryData, setEditedProductCategoryData] = useState({})
@@ -38,8 +37,8 @@ const WareHouseComponent = () => {
   useEffect(() => {
     const fetchWarehouseData = async () => {
       try {
-          const result = await getDataAPI('warehouse');
-          setWareHouseData(result.data)
+        const result = await getDataAPI('warehouse');
+        setWareHouseData(result.data)
       } catch (error) {
           // Handle the error
           console.error('Error fetching data:', error);
@@ -48,8 +47,8 @@ const WareHouseComponent = () => {
 
     const fetchProductCategoryData = async () => {
       try {
-          const result = await getDataAPI('product-category');
-          setProductCategoryData(result.data)
+        const result = await getDataAPI('product-category');
+        setProductCategoryData(result.data)
       } catch (error) {
           // Handle the error
           console.error('Error fetching data:', error);
@@ -58,7 +57,8 @@ const WareHouseComponent = () => {
 
     const fetchProductAttributesData = async () => {
       try {
-          setProductAttributesData(ProductAttributesMockData.map(item => ({...item, required: item.required === 1 })))
+        const result = await getDataAPI('attribute');
+        setProductAttributesData(result.data.map(item => ({...item, required: item.required === 1 })))
       } catch (error) {
           // Handle the error
           console.error('Error fetching data:', error);
@@ -75,7 +75,7 @@ const WareHouseComponent = () => {
       }
     };
 
-
+    
     fetchWarehouseData();
     fetchProductCategoryData();
     fetchProductAttributesData();
@@ -111,7 +111,25 @@ const WareHouseComponent = () => {
     }
 
     else if (place === "product_attribute") {
-      setEditedProductAttributeData(productAttributesData.find(item => item.attribute_name === attribute_name))
+      const combineEditedProductAttributeData = productAttributesData
+      .filter(item => item.attribute_name === attribute_name)
+      .reduce((result, item) => {
+        const key = item.attribute_name;
+
+        if (!result) {
+          result = {
+            attribute_name: key,
+            attribute_type: item.attribute_type,
+            categories: [item.category],
+            required: item.required,
+          };
+        } else {
+          result.categories.push(item.category);
+        }
+        return result;
+      }, null);
+
+      setEditedProductAttributeData(combineEditedProductAttributeData)
       setPopUpState(prevState => ({
         ...prevState,
         state: !prevState.state,
@@ -120,14 +138,38 @@ const WareHouseComponent = () => {
     }
   }
 
-  const handleDeleteData = ({id, category_name, attribute_name, place}) => {
-    if (place === "warehouse") {
-      setWareHouseData(preState => [...preState.filter((item) => item.id !== id)])
-    } else if (place === "categories") {
-      setProductCategoryData(preState => [...preState.filter((item) => item.category_name !== category_name)])
-    } else if (place === "product_attribute") {
-      setProductAttributesData(preState => [...preState.filter((item) => item.attribute_name !== attribute_name)])
+  const handleDeleteData = async({id, category_name, attribute_name, place}) => {
+    try {
+      if (place === "warehouse") {
+        const response = await deleteDataAPI(`warehouse/delete/${id}`);
+        if (response.data) {
+          setWareHouseData(preState => [...preState.filter((item) => item.id !== id)])
+
+          toast.success(`Delete Warehouse with ID ${id} Successfully`)
+        }
+
+      } 
+      else if (place === "categories") {
+        const response = await deleteDataAPI(`product-category/delete/${category_name}`);
+        if (response.data) {
+          setProductCategoryData(preState => [...preState.filter((item) => item.category_name !== category_name)])
+
+          toast.success(`Delete Category with name ${category_name} Successfully`)
+        }
+        
+      } 
+      else if (place === "product_attribute") {
+        const response = await deleteDataAPI(`attribute/delete/${attribute_name}`);
+        if (response.data) {
+          setProductAttributesData(preState => [...preState.filter((item) => (item.attribute_name !== attribute_name))])
+          toast.success(`Delete Attribute ${attribute_name} Successfully`)
+
+        }
+      }
+    } catch (error) {
+      toast.error("Error: ", error)
     }
+    
     
   }
 
@@ -138,6 +180,7 @@ const WareHouseComponent = () => {
   const ProductAttributeFunction = {handleOpenEditedMode, handleDeleteData};
 
   const MoveProductData = {productsData, wareHouseData};
+
   const WareHouseTabsMap = [
     {
       id: 'warehouse',
@@ -155,7 +198,7 @@ const WareHouseComponent = () => {
       created: true
     },
     {
-      id: 'products viewed',
+      id: 'products view',
       component: <Product compData={productsData}/>,
       created: false
     },

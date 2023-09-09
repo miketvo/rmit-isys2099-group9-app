@@ -1,24 +1,23 @@
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Link} from "react-router-dom";
 import PropTypes from 'prop-types';
 import { toast } from "react-hot-toast";
 
 
 import {MdDashboard} from "react-icons/md";
-import {FiSearch} from "react-icons/fi"
 
 import { FaCircleUser } from "react-icons/fa6";
 import {IconSetting} from "../../utils/IconSetting"
 
-import { deleteDataAPI } from "../../api/apiRequest";
-import { useState } from "react";
+import { deleteDataAPI} from "../../api/apiRequest";
 
 
 const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
   // const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role
 
   const handleLogOut = async() => {
-    const username = JSON.parse(localStorage.getItem("userInfo")).username
     try {
+      const username = JSON.parse(localStorage.getItem("userInfo")).username
+
       const response = await deleteDataAPI("auth/logout", {username: username});
       if (response.data) {
         localStorage.removeItem("userInfo")
@@ -29,37 +28,6 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
     } catch (error) {
       toast.error(error);
     }
-  }
-
-  const [searchParams, setSearchParams] = useSearchParams({})
-  const searchCurr = searchParams.get('search')
-  const [searchData, setSearchData] = useState(searchCurr ? searchCurr : "")
-
-  const navigate = useNavigate()
-  const {pathname} = useLocation()
-  
-  const handleSearchProduct = (e) => {
-      e.preventDefault();
-      const search = searchData
-
-      if(search.length === 0) {
-          searchParams.delete('search')
-          setSearchParams(searchParams, {replace: true})     
-      } else {
-          searchParams.set('search', search)
-          setSearchParams(searchParams, {replace: true})
-      }
-
-      if (pathname !== '/') {
-          navigate({
-              pathname: "/",
-              search: `?search=${search}`
-          })
-      }        
-  }
-
-  const handleSearch = () => {
-
   }
 
   return (
@@ -89,26 +57,13 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
               </li>      
             </ul>
 
-            <div className="">
-              <form className="d-flex" onSubmit={handleSearchProduct}>
-                <input className="form-control" type="text" name="search" placeholder="Search here..." id="search"
-                value={searchData}
-                defaultChecked={searchParams.get('search')}
-                onChange={(e) => {setSearchData(e.target.value)}}
-                onKeyDown={(e) => (e.key === "Enter" && handleSearch(e))}
-                />
-                <button className="btn btn-outline-primary"><FiSearch /></button>
-              </form>
-            </div>
+            
 
             <div className="d-flex">
               <Link to="/dashboard" className="btn btn-outline-dark"> 
                 <span>   
-                  {IconSetting(<MdDashboard/>, "", "", "me-2")}
+                  {IconSetting(<MdDashboard/>, "", "", "me-3")}
                   Dashboard
-                  <span className="badge bg-dark text-white ms-1 rounded-pill">
-                    0
-                  </span>
                 </span>
               </Link>
 
@@ -121,7 +76,6 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
                             </span>     
                         </div>  
                         <div className="dropdown-menu avatar-menu" aria-labelledby="navbarDropdown" style={{left: "unset", right: "25px", top: "50px"}}>
-                            <Link className="dropdown-item" to={`/profile`} >My Profile</Link>
                             <span className="dropdown-item" onClick={handleLogOut} style={{cursor: "pointer"}}>Log Out</span>
                         </div>
                   </div>

@@ -18,6 +18,9 @@ axiosInstance.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     // Handle any request errors
+
+    // Need to handle error 403 and 500
+    console.log(error)
     return Promise.reject(error);
 })
 

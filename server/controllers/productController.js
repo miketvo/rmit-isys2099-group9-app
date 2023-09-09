@@ -33,12 +33,12 @@ const getAllProductsDSC = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
-        let id = req.params.id;
+        let productID = req.params.id;
         const [results] = await db.poolWHAdmin.query(`
             SELECT * FROM product where id = ?
-        `, [id]);
+        `, [productID]);
         if (results.length === 0) {
-            return res.status(404).json({ error: `Product with id: ${id} not found` });
+            return res.status(404).json({ error: `Product with id: ${productID} not found` });
         }
         return res.json(results);
     } catch (error) {
@@ -48,13 +48,14 @@ const getProductById = async (req, res) => {
 }
 
 const getProductByTitle = async (req, res) => {
+    console.log(req.body)
     try {
-        let title = req.params.title;
+        let productTitle = req.params.title;
         const [results] = await db.poolWHAdmin.query(`
             SELECT * FROM product WHERE title LIKE CONCAT('%', ?, '%')
-        `, [title]);
+        `, [productTitle]);
         if (results.length === 0) {
-            return res.status(404).json({ error: `Product ${title} not found` });
+            return res.status(404).json({ error: `Product ${productTitle} not found` });
         }
         return res.json(results);
     } catch (error) {
@@ -124,7 +125,7 @@ const updateProductById = async (req, res) => {
             height, 
         } = req.body;
 
-        const query = `UPDATE product SET title = ?, image = ?, product_description = ?, category = ?, price = ?, width = ?, length = ?, height = ?, seller = ? WHERE id = ?`;
+        const query = `UPDATE product SET title = ?, product_description = ?, category = ?, price = ?, width = ?, length = ?, height = ?, seller = ? WHERE id = ?`;
         const result = await db.poolWHAdmin.query(
             query, 
             [

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
+import { toast } from "react-hot-toast";
+import { postDataAPI, putDataAPI } from "../../../api/apiRequest";
 
 const Categories = ({compData, compFunction}) => {
     const {created, edited, productCategoryData, editedProductCategoryData} = compData;
@@ -30,27 +32,43 @@ const Categories = ({compData, compFunction}) => {
         setCategoryData((preState) => ({...preState, [name]: value}))
     }
 
-    function updateCategoryAndRelatedParent(data, oldCategoryName, newCategoryName) {
-        return data.map(item => ({
-          ...item,
-          category_name: item.category_name === oldCategoryName ? newCategoryName : item.category_name,
-          parent: item.parent === oldCategoryName ? newCategoryName : item.parent,
-        }));
-    }
+    // function updateCategoryAndRelatedParent(data, oldCategoryName, newCategoryName) {
+    //     return data.map(item => ({
+    //       ...item,
+    //       category_name: item.category_name === oldCategoryName ? newCategoryName : item.category_name,
+    //       parent: item.parent === oldCategoryName ? newCategoryName : item.parent,
+    //     }));
+    // }
 
-    const handleSubmitData = (e) => {
+    const handleSubmitData = async(e) => {
         e.preventDefault();
-        if (created) {
-            setProductCategoryData((preData) => ([...preData, categoryData]))
+
+        try {
+            if (created) {
+                const response = await postDataAPI("product-category", categoryData);
+                if (response.data) {
+                    setProductCategoryData((preData) => ([...preData, categoryData]))
+                    toast.success("Create A Category Successfully")
+                }
+                
+            }
+            else if (edited) {
+                const response = await putDataAPI(`product-category/update/${category_name}`, {parent: categoryData.parent});
+                if (response.data) {
+                    setProductCategoryData(prevData => prevData.map(item =>
+                        item.category_name === editedProductCategoryData.category_name
+                        ? { ...item, parent: categoryData.parent }
+                        : item
+                    ))
+                    toast.success(`Edit Category "${category_name}" Successfully`)
+                    // setProductCategoryData((preData) => updateCategoryAndRelatedParent(preData, editedProductCategoryData.category_name, categoryData.category_name))
+                }
+                
+            }
+        } catch (error) {
+           toast.error("Error:", error) 
         }
-        else if (edited) {
-            setProductCategoryData(prevData => prevData.map(item =>
-                item.category_name === editedProductCategoryData.category_name
-                  ? { ...item, ...categoryData }
-                  : item
-            ))
-            setProductCategoryData((preData) => updateCategoryAndRelatedParent(preData, editedProductCategoryData.category_name, categoryData.category_name))
-        }
+        
         handleClosePopUpForm();
     };
 
@@ -81,6 +99,7 @@ const Categories = ({compData, compFunction}) => {
                                 <label className="form-label">Category Name</label>
                                 <input type="text" className="form-control"
                                     name="category_name" value={category_name} onChange={handleChangeInput}
+                                    disabled={edited ? true : false}
                                 />
                             </div>
                         </div>

@@ -3,7 +3,7 @@ import {Link} from "react-router-dom"
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="card h-100">
+    <Link to={`/products/${product.id}`} className="card h-100">
       {/* Product image */}
       <img
         className="card-img-top"
@@ -16,7 +16,7 @@ const ProductCard = ({ product }) => {
       <div className="card-body p-2">
         <div className="text-center">
           {/* Product name */}
-          <Link to={`/products/${product.id}`} className="fw-bolder">{product.title}</Link>
+          <div className="fw-bolder">{product.title}</div>
         </div>
         <div className="text-center mt-2">
           {/* Product price */}
@@ -25,16 +25,11 @@ const ProductCard = ({ product }) => {
       </div>
       {/* Product actions */}
       <div className="card-footer p-4 pt-0 border-top-0 bg-transparent">
-        <div className="text-center">
-          <span className="btn btn-outline-dark mt-auto" href="#">
-            Place Order
-          </span>
-        </div>
         <div className="d-flex justify-content-end mt-4 w-100">
           <small className="text-end fw-bold ">{product.category}</small>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

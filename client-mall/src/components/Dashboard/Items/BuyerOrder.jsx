@@ -1,12 +1,47 @@
+import PropTypes from 'prop-types';
+import { Fragment } from "react";
+import {toast} from "react-hot-toast"
+
 import {AiOutlineCheck} from "react-icons/ai"
 import { BiEdit } from "react-icons/bi";
 import { ImBin2 } from "react-icons/im";
 import {RxCross2} from "react-icons/rx"
-import {FaSortAmountDownAlt, FaSortAmountUp} from "react-icons/fa"
-import PropTypes from 'prop-types';
+import { putDataAPI } from '../../../api/apiRequest';
 
 const BuyerOrder = ({data, compFunction}) => {
-  const { handleDeleteData } = compFunction;
+  const { handleDeleteData, handleOpenEdited, setBuyerOrdersData } = compFunction;
+
+  const handleBuyerOrderStatus = async(status, id) => {
+    try {
+      if (status === "accepted") {
+        const response = await putDataAPI(`buyer-order/${id}/accept`);
+        if (response.data) {
+          setBuyerOrdersData(prevData => prevData.map(object => {
+            if (object.id === parseInt(id, 10)) {
+              return {...object, order_status: "A"}
+            }
+            return object;
+          }))
+        };
+      } else if (status === "rejected") {
+        const response = await putDataAPI(`buyer-order/${id}/reject`)
+        if (response.data) {
+          setBuyerOrdersData(prevData => prevData.map(object => {
+            if (object.id === parseInt(id, 10)) {
+              return {...object, order_status: "R"}
+            }
+            return object;
+          }))
+        }
+      } else {
+        toast.error("Only accepted and rejected status is required")
+      }
+    } catch (error) {
+      toast.error("Error: ", error)
+    }
+    
+  }
+
   return (
     <div className="dashboard_table d-flex mt-2">
       <table className="table table-striped table-hover">
@@ -14,54 +49,30 @@ const BuyerOrder = ({data, compFunction}) => {
           <tr>
             <th className="position-relative" style={{width: "125px", minWidth: "1050px"}}>
               <span>ID</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
-                <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
             </th>
             
             <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
               <span>ProductID</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
-                <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
             </th>
 
             <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
               <span>Quantity</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
-                <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
             </th>
             
             <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
               <span>Order Status</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
-                <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
               </th>
             <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
               <span>Fulfilled Time</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
-                <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
               </th>
             <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
               <span>Fulfilled Date</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
-                <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
               </th>
             <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
               <span>Created Time</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
-                <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
               </th>
             <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
               <span>Created Date</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
-                <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
               </th>
             <th>
               <span>Accept/Decline</span>
@@ -78,29 +89,54 @@ const BuyerOrder = ({data, compFunction}) => {
                 <th scope="row">{item.id}</th>
                 <td>{item.product_id}</td>
                 <td>{item.quantity}</td>
-                <td>{item.order_status}</td>
-                <td>{item.created_time}</td>
-                <td>{item.created_date}</td>
+                <td>
+                  {
+                    item.order_status === "P" ? "Pending" 
+                    : item.order_status === "A" ? "Accepted" 
+                    : item.order_status === "R" ? "Rejected" 
+                    : ""
+                  }
+                </td>
                 <td>{item.fulfilled_time}</td>
                 <td>{item.fulfilled_date}</td>
+                <td>{item.created_time}</td>
+                <td>{item.created_date}</td>
                 <td className="sticky_action">
-                  <span className="btn btn-success">
-                    <AiOutlineCheck />
-                  </span>
-                  <span
-                    className="btn btn-danger ms-2"
-                    onClick={() => handleDeleteData(item.id, "product")}
-                  >
-                    <RxCross2 />
-                  </span>
+                  {
+                    item.order_status === "P" ? (
+                      <Fragment>
+                        <span className="btn btn-success"
+                          onClick={() => handleBuyerOrderStatus("accepted", item.id)}
+                        >
+                          <AiOutlineCheck />
+                        </span>
+                        <span
+                          className="btn btn-danger ms-2"
+                          onClick={() => handleBuyerOrderStatus("rejected", item.id)}
+                        >
+                          <RxCross2 />
+                        </span> 
+                      </Fragment>
+                    )
+                    :
+                    (<span className="fw-bold">Closed</span>)
+                  }
+                  
                 </td>
                 <td className="sticky_action">
-                  <span className="btn btn-primary">
-                    <BiEdit />
-                  </span>
+                  {
+                    item.order_status === "P" && (
+                      <span className="btn btn-primary" 
+                      onClick={() => handleOpenEdited(item.id, "buyer order")}>
+                        <BiEdit />
+                      </span>
+                    )
+                  }
+                  
+
                   <span
                     className="btn btn-warning ms-2"
-                    onClick={() => handleDeleteData(item.id, "product")}
+                    onClick={() => handleDeleteData(item.id, "buyer order")}
                   >
                     <ImBin2 />
                   </span>
@@ -127,6 +163,8 @@ BuyerOrder.propTypes = {
   })).isRequired,
   compFunction: PropTypes.shape({
     handleDeleteData: PropTypes.func.isRequired,
+    handleOpenEdited: PropTypes.func.isRequired,
+    setBuyerOrdersData: PropTypes.func.isRequired
   }).isRequired,
 };
 

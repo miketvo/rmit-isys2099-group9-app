@@ -20,9 +20,8 @@ const ProductAttributes = ({compData, compFunction}) => {
         <tbody>
           {
             compData?.map((item) => {
-              console.log(item.required)
                 return(
-                    <tr key={item.attribute_name}>
+                    <tr key={`${item.attribute_name}-${item.category}`}>
                         <td>{item.attribute_name}</td>
                         <td>{item.attribute_type}</td>
                         <td>{item.required === false ? "No" : "Yes"}</td>
