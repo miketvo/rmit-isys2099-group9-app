@@ -449,11 +449,6 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET message_text = err_msg;
     END IF;
 
-    IF (OLD.order_status = 'P') AND (NEW.order_status = 'P') THEN
-        SET err_msg = concat('Order already pending.');
-        SIGNAL SQLSTATE '45000' SET message_text = err_msg;
-    END IF;
-
     IF (OLD.order_status = 'R') AND (NEW.order_status = 'P') THEN
         SET err_msg = 'Cannot reopen rejected buyer order. Place a new order with sp_return_product_from_buyer_order() instead.';
         SIGNAL SQLSTATE '45000' SET message_text = err_msg;
