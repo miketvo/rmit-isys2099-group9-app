@@ -6,11 +6,12 @@ const authenticate = async (req, res, next) => {
     const { accessToken, refreshToken } = req.cookies;
 
     console.log('\n');
-    console.log('access token: ' + accessToken);
-    console.log('refresh token: ' + refreshToken);
+    console.log('Access token: ' + accessToken);
+    console.log('Refresh token: ' + refreshToken);
 
     try {
-        if (!accessToken && !refreshToken) {
+        // Check if there are any tokens in the cookies
+        if (!refreshToken) {
             res.status(403).send('Authentication Ivalid');
 
         // } else if (accessToken) {

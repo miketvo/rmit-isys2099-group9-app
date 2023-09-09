@@ -187,16 +187,15 @@ const updateBuyerOrderStatusReject = async (req, res) => {
     }
 };
 
-const deleteBuyerOrder = (req, res) => {
+const deleteBuyerOrder = async (req, res) => {
     const { id } = req.params;
-    db.poolBuyer.query('DELETE FROM buyer_order WHERE id = ?', [id], (error) => {
-        if (error) {
-            console.error(error);
-            res.status(500).send('An error occurred while deleting a buyer order');
-        } else {
-            res.status(200).send(`Buyer order with ID: ${id} deleted`);
-        }
-    });
+    try {
+        await db.poolBuyer.query('DELETE FROM buyer_order WHERE id = ?', [id]);
+        res.status(200).send(`Buyer order with ID: ${id} deleted`);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while deleting a buyer order');
+    }
 };
 
 module.exports = {
