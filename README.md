@@ -8,12 +8,43 @@ View assesment details [here](assets/Project_ISYS2099.pdf).
 
 ## Project Structure
 
-TODO: Write this
+<pre>
+<span style="color: dodgerblue;"><b>./</b></span>
+├── .gitignore
+├── LICENSE
+├── README.md
+├── Report.pdf
+├── <span style="color: dodgerblue;"><b>assets/</b></span>
+├── <span style="color: dodgerblue;"><b>client-mall/</b></span>
+├── <span style="color: dodgerblue;"><b>client-whadmin/</b></span>
+├── <span style="color: dodgerblue;"><b>server/</b></span>
+└── <span style="color: dodgerblue;"><b>database/</b></span>
+    ├── <span style="color: dodgerblue;"><b>mysql/</b></span>
+    └── <span style="color: dodgerblue;"><b>mongodb/</b></span>
+</pre>
+
+1. `.gitignore`: This file tells git which files it should not track / not maintain a version history for.
+2. `LICENSE`: MIT License.
+3. `README.md`: The current file. Contains the necessary information and instructions to set up and run this project locally, the link to the video demonstration for this project, and contribution information.
+4. `Report.pdf`: The Database Design and Implementation report as required on the [Assessment page on Canvas](https://rmit.instructure.com/courses/121627/assignments/836777).
+5. `assets/`: This folder contains the [Project Requirement Specifications](assets/FProject_ISYS2099.pdf) PDF file and other miscellaneous medias.
+6. `client-mall/`: This NodeJS project directory contains the source code for the Mall frontend client.
+7. `client-whadmin/`: This NodeJS project directory contains the source code for the Warehouse Administrator's frontend client.
+8. `server/`: This NodeJS project directory contains the source code for the Warehouse Administrator's frontend client.
+9. `database/mysql`: This NodeJS project folder contains the setup script (NodeJS), utilities SQL scripts, and sample data for the local MySQL database instance. See **Installation - Database - MySQL** below for more detail.
+10. `database/mongodb`: This NodeJS project folder contains the setup script (NodeJS) and sample data for the local MongoDB database instance. See **Installation - Database - MongoDB** below for more detail.
+
+[//]: # (TODO: Export the report file and save it in the root directory as Report.pdf)
 
 
 ## Dependencies
 
-TODO: Write this
+| Dependency                                                                 | Version |
+|:---------------------------------------------------------------------------|:-------:|
+| [NodeJS](https://nodejs.org/)                                              |   18    |
+| [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)           |    8    |
+| [MySQL Shell](https://dev.mysql.com/downloads/shell/)                      |    8    |
+| [MongoDB Community Server](https://www.mongodb.com/try/download/community) |    6    |
 
 
 ## Installation
@@ -123,6 +154,8 @@ npm clean-install
 ## Video Demonstration:
 
 Available on [YouTube](upload_and_insert_link_here).
+
+[//]: # (TODO: Finish editing the demo video and upload it on YouTube, then paste the link here)
 
 
 ## Contribution
