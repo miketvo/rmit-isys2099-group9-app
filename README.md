@@ -37,6 +37,13 @@ View assesment details [here](assets/Project_ISYS2099.pdf).
 [//]: # (TODO: Export the report file and save it in the root directory as Report.pdf)
 
 
+## Technology stack
+
+- Database: MySQL and MongoDB.
+- Backend API Server: NodeJS, Express, and Mongoose.
+- Frontend: Vite, React, Bootstrap, and Axios.
+
+
 ## Dependencies
 
 | Dependency                                                                 | Version  |
@@ -166,3 +173,14 @@ Available on [YouTube](https://www.youtube.com/watch?v=dQw4w9WgXcQ).
 | s3864188 | Phan Thanh Loi       |   5   |
 | s3963207 | Do Le Long An        |   5   |
 | s3877562 | Vo Tuong Minh (Mike) |   5   |
+
+
+## Developer tools
+
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Vim](https://img.shields.io/badge/Vim-019733?style=for-the-badge&logo=vim&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
+![WebStorm](https://img.shields.io/badge/WebStorm-000000?style=for-the-badge&logo=webstorm&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+![MySQL Workbench](https://img.shields.io/badge/MySQL_Workbench-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![MongoDB Compass](https://img.shields.io/badge/MongoDB_Compass-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
