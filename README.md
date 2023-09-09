@@ -39,12 +39,12 @@ View assesment details [here](assets/Project_ISYS2099.pdf).
 
 ## Dependencies
 
-| Dependency                                                                 | Version |
-|:---------------------------------------------------------------------------|:-------:|
-| [NodeJS](https://nodejs.org/)                                              |   18    |
-| [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)           |    8    |
-| [MySQL Shell](https://dev.mysql.com/downloads/shell/)                      |    8    |
-| [MongoDB Community Server](https://www.mongodb.com/try/download/community) |    6    |
+| Dependency                                                                 | Version  |
+|:---------------------------------------------------------------------------|:--------:|
+| [NodeJS](https://nodejs.org/)                                              | 18.\*.\* |
+| [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)           |  8.0.33  |
+| [MySQL Shell](https://dev.mysql.com/downloads/shell/)                      |  8.0.33  |
+| [MongoDB Community Server](https://www.mongodb.com/try/download/community) |  6.0.\*  |
 
 
 ## Installation
