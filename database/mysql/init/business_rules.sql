@@ -2,7 +2,7 @@ USE isys2099_group9_app;
 
 
 /*
- sp_move_product(product_id: int, move_quantity: int, from_warehouse: int, to_warehouse: int, OUT result: int)
+ sp_move_product(move_product: int, move_quantity: int, from_warehouse: int, to_warehouse: int, OUT result: int)
 
  OUT result:
     -1 on rollback
