@@ -27,7 +27,7 @@ View assesment details [here](assets/Project_ISYS2099.pdf).
 2. `LICENSE`: MIT License.
 3. `README.md`: The current file. Contains the necessary information and instructions to set up and run this project locally, the link to the video demonstration for this project, and contribution information.
 4. `Report.pdf`: The Database Design and Implementation report as required on the [Assessment page on Canvas](https://rmit.instructure.com/courses/121627/assignments/836777).
-5. `assets/`: This folder contains the [Project Requirement Specifications](assets/FProject_ISYS2099.pdf) PDF file and other miscellaneous medias.
+5. `assets/`: This folder contains the [Project Requirement Specifications](assets/Project_ISYS2099.pdf) PDF file and other miscellaneous medias.
 6. `client-mall/`: This NodeJS project directory contains the source code for the Mall frontend client.
 7. `client-whadmin/`: This NodeJS project directory contains the source code for the Warehouse Administrator's frontend client.
 8. `server/`: This NodeJS project directory contains the source code for the Warehouse Administrator's frontend client.
