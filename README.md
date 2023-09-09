@@ -37,7 +37,7 @@ View assesment details [here](assets/Project_ISYS2099.pdf).
 [//]: # (TODO: Export the report file and save it in the root directory as Report.pdf)
 
 
-## Technology stack
+## Technology Stack
 
 - Database: MySQL and MongoDB.
 - Backend API Server: NodeJS, Express, and Mongoose.
@@ -175,7 +175,7 @@ Available on [YouTube](https://www.youtube.com/watch?v=dQw4w9WgXcQ).
 | s3877562 | Vo Tuong Minh (Mike) |   5   |
 
 
-## Developer tools
+## Developer Tools
 
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 ![Vim](https://img.shields.io/badge/Vim-019733?style=for-the-badge&logo=vim&logoColor=white)
