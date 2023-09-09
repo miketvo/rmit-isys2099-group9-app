@@ -61,7 +61,7 @@ const getAllProductAttributesWithCategories = async (req, res) => {
 // Get a product attribute with its associated categories by name
 const getAllProductAttributesByCategories = async (req, res) => {
     try {
-        const { category } = req.body;
+        const { category } = req.params;
         const [results] = await db.poolWHAdmin.query(`
             SELECT pa.attribute_name, pa.attribute_type, pa.required, pcaa.category
             FROM product_attribute pa
