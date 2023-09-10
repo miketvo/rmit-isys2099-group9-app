@@ -52,7 +52,7 @@ const getAllWarehouse = async (req, res) => {
         for (const result of results) {
             await db.poolWHAdmin.query(availableVolumeQuery, [result.id]);
             const [[{ volume: volume }]] = await db.poolWHAdmin.query('SELECT @to_warehouse_available_volume as volume');
-            result.volume = volume;
+            result.available_volume = volume;
             console.log(result);
         }
 
