@@ -201,14 +201,22 @@ const deleteProductById = async (req, res) => {
 
         // Handle logic if the product has already ordered
         const [buyerOrder] = await db.poolBuyer.query(`
-            SELECT * FROM buyer_order WHERE id = ?
+            SELECT * FROM buyer_order WHERE product_id = ?
         `, [productID]);
         if (buyerOrder.length > 0) {
-            return res.status(409).json({ error: `A buyer is ordering this product!` });
+            return res.status(409).json({ error: `A buyer is ordering this product ${productID}!` });
+        }
+
+        // Handle logic if the product is in stockpile
+        const [stockPile] = await db.poolWHAdmin.query(`
+            SELECT * FROM stockpile WHERE product_id = ?
+        `, [productID]);
+        if (stockPile.length > 0) {
+            return res.status(409).json({ error: `This product ${productID} is in stockpile!` });
         }
 
         const query=`DELETE FROM product WHERE id = ?`;
-        await db.poolWHAdmin.query(query,[productID]);
+        await db.poolWHAdmin.query(query, [productID]);
         res.json({message:"Product deleted", id: productID});
     } catch(error){
         res.status(400).json({error:error.message});
