@@ -1,11 +1,10 @@
+/* eslint-disable no-undef */
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
-// Not Protected apiRouter
-const apiRouter = require("./apiRouter");
+const path = require("path");
 
 const authRouter = require("./routes/authRoutes");
 const productRouter = require("./routes/productRoutes");
@@ -14,8 +13,24 @@ const inboundOrderRouter = require("./routes/inboundOrderRoutes");
 const productCategoryRouter = require("./routes/productCategoryRoutes");
 const warehouseRouter = require("./routes/warehouseRoutes");
 const buyerOrderRouter = require("./routes/buyerOrderRoutes");
+const attributeRouter = require("./routes/attributeRoutes");
+const stockRouter = require("./routes/stockRoutes");
 
 const app = express();
+
+/* 
+* Serve static files from the server directory. `server/uploads` to be specific. 
+* This means that any files in the server directory can be accessed by the client through a web browser.
+* The __dirname variable is a global variable in Node.js that contains the absolute path of the directory containing the currently executing file. 
+*/
+app.use('/uploads', express.static(path.join(__dirname + "/uploads")));
+
+/* 
+* Tell Express.js to trust the headers set by your proxy 
+* so that we can access req.protocol and req.hostname
+*/ 
+app.set('trust proxy', true);
+
 app.use(cookieParser());
 
 // eslint-disable-next-line no-undef
@@ -29,7 +44,10 @@ const CORS_WHITELIST = [
   `http://localhost:${process.env.CLIENT_WHADMIN_PORT}`
 ];
 
+// parse application/json
 app.use(bodyParser.json());
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -43,11 +61,6 @@ app.use(
   }),
 );
 
-apiRouter.use(cookieParser());
-
-// Not Protected apiRouter
-app.use("/api", apiRouter);
-
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
 app.use("/api/user", userRouter);
@@ -55,6 +68,8 @@ app.use("/api/inbound-order", inboundOrderRouter);
 app.use("/api/product-category", productCategoryRouter);
 app.use("/api/warehouse", warehouseRouter);
 app.use("/api/buyer-order", buyerOrderRouter);
+app.use("/api/attribute", attributeRouter);
+app.use("/api/stock", stockRouter);
 
 app.get("/", (req, res) => {
   return res.json("Server is running");

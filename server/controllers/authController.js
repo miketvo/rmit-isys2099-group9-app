@@ -39,6 +39,10 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Please enter a shop name' });
     }
 
+    if (role === 'seller' && await model.getShopName(shop_name)) {
+      return res.status(409).json({ message: 'Shop name already exists' });
+    }
+
     // Hash the password
     const salt = genSaltSync(10);
     const hashedPassword = hashSync(password, salt);
@@ -89,9 +93,6 @@ const login = async (req, res) => {
     } else if (await model.getBuyer(username)) {
       role = "buyer";
 
-    } else if (await model.getWHAdmin(username)) {
-      role = "admin";
-
     } else {
       return res.status(401).send("User not found");
     }
@@ -101,10 +102,8 @@ const login = async (req, res) => {
     let existingUser;
     if (role === "seller" || role === "buyer") {
       existingUser = await model.getLazadaUserByRole("lazada_user", username);
-    } else {
-      existingUser = await model.getLazadaUserByRole(role, username);
-    }
-
+    } 
+    
     console.log("Login user's password_hash: " + existingUser.password_hash);
 
     // Compare the provided password with the stored hashed password
@@ -137,6 +136,59 @@ const login = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+const loginAdmin = async (req, res) => {
+  try {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    console.log(`username: ${username}`);
+    console.log(`password: ${password}`);
+
+    if (!username || !password) {
+      return res.status(400).send('Please provide a username and password');
+    }
+
+    // Retrieve the user from the database
+    if (!await model.getWHAdmin(username)) {
+      return res.status(401).send("User not found or not an warehouse admin");
+    }
+   
+    const role = "admin";
+    // Get user password    
+    const existingUser = await model.getLazadaUserByRole(role, username);
+
+    console.log("Login user's password_hash: " + existingUser.password_hash);
+
+    // Compare the provided password with the stored hashed password
+    const passwordMatches = compareSync(password, existingUser.password_hash);
+
+    if (!passwordMatches) {
+      return res.status(401).send("Incorrect password");
+    }
+    
+    const shop_name = "";
+    // Generate tokens
+    const tokens = generateTokens(username, role, shop_name);
+
+    console.log(`tokens: ${JSON.stringify(tokens)}`);
+
+    // Set the token as a cookie
+    setTokenCookie(res, username, role, shop_name);
+
+    req.role = role;
+    req.username = username;
+
+    return res.status(200).json({ 
+      message: `User ${username} authenticated`, 
+      username: username, 
+      role: "admin", 
+    });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+}
 
 // Endpoint for logout
 const logout = async (req, res) => {
@@ -176,5 +228,6 @@ const logout = async (req, res) => {
 module.exports = {
   register,
   login,
+  loginAdmin,
   logout
 }

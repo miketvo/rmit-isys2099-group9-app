@@ -5,10 +5,10 @@ import {BiEdit} from "react-icons/bi"
 import {ImBin2} from "react-icons/im"
 
 const WareHouse = ({data, compFunction}) => {
-    const {handleDeleteData} = compFunction;
+    const {handleOpenEditedMode, handleDeleteData} = compFunction;
 
     return (
-        <div className="warehouse_table mt-4">
+        <div className="warehouse_table mt-3">
             <table className="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -37,11 +37,12 @@ const WareHouse = ({data, compFunction}) => {
                                     <td>{item.street}</td>
                                     <td>{item.street_number}</td>
                                     <td>
-                                        <span className="btn btn-primary">
+                                        <span className="btn btn-primary"
+                                        onClick={() => handleOpenEditedMode({id: item.id, place: "warehouse"})}>
                                             <BiEdit />
                                         </span>
                                         <span className="btn btn-warning ms-2"
-                                        onClick={() => handleDeleteData(item.id, "warehouse")}>
+                                        onClick={() => handleDeleteData({id: item.id, place: "warehouse"})}>
                                             <ImBin2 />
                                         </span>
                                     </td>
@@ -68,7 +69,8 @@ WareHouse.propTypes = {
       street_number: PropTypes.number
     })).isRequired,
     compFunction: PropTypes.shape({
-        handleDeleteData: PropTypes.func.isRequired
+        handleDeleteData: PropTypes.func.isRequired,
+        handleOpenEditedMode: PropTypes.func.isRequired
     }).isRequired
 }
 

@@ -12,7 +12,7 @@ import NavBar from "./components/NavBar/NavBar";
 import HomePage from "./components/HomePage/HomePage";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
-import SellerDashboardPage from "./pages/seller.jsx";
+
 import { useState } from "react";
 import DetailProductPage from "./pages/products/[id]";
 
@@ -30,14 +30,8 @@ function App() {
           <Route exact path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn}/>} />
           <Route exact path="/register" element={<RegisterPage/>} />
 
-          <Route exact path="/" element={<HomePage />} />
-          <Route
-            exact
-            path="/seller"
-            element={<SellerDashboardPage />}
-          />
-
           <Route exact path="/" element={<PrivateRouter />}>
+            <Route exact path="/" element={<HomePage />} />
             <Route exact path="/products/:id" element={<DetailProductPage />} />
 
             <Route exact path="/:page" element={<PageRender />} />

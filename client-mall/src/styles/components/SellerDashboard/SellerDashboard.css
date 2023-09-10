@@ -50,7 +50,7 @@
 .dashboard_table,
 .product_table {
     height: fit-content;
-    max-height: 75vh;
+    max-height: 70vh;
 
     width: fit-content;
     max-width: 100%;
@@ -58,19 +58,15 @@
     overflow-y: auto;
 }
 
-.dashboard_table table {
-    width: 100%;
-    table-layout: fixed;
-    min-width: 1000px;
-}
-
+.dashboard_table table,
 .product_table table {
     width: 100%;
     table-layout: fixed;
     min-width: 1500px;
 }
 
-.dashboard_wrapper thead th {
+.dashboard_wrapper thead th,
+.product_table thead th {
     position: sticky;
     top: 0;
     background-color: #B64F4F;
@@ -79,12 +75,39 @@
 }
 
 .dashboard_wrapper th,
-.dashboard_wrapper td {
+.dashboard_wrapper td,
+.product_table th,
+.product_table td {
     justify-content: center;
     align-items: center;
     text-align: center;
     vertical-align: middle;
 }   
+
+
+.dashboard_table table th:nth-last-child(1),
+.dashboard_table table td:nth-last-child(1),
+.product_table table th:nth-last-child(1),
+.product_table table td:nth-last-child(1) {
+    position: sticky;
+    right: 0;
+    width: 175px;
+    min-width: 175px;
+}
+
+.dashboard_table table th:nth-last-child(2),
+.dashboard_table table td:nth-last-child(2) {
+    position: sticky;
+    right: 175px;
+    width: 175px;
+    min-width: 175px;
+}
+
+.dashboard_table table th:nth-last-child(1),
+.dashboard_table table th:nth-last-child(2),
+.product_table table th:nth-last-child(1) {
+    z-index: 2;
+} 
 
 .dashboard_wrapper td img {
     width: 120px;
@@ -92,14 +115,4 @@
     object-fit: cover;
     border-radius: 15px;
     border: 3px solid #ced0d2;
-}
-
-table th:nth-last-child(1),
-table td:nth-last-child(1) {
-    position: sticky;
-    right: 0;
-}
-
-table th:nth-last-child(1) {
-    z-index: 2;
 }

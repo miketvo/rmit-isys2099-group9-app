@@ -7,9 +7,9 @@ import { ImBin2 } from "react-icons/im";
 import TestImg from "../../../images/potato.jpg";
 
 const Product = ({ data, compFunction }) => {
-  const { handleDeleteData } = compFunction;
+  const { handleDeleteData, handleOpenEdited } = compFunction;
   return (
-    <div className="product_table d-flex mt-4">
+    <div className="product_table d-flex mt-2">
       <table className="table table-striped table-hover">
         <thead>
           <tr>
@@ -43,7 +43,8 @@ const Product = ({ data, compFunction }) => {
                 <td>{item.length}</td>
                 <td>{item.seller}</td>
                 <td className="sticky_action">
-                  <span className="btn btn-primary">
+                  <span className="btn btn-primary"
+                  onClick={() => handleOpenEdited(item.id, "product")}>
                     <BiEdit />
                   </span>
                   <span
@@ -79,6 +80,7 @@ Product.propTypes = {
   ).isRequired,
   compFunction: PropTypes.shape({
     handleDeleteData: PropTypes.func.isRequired,
+    handleOpenEdited: PropTypes.func.isRequired
   }).isRequired,
 };
 

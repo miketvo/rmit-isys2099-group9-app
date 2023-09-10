@@ -15,7 +15,7 @@ const {
     deleteProductCategory
 } = require('../controllers/productCategoryController');
 
-productCategoryRouter.post('/', authenticate, checkAdmin, createProductCategory);
+productCategoryRouter.post('/create', authenticate, checkAdmin, createProductCategory);
 productCategoryRouter.get('/', authenticate, getAllProductCategory);
 productCategoryRouter.get('/:category_name', authenticate, getProductCategoryByName);
 productCategoryRouter.put('/update/:category_name', authenticate, checkAdmin, updateProductCategory);

@@ -2,10 +2,7 @@ import PropTypes from "prop-types";
 import {Link} from "react-router-dom"
 
 const CategoryTree = ({categories, depth = 1}) => {
-    if (depth > 2) {
-        // Return null when the depth exceeds 5 to prevent further nesting
-        return null;
-      }
+
     return (
         <ul className={`${depth === 1 && "px-2"}`}>
           {categories.map((category) => (

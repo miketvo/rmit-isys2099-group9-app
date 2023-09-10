@@ -69,6 +69,19 @@ database.insertSeller = (username, shop_name) => {
   });
 };
 
+database.getShopName = async shop_name => {
+  try {
+    const [results] = await db.poolSeller.query(
+      `SELECT * FROM seller WHERE shop_name = ?`,
+      [shop_name]
+    );
+    return results[0];
+  } catch (err) {
+    console.error("error: " + err.stack);
+    throw err;
+  }
+}
+
 {
   /* Endpoints for WH Admin */
 }
