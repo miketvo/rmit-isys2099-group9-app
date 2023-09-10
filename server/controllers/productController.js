@@ -193,10 +193,10 @@ const deleteProductById = async (req, res) => {
 
         // Handle logic if the product already has inbound order
         const [inboundOrder] = await db.poolSeller.query(`
-            SELECT * FROM inbound_order WHERE id = ? AND seller = ?
+            SELECT * FROM inbound_order WHERE product_id = ?
         `, [productID, seller]);
         if (inboundOrder.length > 0) {
-            return res.status(409).json({ error: `Seller ${seller} has already created inbound order for this product ${productID}` });
+            return res.status(409).json({ error: `There is already created inbound order for this product ${productID}` });
         }
 
         // Handle logic if the product has already ordered
