@@ -90,7 +90,7 @@ const createInboundOrder = async (req, res) => {
         );
 
         res.status(201).json({
-            message: `Inbound order with ID: ${result[0].insertId} updated`, 
+            message: `Inbound order with ID: ${result[0].insertId} created`, 
             id: result[0].insertId, 
             quantity: quantity, 
             product_id: product_id, 
