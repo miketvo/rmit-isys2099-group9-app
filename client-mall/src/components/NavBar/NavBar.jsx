@@ -14,6 +14,8 @@ import { deleteDataAPI} from "../../api/apiRequest";
 const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
   // const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role
 
+  
+
   const handleLogOut = async() => {
     try {
       const username = JSON.parse(localStorage.getItem("userInfo")).username
@@ -60,12 +62,17 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
             
 
             <div className="d-flex">
-              <Link to="/dashboard" className="btn btn-outline-dark"> 
-                <span>   
-                  {IconSetting(<MdDashboard/>, "", "", "me-3")}
-                  Dashboard
-                </span>
-              </Link>
+              {
+                localStorage.getItem("userInfo") && (
+                  <Link to="/dashboard" className="btn btn-outline-dark"> 
+                    <span>   
+                      {IconSetting(<MdDashboard/>, "", "", "me-3")}
+                      Dashboard
+                    </span>
+                  </Link>
+                )
+              }
+              
 
               {
                 isLoggedIn ? (

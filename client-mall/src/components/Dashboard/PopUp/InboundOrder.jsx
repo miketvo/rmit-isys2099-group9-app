@@ -105,10 +105,10 @@ const InboundOrder = ({compData, compFunction}) => {
           <div className="row">
             <div className="col-6">
               <div className="mb-3">
-                <label className="form-label">Category</label>
+                <label className="form-label">Product</label>
                 <select className="form-select" name="product_id" value={product_id} 
                 onChange={handleChangeInput} disabled={edited ? true : false}>
-                  <option value="">-- Choose product category --</option>
+                  <option value="">-- Choose product --</option>
                   {
                     productData?.map((item) => (
                       <option value={item.id} key={item.id}>{item.title}</option>

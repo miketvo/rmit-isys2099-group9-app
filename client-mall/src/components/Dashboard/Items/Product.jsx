@@ -4,10 +4,9 @@ import PropTypes from "prop-types";
 import { BiEdit } from "react-icons/bi";
 import { ImBin2 } from "react-icons/im";
 
-import TestImg from "../../../images/potato.jpg";
-
 const Product = ({ data, compFunction }) => {
   const { handleDeleteData, handleOpenEdited } = compFunction;
+  console.log(data)
   return (
     <div className="product_table d-flex mt-2">
       <table className="table table-striped table-hover">
@@ -33,7 +32,7 @@ const Product = ({ data, compFunction }) => {
                 <th scope="row">{item.id}</th>
                 <td>{item.title}</td>
                 <td>
-                  <img src={TestImg} alt="" />
+                  <img src={item.image || ""} alt="" />
                 </td>
                 <td>{item.product_description}</td>
                 <td>{item.category}</td>

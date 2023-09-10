@@ -14,7 +14,8 @@ const WareHouse = ({data, compFunction}) => {
                     <tr>
                         <th>ID</th>
                         <th>Warehouse Name</th>
-                        <th>Volume</th>
+                        <th>Total Volume</th>
+                        <th>Available Volume</th>
                         <th>Province</th>
                         <th>City</th>
                         <th>District</th>
@@ -31,6 +32,7 @@ const WareHouse = ({data, compFunction}) => {
                                     <th scope="row">{item.id}</th>
                                     <td>{item.warehouse_name}</td>
                                     <td>{item.volume}</td>
+                                    <td>{item.available_volume}</td>
                                     <td>{item.province}</td>
                                     <td>{item.city}</td>
                                     <td>{item.district}</td>

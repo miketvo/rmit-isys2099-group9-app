@@ -137,7 +137,7 @@ const ProductAttributes = ({compData, compFunction}) => {
           }
     }
     return (
-        <div className="popup_container p-4" style={{top: created ? "-10%": "10%"}}>
+        <div className="popup_container p-4" style={{top: "-10%"}}>
             <form onSubmit={handleSubmitData}>
                 <div className="container_fluid">
                     <div className="row">

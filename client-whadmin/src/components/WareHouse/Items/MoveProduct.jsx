@@ -180,8 +180,9 @@ const MoveProduct = ({compData}) => {
                                     wareHouseData.map((item) =>
                                         item.id === parseInt(warehouseId, 10) && (
                                             <ul key={item.id}>
-                                                <li><span>Warehouse Name: {item.warehouse_name}</span></li>
-                                                <li><span>Volume: {item.volume}</span></li>
+                                                <li><span className="fw-bold">Warehouse Name: {item.warehouse_name}</span></li>
+                                                <li><span className="fw-bold">Total Volume: {item.volume}</span></li>
+                                                <li><span className="fw-bold">Available Volume: {item.available_volume}</span></li>
                                                 <li><span>Province: {item.province}</span></li>
                                                 <li><span>City: {item.city}</span></li>
                                                 <li><span>District: {item.district}</span></li>
@@ -216,8 +217,9 @@ const MoveProduct = ({compData}) => {
                                     wareHouseFilter.map((item) =>
                                         item.id === parseInt(warehouseMoved, 10) && (
                                             <ul key={item.id}>
-                                                <li><span>Warehouse Name: {item.warehouse_name}</span></li>
-                                                <li><span>Volume: {item.volume}</span></li>
+                                                <li><span className="fw-bold">Warehouse Name: {item.warehouse_name}</span></li>
+                                                <li><span className="fw-bold">Total Volume: {item.volume}</span></li>
+                                                <li><span className="fw-bold">Available Volume: {item.available_volume}</span></li>
                                                 <li><span>Province: {item.province}</span></li>
                                                 <li><span>City: {item.city}</span></li>
                                                 <li><span>District: {item.district}</span></li>
