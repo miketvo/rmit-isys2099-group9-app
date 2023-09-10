@@ -182,12 +182,22 @@ const updateProductById = async (req, res) => {
 const deleteProductById = async (req, res) => {
     try{
         let productID = req.params.id;
+
         const [results] = await db.poolWHAdmin.query(`
             SELECT * FROM product where id = ?
         `, [productID]);
         if (results.length === 0) {
             return res.status(404).json({ error: "Product not found" });
         }
+
+        // Handle logic if the product is already has inbound order
+        const [inboundOrder] = await db.poolSeller.query(`
+            SELECT * FROM inbound_order where id = ?
+        `, [productID]);
+        if (inboundOrder.length > 0) {
+            return res.status(409).json({ error: "There is already inbound order for this product" });
+        }
+
         const query=`DELETE FROM product WHERE id = ?`;
         await db.poolWHAdmin.query(query,[productID]);
         res.json({message:"Product deleted", id: productID});
