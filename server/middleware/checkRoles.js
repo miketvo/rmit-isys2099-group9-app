@@ -12,7 +12,7 @@ const checkBuyer = async (req, res, next) => {
         next();
       } else {
         // If the user is not a buyer, return an error response
-        res.status(403).json({ message: `Forbidden: You are not ${role}!` });
+        res.status(403).json({ message: `Forbidden: You are not buyer!` });
       }
     } catch (error) {
       // Handle errors
@@ -31,7 +31,7 @@ const checkSeller = async (req, res, next) => {
             next();
         } else {
             // If the user is not a seller, return an error response
-            res.status(403).json({ message: `Forbidden: You are not ${role}!` });
+            res.status(403).json({ message: `Forbidden: You are not seller!` });
         }
     } catch (error) {
         // Handle errors
@@ -50,7 +50,7 @@ const checkAdmin = async (req, res, next) => {
             next();
         } else {
             // If the user is not an admin, return an error response
-            res.status(403).json({ message: `Forbidden: You are not ${role}!` });
+            res.status(403).json({ message: `Forbidden: You are not admin!` });
         }
     } catch (error) {
         // Handle errors

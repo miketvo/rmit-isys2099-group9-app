@@ -78,11 +78,23 @@ const createProduct = async (req, res) => {
             height, 
         } = req.body;
 
-        const query = `INSERT INTO view_product_noid (title,  product_description, category, price, width, length, height, seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const fileName = req.file.filename;
+        if (!fileName) {
+            return res.status(404).json({ message: 'File not found in the request' });
+        }
+        // eslint-disable-next-line no-undef
+        const basePath = `http://localhost:${process.env.SERVER_PORT}/uploads/`
+        // `${basePath}${fileName}` will return the image that is stored in the server
+        const image = `${basePath}${fileName}`; // For example: "http://localhost:3000/server/uploads/<image>"
+
+        console.log(image);
+
+        const query = `INSERT INTO view_product_noid (title, image, product_description, category, price, width, length, height, seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const result = await db.poolWHAdmin.query(
             query, 
             [
-                title, 
+                title,
+                image, 
                 product_description, 
                 category, 
                 price, 
@@ -97,7 +109,8 @@ const createProduct = async (req, res) => {
         res.status(201).json({ 
             message: 'Product created successfully',
             id: result[0].insertId, 
-            title: title, 
+            title: title,
+            image: image, 
             product_description: product_description, 
             category: category, 
             price: price,
@@ -125,11 +138,23 @@ const updateProductById = async (req, res) => {
             height, 
         } = req.body;
 
-        const query = `UPDATE product SET title = ?, product_description = ?, category = ?, price = ?, width = ?, length = ?, height = ?, seller = ? WHERE id = ?`;
+        const fileName = req.file.filename;
+        if (!fileName) {
+            return res.status(404).json({ message: 'File not found in the request' });
+        }
+        // eslint-disable-next-line no-undef
+        const basePath = `http://localhost:${process.env.SERVER_PORT}/uploads/`
+        // `${basePath}${fileName}` will return the image that is stored in the server
+        const image = `${basePath}${fileName}`; // For example: "http://localhost:3000/server/uploads/<image>"
+
+        console.log(image);
+
+        const query = `UPDATE product SET title = ?, image = ?, product_description = ?, category = ?, price = ?, width = ?, length = ?, height = ?, seller = ? WHERE id = ?`;
         const result = await db.poolWHAdmin.query(
             query, 
             [
-                title,  
+                title,
+                image,  
                 product_description, 
                 category, 
                 price, 
@@ -142,7 +167,8 @@ const updateProductById = async (req, res) => {
         res.json({ 
             message: "Product updated", 
             id: result[0].insertId, 
-            title: title, 
+            title: title,
+            image: image,
             product_description: product_description, 
             category: category, 
             price: price,
