@@ -20,7 +20,7 @@ const {
     checkAdmin
 } = require("../middleware/checkRoles");
 
-// upload image middleware
+// Start uploading image middleware
 const multer = require("multer");
 
 const limits = {
@@ -69,6 +69,8 @@ let uploadImage = multer({
     fileFilter: imageFilter,
     limits: limits,
 });
+// End uploading image middleware
+
 
 productRouter.get('/', authenticate, getAllProducts);
 productRouter.get('/productsASC', authenticate, getAllProductsASC);
