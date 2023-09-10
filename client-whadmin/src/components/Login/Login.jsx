@@ -27,16 +27,13 @@ const LoginComponent = () => {
     e.preventDefault();
     try {
       const response = await postDataAPI("auth/login/whadmin", loginState)
-      if (response.data && response.data?.role === "admin") {
+      if (response.status === 200 || response.status === 201) {
         localStorage.setItem("userInfo", JSON.stringify({username: response.data?.username, role: response.data?.role}));
         toast.success(`Login Successfully! Welcome back ${response.data?.username}`);
         navigate(`${from}`, {replace: true});
       }
-      else {
-        toast.error("You don't permission to access this behavior")
-      }
     } catch (error) {
-      toast.error('Login failed. Please check your username and password.')
+      toast.error(error)
     }
   }
 

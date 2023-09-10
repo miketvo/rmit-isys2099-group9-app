@@ -122,8 +122,9 @@ const userController = {
 
     // Update a seller's username and/or shop name
     updateSeller: async (req, res) => {
+        console.log(req.params)
         try {
-            const oldUsername = req.username;
+            const oldUsername = req.params.username;
             const { newUsername, newShopName } = req.body;
 
             // prevent SQL injection

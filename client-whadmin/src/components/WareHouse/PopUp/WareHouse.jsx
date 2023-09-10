@@ -52,7 +52,7 @@ const WareHouse = ({compData, compFunction}) => {
             // Handle call create warehouse here
             try {
                 const response = await postDataAPI("warehouse/create", wareHouseFormData)
-                if (response.data) {
+                if (response.status === 200 || response.status === 201) {
                     // handle add data into setWareHouseData
                     setWareHouseData(prevState => [
                         ...prevState,
@@ -71,12 +71,10 @@ const WareHouse = ({compData, compFunction}) => {
             // Handle call update warehouse here
             try {
                 const response = await putDataAPI(`warehouse/update/${editedWarehouseData.id}`, wareHouseFormData)
-                console.log(response)
-                if (response.data) {
+                if (response.status === 200 || response.status === 201) {
                     // handle update into setWareHouseData by API response
                     setWareHouseData((preData) => (preData.map(obj => {
                         if(obj.id === editedWarehouseData.id) {
-                          console.log(obj)
                             return {
                                 ...obj,
                                 ...wareHouseFormData
@@ -91,7 +89,6 @@ const WareHouse = ({compData, compFunction}) => {
 
             setWareHouseData((preData) => (preData.map(obj => {
               if(obj.id === editedWarehouseData.id) {
-                console.log(obj)
                   return {
                       ...obj,
                       ...wareHouseFormData

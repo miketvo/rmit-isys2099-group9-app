@@ -38,7 +38,7 @@ const BuyerOrder = ({compData, compFunction}) => {
       if (buyerOrderData.quantity > 0) {
         if (edited) {
           const response = await putDataAPI(`buyer-order/${editedBuyerOrderData.id}/quantity`, {quantity: buyerOrderData.quantity})
-          if (response.data) {
+          if (response.status === 200 || response.status === 201) {
             setBuyerOrdersData((preData) => (preData.map(obj => {
               if(obj.id === editedBuyerOrderData.id) {
                   return {

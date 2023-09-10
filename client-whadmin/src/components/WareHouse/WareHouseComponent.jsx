@@ -142,7 +142,7 @@ const WareHouseComponent = () => {
     try {
       if (place === "warehouse") {
         const response = await deleteDataAPI(`warehouse/delete/${id}`);
-        if (response.data) {
+        if (response.status === 200 || response.status === 201) {
           setWareHouseData(preState => [...preState.filter((item) => item.id !== id)])
 
           toast.success(`Delete Warehouse with ID ${id} Successfully`)
@@ -151,7 +151,7 @@ const WareHouseComponent = () => {
       } 
       else if (place === "categories") {
         const response = await deleteDataAPI(`product-category/delete/${category_name}`);
-        if (response.data) {
+        if (response.status === 200 || response.status === 201) {
           setProductCategoryData(preState => [...preState.filter((item) => item.category_name !== category_name)])
 
           toast.success(`Delete Category with name ${category_name} Successfully`)
@@ -160,7 +160,7 @@ const WareHouseComponent = () => {
       } 
       else if (place === "product_attribute") {
         const response = await deleteDataAPI(`attribute/delete/${attribute_name}`);
-        if (response.data) {
+        if (response.status === 200 || response.status === 201) {
           setProductAttributesData(preState => [...preState.filter((item) => (item.attribute_name !== attribute_name))])
           toast.success(`Delete Attribute ${attribute_name} Successfully`)
 

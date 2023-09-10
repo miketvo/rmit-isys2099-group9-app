@@ -15,7 +15,7 @@ const BuyerOrder = ({data, compFunction}) => {
     try {
       if (status === "accepted") {
         const response = await putDataAPI(`buyer-order/${id}/accept`);
-        if (response.data) {
+        if (response.status === 200 || response.status === 201) {
           setBuyerOrdersData(prevData => prevData.map(object => {
             if (object.id === parseInt(id, 10)) {
               return {...object, order_status: "A"}
@@ -25,7 +25,7 @@ const BuyerOrder = ({data, compFunction}) => {
         };
       } else if (status === "rejected") {
         const response = await putDataAPI(`buyer-order/${id}/reject`)
-        if (response.data) {
+        if (response.status === 200 || response.status === 201) {
           setBuyerOrdersData(prevData => prevData.map(object => {
             if (object.id === parseInt(id, 10)) {
               return {...object, order_status: "R"}

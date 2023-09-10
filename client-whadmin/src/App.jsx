@@ -10,8 +10,13 @@ import PrivateRouter from "./customRouter/PrivateRouter";
 import LoginPage from './pages/login'
 import RegisterPage from './pages/register'
 import Layout from "./components/Layout";
+import { useEffect } from "react";
+import { setupResponseInterceptor } from "./api/axiosInterceptor";
  
 function App() {
+  useEffect(() => {
+    setupResponseInterceptor();
+  }, [])
   return (
     <Router>
       <div className="">

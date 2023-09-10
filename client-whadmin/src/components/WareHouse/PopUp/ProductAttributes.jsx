@@ -64,7 +64,7 @@ const ProductAttributes = ({compData, compFunction}) => {
                         categories: categoryList
                     })
 
-                    if (response.data) {
+                    if (response.status === 200 || response.status === 201) {
                         const categoryObjects = categoryList.map((categoryItem) => ({
                             attribute_name: productAttributeData.attribute_name,
                             attribute_type: productAttributeData.attribute_type,
@@ -94,7 +94,7 @@ const ProductAttributes = ({compData, compFunction}) => {
                     categories: categoryList
                 })
 
-                if (response.data) {
+                if (response.status === 200 || response.status === 201) {
                     setProductAttributesData((preData) => {
                         const clonedData = [...preData]
                         const matchingObjects = clonedData.filter(item => item.attribute_name === editedData.attribute_name);

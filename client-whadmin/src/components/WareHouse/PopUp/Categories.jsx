@@ -46,7 +46,7 @@ const Categories = ({compData, compFunction}) => {
         try {
             if (created) {
                 const response = await postDataAPI("product-category", categoryData);
-                if (response.data) {
+                if (response.status === 200 || response.status === 201) {
                     setProductCategoryData((preData) => ([...preData, categoryData]))
                     toast.success("Create A Category Successfully")
                 }
@@ -54,7 +54,7 @@ const Categories = ({compData, compFunction}) => {
             }
             else if (edited) {
                 const response = await putDataAPI(`product-category/update/${category_name}`, {parent: categoryData.parent});
-                if (response.data) {
+                if (response.status === 200 || response.status === 201) {
                     setProductCategoryData(prevData => prevData.map(item =>
                         item.category_name === editedProductCategoryData.category_name
                         ? { ...item, parent: categoryData.parent }

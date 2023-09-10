@@ -6,15 +6,14 @@ import { ImBin2 } from "react-icons/im";
 
 const Product = ({ data, compFunction }) => {
   const { handleDeleteData, handleOpenEdited } = compFunction;
-  console.log(data)
   return (
     <div className="product_table d-flex mt-2">
       <table className="table table-striped table-hover">
         <thead>
           <tr>
             <th>ID</th>
-            <th>Title</th>
-            <th style={{ width: "15%" }}>Image</th>
+            <th style={{ width: "10%" }}>Title</th>
+            <th style={{ width: "20%" }}>Image</th>
             <th style={{ width: "15%" }}>Product Description</th>
             <th>Category</th>
             <th>Price</th>
@@ -31,8 +30,9 @@ const Product = ({ data, compFunction }) => {
               <tr key={item.id}>
                 <th scope="row">{item.id}</th>
                 <td>{item.title}</td>
-                <td>
-                  <img src={item.image || ""} alt="" />
+                <td className="p-4" style={{width: "100%", height: "200px"}}>
+                  <img src={item.image ? (item.image instanceof File ? URL.createObjectURL(item.image) : item.image) 
+                                  : ""}   alt="" />
                 </td>
                 <td>{item.product_description}</td>
                 <td>{item.category}</td>

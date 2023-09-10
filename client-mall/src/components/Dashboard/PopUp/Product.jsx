@@ -88,8 +88,8 @@ const Product = ({ compData, compFunction }) => {
           }
   
           const response = await postDataAPI("product/create", formData)
-          console.log(response.data)
-          if (response.data) {
+
+          if (response.status === 200 || response.status === 201) {
             setProductData((preData) => ([...preData, {
               id: response.data.id,
               title: response.data.title,
@@ -114,7 +114,7 @@ const Product = ({ compData, compFunction }) => {
       } 
       else if (edited) {
         const response = await putDataAPI(`product/update/${editedProductData.id}`, productFormData)
-        if (response.data) {
+        if (response.status === 200 || response.status === 201) {
           setProductData((preData) => (preData.map(obj => {
             if(obj.id === editedProductData.id) {
                 return {

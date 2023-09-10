@@ -116,10 +116,9 @@ const MoveProduct = ({compData}) => {
                         from_warehouse_id: parseInt(warehouseId, 10), 
                         to_warehouse_id: parseInt(warehouseMoved, 10)
                     }
-                    console.log(postData)
                     const response = await postDataAPI("warehouse/move-product", postData)
-                    console.log(response)
-                    if (response.data) {
+
+                    if (response.status === 200 || response.status === 201) {
                         toast.success("Move A Product Successfully!")
                     }
                 } else {

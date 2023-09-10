@@ -21,7 +21,7 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
       const username = JSON.parse(localStorage.getItem("userInfo")).username
 
       const response = await deleteDataAPI("auth/logout", {username: username});
-      if (response.data) {
+      if (response.status === 200 || response.status === 201) {
         localStorage.removeItem("userInfo")
         toast.success(`Log Out Successfully`);
         setIsLoggedIn(false);
@@ -36,7 +36,7 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
     <>
       <nav className="navbar horizontal_navbar navbar-expand-lg navbar-light bg-light">
         <div className="container px-4 px-lg-5">
-          <Link to="/" className="navbar-brand" href="#!">
+          <Link to="/homepage" className="navbar-brand">
             👑
           </Link>
           <button
@@ -53,7 +53,7 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
           <div className="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul className="navbar-nav mb-2 mb-lg-0 ms-lg-4">
               <li className="nav-item">
-                <Link to="/" className="nav-link active" aria-current="page">
+                <Link to="/homepage" className="nav-link active" aria-current="page">
                   Home
                 </Link>
               </li>      
@@ -83,6 +83,7 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
                             </span>     
                         </div>  
                         <div className="dropdown-menu avatar-menu" aria-labelledby="navbarDropdown" style={{left: "unset", right: "25px", top: "50px"}}>
+                            <Link className="dropdown-item" to={`/profile`} >My Profile</Link>
                             <span className="dropdown-item" onClick={handleLogOut} style={{cursor: "pointer"}}>Log Out</span>
                         </div>
                   </div>

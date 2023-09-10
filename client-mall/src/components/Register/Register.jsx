@@ -31,18 +31,18 @@ const RegisterComponent = () => {
       try {
         if (roles === "buyer") {
           const response = await postDataAPI("auth/register", {username: username, password: password, role: roles})
-          if (response.data) {
+          if (response.status === 200 || response.status === 201) {
             toast.success(`Register Successfully!`)
           }
         } 
         else if (roles === "seller") {
           const response = await postDataAPI("auth/register", {username: username, password: password, role: roles, shop_name: shopName})
-          if (response.data) {
+          if (response.status === 200 || response.status === 201) {
             toast.success(`Register Successfully!`)
           }
         } 
       } catch (error) {
-        toast.error('Register Failed!')
+        toast.error(error)
       }
     } else {
       toast.error("Your confirmed password does not match")

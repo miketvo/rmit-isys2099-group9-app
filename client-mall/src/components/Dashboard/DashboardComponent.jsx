@@ -92,7 +92,7 @@ const DashboardComponent = () => {
     try {
       if (place === "buyer order") {
         const response = await deleteDataAPI(`buyer-order/delete/${id}`)
-        if (response.data) {
+        if (response.status === 200 || response.status === 201) {
           setBuyerOrdersData(preState => [...preState.filter(item => item.id !== id)]);
           toast.success(`Delete Order ${id} Successfully`)
         }
@@ -107,7 +107,7 @@ const DashboardComponent = () => {
       }
       else if (place === "inbound order") {
         const response = await deleteDataAPI(`inbound-order/delete/${id}`)
-        if (response.data) {
+        if (response.status === 200 || response.status === 201) {
           setInboundOrdersData(preState => [...preState.filter(item => item.id !== id)]);
           toast.success(`Delete Order ${id} Successfully`)          
         }

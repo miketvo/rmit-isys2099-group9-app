@@ -17,7 +17,7 @@ const InboundOrder = ({ data, compFunction }) => {
   const handleFulfilledOrder = async(id) => {
     try {
       const response = await putDataAPI(`inbound-order/fulfill/${id}`)
-      if (response.data) {
+      if (response.status === 200 || response.status === 201) {
         setInboundOrdersData((preData) => (preData.map(obj => {
           if(obj.id === id) {
               return {

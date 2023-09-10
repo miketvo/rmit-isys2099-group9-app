@@ -15,7 +15,7 @@ const NavBar = () => {
         const userData = JSON.parse(localStorage.getItem("userInfo"))?.username
         try {
             const response = await deleteDataAPI("auth/logout", {username: userData});
-            if (response.data) {
+            if (response.status === 200 || response.status === 201) {
                 localStorage.removeItem("userInfo")
                 toast.success(`Log Out Successfully`);
                 navigate("/login")
@@ -31,7 +31,7 @@ const NavBar = () => {
         <Fragment>
             <div className="navbar navbar_vertical">
                 <div className="navbar-logo">
-                    <Link to="/">
+                    <Link to="/warehouse">
                         <img src={LazadaImg} alt="" style={{width: "55px"}}/>
                     </Link>
                 </div>

@@ -24,7 +24,7 @@ const RegisterComponent = () => {
     if (confirmPassword === password) {
       try {
         const response = await postDataAPI("auth/register", {username: username, password: password, role: "admin"})
-        if (response.data) {
+        if (response.status === 200 || response.status === 201) {
           toast.success(`Register Successfully!`)
         }
       } catch (error) {

@@ -30,14 +30,15 @@ const LoginComponent = ({setIsLoggedIn}) => {
     e.preventDefault();
     try {
       const response = await postDataAPI("auth/login", loginState)
-      if (response.data) {
+
+      if (response.status === 200 || response.status === 201) {
         localStorage.setItem("userInfo", JSON.stringify({username: response.data?.username, role: response.data?.role}));
         toast.success(`Login Successfully! Welcome back ${response.data?.username}`);
         setIsLoggedIn(true);
         navigate(`${from}`, {replace: true});
       }
     } catch (error) {
-      toast.error('Login failed. Please check your username and password.')
+      toast.error(error)
     }
   };
 

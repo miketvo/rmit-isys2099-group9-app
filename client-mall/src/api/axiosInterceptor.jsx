@@ -14,14 +14,19 @@ axiosInstance.interceptors.request.use((request) => {
   return Promise.reject(error);
 })
 
-axiosInstance.interceptors.response.use((response) => {
-    return response;
-}, (error) => {
-    // Handle any request errors
+export function setupResponseInterceptor(setIsLoggedIn) {
+    axiosInstance.interceptors.response.use((response) => {
+        return response;
 
-    // Need to handle error 403 and 500
-    console.log(error)
-    return Promise.reject(error);
-})
+    }, async(error) => {
 
+        // Handle error 403 and 500
+        if (error.response.status === 403 || error.response.status === 500) {
+            localStorage.removeItem("userInfo");
+            setIsLoggedIn(false);
+
+        }
+        return Promise.reject(error);
+    })
+}
 export default axiosInstance;

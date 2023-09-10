@@ -10,7 +10,7 @@ const InboundOrder = ({compData, compFunction}) => {
 
   const InboundOrderState = {
     product_id: "",
-    quantity: 1,
+    quantity: 0,
   }
 
   const [inboundOrderData, setInboundOrderData] = useState(InboundOrderState);
@@ -37,8 +37,8 @@ const InboundOrder = ({compData, compFunction}) => {
     try {
       if (inboundOrderData.quantity > 0) {
         if (created) {
-          const response = await postDataAPI("inbound-order/create", inboundOrderData)
-          if (response.data) {
+          const response = await postDataAPI("inbound-order/create", inboundOrderData);
+          if (response.status === 200 || response.status === 201 || response.status === 201) {
             setInboundOrdersData((preData) => ([...preData, {
               id: response.data.id,
               quantity: response.data.quantity,
@@ -55,7 +55,7 @@ const InboundOrder = ({compData, compFunction}) => {
           
         } else if (edited) {
           const response = await putDataAPI(`inbound-order/update/${editedInboundOrderData.id}`, inboundOrderData)
-          if (response.data) {
+          if (response.status === 200 || response.status === 201) {
             setInboundOrdersData((preData) => (preData.map(obj => {
               if(obj.id === editedInboundOrderData.id) {
                   return {
@@ -122,7 +122,7 @@ const InboundOrder = ({compData, compFunction}) => {
               <div className="mb-3">
                 <label className="form-label">Quantity</label>
                 <input type="number" className="form-control"
-                      name="quantity" value={quantity > 0 ? quantity : 1} onChange={handleChangeInput}
+                      name="quantity" value={quantity > 0 ? quantity : 0} onChange={handleChangeInput}
                 />
               </div>
             </div>
