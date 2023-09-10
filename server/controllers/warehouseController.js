@@ -39,6 +39,23 @@ const createWarehouse = async (req, res) => {
 const getAllWarehouse = async (req, res) => {
     try {
         const [results] = await db.poolWHAdmin.query(`SELECT * FROM warehouse`);
+        
+        const availableVolumeQuery = `
+        SELECT w.volume - coalesce(sum(s.quantity * p.width * p.length * p.height), 0)
+        INTO @to_warehouse_available_volume
+        FROM stockpile s
+            LEFT JOIN warehouse w ON s.warehouse_id = w.id
+            LEFT JOIN product p on s.product_id = p.id
+        WHERE w.id = ? FOR SHARE
+        `
+
+        for (const result of results) {
+            await db.poolWHAdmin.query(availableVolumeQuery, [result.id]);
+            const [[{ volume: volume }]] = await db.poolWHAdmin.query('SELECT @to_warehouse_available_volume as volume');
+            result.volume = volume;
+            console.log(result);
+        }
+
         return res.json(results);
     } catch (error) {
         console.error("error: " + error.stack);
