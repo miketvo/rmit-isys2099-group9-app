@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS product_category_attribute_association
 CREATE TABLE IF NOT EXISTS product
 (
     id                  INT AUTO_INCREMENT,
+    image               VARCHAR(255) NOT NULL,
     title               VARCHAR(45) NOT NULL,
     product_description TEXT,
     category            VARCHAR(45),

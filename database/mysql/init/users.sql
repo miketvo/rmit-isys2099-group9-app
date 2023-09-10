@@ -15,7 +15,7 @@ FROM warehouse;
 
 DROP VIEW IF EXISTS view_product_noid;
 CREATE VIEW view_product_noid AS
-SELECT title, product_description, category, price, width, height, length, seller
+SELECT title, image, product_description, category, price, width, height, length, seller
 FROM product;
 
 DROP VIEW IF EXISTS view_inbound_order_noid;
