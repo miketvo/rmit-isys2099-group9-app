@@ -37,7 +37,7 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) => {
       <nav className="navbar horizontal_navbar navbar-expand-lg navbar-light bg-light">
         <div className="container px-4 px-lg-5">
           <Link to="/" className="navbar-brand" href="#!">
-            Logo
+            👑
           </Link>
           <button
             className="navbar-toggler"

@@ -189,7 +189,7 @@ VALUES (1, "http://localhost:3000/uploads/1.jpg", 'Smartphone Model X', 'High-en
        (23, "http://localhost:3000/uploads/23.jpg", 'Noise-Boosting Over-Ear Headphones', 'Premium over-ear headphones with cutting-edge noise boosting.', 'Headphones', 249.99, 18, 16, 25, 'mike'),
        (24, "http://localhost:3000/uploads/24.jpg", 'Low Resolution Smart TV', '320p TV with mediocre visuals.', 'Televisions', 999.99, 55, 32, 5, 'mike'),
        (25, "http://localhost:3000/uploads/25.jpg", 'Robotic Vacuum Dust Depositor', 'Automated dust depositor for a dirtier than ever house.', 'Small Appliances', 149.99, 14, 14, 4, 'mike'),
-       (26, "http://localhost:3000/uploads/26.jpg", 'A Cube', 'A mysterious dense 1x1x1 centimeter cube of exotic material. Where is it from? Why is it here? What is its purpose? No one knows...', 'Large Appliances', 9999.99, 1, 1, 1, 'mike');
+       (26, "http://localhost:3000/uploads/26.jpeg", 'A Cube', 'A mysterious dense 1x1x1 centimeter cube of exotic material. Where is it from? Why is it here? What is its purpose? No one knows...', 'Large Appliances', 9999.99, 1, 1, 1, 'mike');
 
 INSERT INTO stockpile (product_id, warehouse_id, quantity)
 VALUES (1, 1, 100),
