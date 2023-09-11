@@ -29,7 +29,7 @@ const LoginComponent = ({ setIsLoggedIn }) => {
     e.preventDefault();
     try {
       const response = await postDataAPI("auth/login", loginState);
-
+      console.log(response);
       if (response.status === 200 || response.status === 201) {
         localStorage.setItem(
           "userInfo",
@@ -45,7 +45,9 @@ const LoginComponent = ({ setIsLoggedIn }) => {
         navigate(`${from}`, { replace: true });
       }
     } catch (error) {
-      toast.error(error);
+      
+      toast.error(error.response?.data?.error);
+
     }
   };
 
@@ -68,6 +70,7 @@ const LoginComponent = ({ setIsLoggedIn }) => {
                 name="username"
                 value={username}
                 onChange={handleChangeInput}
+                required
               />
               <label htmlFor="floatingInput">Username</label>
             </div>
@@ -81,6 +84,7 @@ const LoginComponent = ({ setIsLoggedIn }) => {
                 name="password"
                 value={password}
                 onChange={handleChangeInput}
+                required
               />
               <label htmlFor="floatingPassword">Password</label>
             </div>

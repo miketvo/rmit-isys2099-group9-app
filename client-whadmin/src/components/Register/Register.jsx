@@ -32,7 +32,7 @@ const RegisterComponent = () => {
           toast.success(`Register Successfully!`);
         }
       } catch (error) {
-        toast.error("Register Failed!");
+        toast.error(error.response?.data?.error);
       }
     } else {
       toast.error("Your confirmed password does not match");
