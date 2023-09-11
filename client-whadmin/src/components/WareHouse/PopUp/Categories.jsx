@@ -79,7 +79,7 @@ const Categories = ({ compData, compFunction }) => {
         }
       }
     } catch (error) {
-      toast.error("Error:", error);
+      toast.error("Error:", error.response?.data?.error);
     }
 
     handleClosePopUpForm();

@@ -95,7 +95,7 @@ const updateProductCategory = async (req, res) => {
   if (categoryName === parent) {
     return res
       .status(409)
-      .json({ message: "Product Category and parent cannot have same name" });
+      .json({ error: "Product Category and parent cannot have same name" });
   }
 
   try {
@@ -120,7 +120,7 @@ const updateProductCategory = async (req, res) => {
   } catch (error) {
     await db.poolWHAdmin.query("ROLLBACK");
     console.error(error);
-    res.status(500).send("An error occurred while updating a product category");
+    res.status(500).json({error:"An error occurred while updating a product category"});
   }
 };
 
@@ -149,7 +149,7 @@ const deleteProductCategory = async (req, res) => {
   } catch (error) {
     await db.poolWHAdmin.query("ROLLBACK");
     console.error(error);
-    res.status(500).send("An error occurred while deleting a product category");
+    res.status(500).json({error:"An error occurred while deleting a product category"});
   }
 };
 

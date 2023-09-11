@@ -25,7 +25,7 @@ const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
         setIsLoggedIn(false);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error.response?.data?.error);
     }
   };
 
@@ -33,7 +33,7 @@ const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
     <>
       <nav className="navbar horizontal_navbar navbar-expand-lg navbar-light bg-light">
         <div className="container px-4 px-lg-5">
-          <Link to="/homepage" className="navbar-brand">
+          <Link to="/" className="navbar-brand">
             👑
           </Link>
           <button
@@ -54,7 +54,7 @@ const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
             <ul className="navbar-nav mb-2 mb-lg-0 ms-lg-4">
               <li className="nav-item">
                 <Link
-                  to="/homepage"
+                  to="/"
                   className="nav-link active"
                   aria-current="page"
                 >
