@@ -41,7 +41,7 @@ const LoginComponent = () => {
         navigate(`${from}`, { replace: true });
       }
     } catch (error) {
-      toast.error(error);
+      error.response?.data?.error(error);
     }
   };
 
