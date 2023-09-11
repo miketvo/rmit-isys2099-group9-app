@@ -120,7 +120,9 @@ const updateProductCategory = async (req, res) => {
   } catch (error) {
     await db.poolWHAdmin.query("ROLLBACK");
     console.error(error);
-    res.status(500).json({error:"An error occurred while updating a product category"});
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating a product category" });
   }
 };
 
@@ -149,7 +151,9 @@ const deleteProductCategory = async (req, res) => {
   } catch (error) {
     await db.poolWHAdmin.query("ROLLBACK");
     console.error(error);
-    res.status(500).json({error:"An error occurred while deleting a product category"});
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting a product category" });
   }
 };
 

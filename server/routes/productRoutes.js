@@ -89,12 +89,7 @@ productRouter.post(
   uploadImage.single("image"),
   createProduct,
 );
-productRouter.put(
-  "/update/:id",
-  authenticate,
-  checkSeller,
-  updateProductById,
-);
+productRouter.put("/update/:id", authenticate, checkSeller, updateProductById);
 productRouter.delete(
   "/delete/:id",
   authenticate,

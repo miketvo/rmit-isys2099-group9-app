@@ -164,7 +164,9 @@ const updateInboundOrder = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({error:"An error occurred while updating an inbound order"});
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating an inbound order" });
   }
 };
 
@@ -177,7 +179,9 @@ const deleteInboundOrder = async (req, res) => {
       .json({ error: `Inbound order with ID: ${id} deleted`, id: id });
   } catch (error) {
     console.error(error);
-    res.status(500).json({erorr:"An error occurred while deleting an inbound order"});
+    res
+      .status(500)
+      .json({ erorr: "An error occurred while deleting an inbound order" });
   }
 };
 
@@ -225,7 +229,10 @@ const fulfillInboundOrder = async (req, res) => {
     } else if (resultCode === 2) {
       return res
         .status(404)
-        .json({ error: `Inbound order ID ${id} does not exist`, result: resultCode });
+        .json({
+          error: `Inbound order ID ${id} does not exist`,
+          result: resultCode,
+        });
     }
     return res.status(500).json({
       error: "An error occurred while fulfilling an inbound order",

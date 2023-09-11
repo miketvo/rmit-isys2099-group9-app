@@ -146,7 +146,9 @@ const updateWarehouse = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({error:"An error occurred while updating a warehouse"});
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating a warehouse" });
   }
 };
 
