@@ -64,11 +64,9 @@ const getProductCategoryByName = async (req, res) => {
       [categoryName],
     );
     if (results.length === 0) {
-      return res
-        .status(404)
-        .json({
-          error: `Product category with name: ${categoryName} not found`,
-        });
+      return res.status(404).json({
+        error: `Product category with name: ${categoryName} not found`,
+      });
     }
     return res.json(results);
   } catch (error) {
@@ -144,12 +142,10 @@ const deleteProductCategory = async (req, res) => {
       [category_name],
     );
     await db.poolWHAdmin.query("COMMIT");
-    res
-      .status(200)
-      .json({
-        message: `Product category with name: ${category_name} deleted`,
-        category_name: category_name,
-      });
+    res.status(200).json({
+      message: `Product category with name: ${category_name} deleted`,
+      category_name: category_name,
+    });
   } catch (error) {
     await db.poolWHAdmin.query("ROLLBACK");
     console.error(error);

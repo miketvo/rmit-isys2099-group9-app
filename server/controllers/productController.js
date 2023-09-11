@@ -212,11 +212,9 @@ const deleteProductById = async (req, res) => {
       [productID, seller],
     );
     if (inboundOrder.length > 0) {
-      return res
-        .status(409)
-        .json({
-          error: `There is already created inbound order for this product ${productID}`,
-        });
+      return res.status(409).json({
+        error: `There is already created inbound order for this product ${productID}`,
+      });
     }
 
     // Handle logic if the product has already ordered

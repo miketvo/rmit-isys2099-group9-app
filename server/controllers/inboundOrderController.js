@@ -218,23 +218,19 @@ const fulfillInboundOrder = async (req, res) => {
         fulfilled_time: inboundOrder.fulfilled_time,
       });
     } else if (resultCode === 1) {
-      return res
-        .status(400)
-        .json({
-          error: "No available warehouses or inbound order already fulfilled",
-          result: resultCode,
-        });
+      return res.status(400).json({
+        error: "No available warehouses or inbound order already fulfilled",
+        result: resultCode,
+      });
     } else if (resultCode === 2) {
       return res
         .status(404)
         .json({ error: "Inbound order ID does not exist", result: resultCode });
     }
-    return res
-      .status(500)
-      .json({
-        error: "An error occurred while fulfilling an inbound order",
-        result: resultCode,
-      });
+    return res.status(500).json({
+      error: "An error occurred while fulfilling an inbound order",
+      result: resultCode,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -171,12 +171,10 @@ const deleteWarehouse = async (req, res) => {
       `SELECT @result`,
     );
     if (resultCode === 1) {
-      return res
-        .status(400)
-        .json({
-          error: `Warehouse with id: ${warehouseID} not empty or not exist`,
-          result: resultCode,
-        });
+      return res.status(400).json({
+        error: `Warehouse with id: ${warehouseID} not empty or not exist`,
+        result: resultCode,
+      });
     } else if (resultCode === -1) {
       return res
         .status(500)
@@ -219,23 +217,19 @@ const moveProduct = async (req, res) => {
         .status(200)
         .json({ message: "Product moved successfully", result: resultCode });
     } else if (resultCode === 1) {
-      return res
-        .status(400)
-        .json({
-          error: "Data not exists or illegal operation",
-          result: resultCode,
-        });
+      return res.status(400).json({
+        error: "Data not exists or illegal operation",
+        result: resultCode,
+      });
     } else if (resultCode === 2) {
       return res
         .status(400)
         .json({ error: "Illegal argument value", result: resultCode });
     }
-    return res
-      .status(500)
-      .json({
-        error: "An error occurred while moving the product",
-        result: resultCode,
-      });
+    return res.status(500).json({
+      error: "An error occurred while moving the product",
+      result: resultCode,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
