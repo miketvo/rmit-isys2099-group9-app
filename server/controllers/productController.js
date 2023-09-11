@@ -78,7 +78,6 @@ const getProductByTitle = async (req, res) => {
   }
 };
 
-// TODO: Review Insert Product on MongoDB with product attributes associated
 const createProduct = async (req, res) => {
   try {
     const seller = req.username;
@@ -94,7 +93,7 @@ const createProduct = async (req, res) => {
 
     const fileName = req.file.filename;
     if (!fileName) {
-      return res.status(404).json({ message: "File not found in the request" });
+      return res.status(404).json({ error: "Image not found" });
     }
     // eslint-disable-next-line no-undef
     const basePath = `http://localhost:${process.env.SERVER_PORT}/uploads/`;
@@ -152,7 +151,7 @@ const updateProductById = async (req, res) => {
 
     const fileName = req.file.filename;
     if (!fileName) {
-      return res.status(404).json({ message: "File not found in the request" });
+      return res.status(404).json({ error: "Image not found" });
     }
     // eslint-disable-next-line no-undef
     const basePath = `http://localhost:${process.env.SERVER_PORT}/uploads/`;

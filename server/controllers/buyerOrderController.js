@@ -240,7 +240,7 @@ const deleteBuyerOrder = async (req, res) => {
       .json({ message: `Buyer order with ID: ${id} deleted`, id: id });
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred while deleting a buyer order");
+    res.status(500).json({error:"An error occurred while deleting a buyer order"});
   }
 };
 
