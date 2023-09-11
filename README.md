@@ -8,12 +8,48 @@ View assesment details [here](assets/Project_ISYS2099.pdf).
 
 ## Project Structure
 
-TODO: Write this
+<pre>
+<span style="color: dodgerblue;"><b>./</b></span>
+├── .gitignore
+├── LICENSE
+├── README.md
+├── Report.pdf
+├── <span style="color: dodgerblue;"><b>assets/</b></span>
+├── <span style="color: dodgerblue;"><b>client-mall/</b></span>
+├── <span style="color: dodgerblue;"><b>client-whadmin/</b></span>
+├── <span style="color: dodgerblue;"><b>server/</b></span>
+└── <span style="color: dodgerblue;"><b>database/</b></span>
+    ├── <span style="color: dodgerblue;"><b>mysql/</b></span>
+    └── <span style="color: dodgerblue;"><b>mongodb/</b></span>
+</pre>
+
+1. `.gitignore`: This file tells git which files it should not track / not maintain a version history for.
+2. `LICENSE`: MIT License.
+3. `README.md`: The current file. Contains the necessary information and instructions to set up and run this project locally, the link to the video demonstration for this project, and contribution information.
+4. `Database-Design-and-Implementation-Report.pdf`: The Database Design and Implementation report as required on the [Assessment page on Canvas](https://rmit.instructure.com/courses/121627/assignments/836777).
+5. `assets/`: This folder contains the [Project Requirement Specifications](assets/Project_ISYS2099.pdf) PDF file and other miscellaneous medias.
+6. `client-mall/`: This NodeJS project directory contains the source code for the Mall frontend client.
+7. `client-whadmin/`: This NodeJS project directory contains the source code for the Warehouse Administrator's frontend client.
+8. `server/`: This NodeJS project directory contains the source code for the Warehouse Administrator's frontend client.
+9. `database/mysql`: This NodeJS project folder contains the setup script (NodeJS), utilities SQL scripts, and sample data for the local MySQL database instance. See **Installation - Database - MySQL** below for more detail.
+10. `database/mongodb`: This NodeJS project folder contains the setup script (NodeJS) and sample data for the local MongoDB database instance. See **Installation - Database - MongoDB** below for more detail.
+
+
+## Technology Stack
+
+- Database: MySQL and MongoDB.
+- Backend API Server: NodeJS, Express, and Mongoose.
+- Frontend: Vite, React, Bootstrap, and Axios.
 
 
 ## Dependencies
 
-TODO: Write this
+| Dependency                                                                 | Version  |
+|:---------------------------------------------------------------------------|:--------:|
+| [NodeJS](https://nodejs.org/)                                              | 18.\*.\* |
+| [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)           |  8.0.33  |
+| [MySQL Shell](https://dev.mysql.com/downloads/shell/)                      |  8.0.33  |
+| [MongoDB Community Server](https://www.mongodb.com/try/download/community) |  6.0.\*  |
 
 
 ## Installation
@@ -122,7 +158,9 @@ npm clean-install
 
 ## Video Demonstration:
 
-Available on [YouTube](upload_and_insert_link_here).
+Available on [YouTube](https://www.youtube.com/watch?v=dQw4w9WgXcQ).
+
+[//]: # (TODO: Finish editing the demo video and upload it on YouTube, then paste the link here)
 
 
 ## Contribution
@@ -133,3 +171,14 @@ Available on [YouTube](upload_and_insert_link_here).
 | s3864188 | Phan Thanh Loi       |   5   |
 | s3963207 | Do Le Long An        |   5   |
 | s3877562 | Vo Tuong Minh (Mike) |   5   |
+
+
+## Developer Tools
+
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Vim](https://img.shields.io/badge/Vim-019733?style=for-the-badge&logo=vim&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
+![WebStorm](https://img.shields.io/badge/WebStorm-000000?style=for-the-badge&logo=webstorm&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+![MySQL Workbench](https://img.shields.io/badge/MySQL_Workbench-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![MongoDB Compass](https://img.shields.io/badge/MongoDB_Compass-47A248?style=for-the-badge&logo=mongodb&logoColor=white)

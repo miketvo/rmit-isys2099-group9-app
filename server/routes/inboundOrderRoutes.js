@@ -3,26 +3,46 @@ const express = require("express");
 const inboundOrderRouter = express.Router();
 
 const {
-    createInboundOrder,
-    getAllInboundOrder,
-    getInboundOrderByID,
-    updateInboundOrder,
-    deleteInboundOrder,
-    fulfillInboundOrder
-} = require("../controllers/inboundOrderController")
+  createInboundOrder,
+  getAllInboundOrder,
+  getInboundOrderByID,
+  updateInboundOrder,
+  deleteInboundOrder,
+  fulfillInboundOrder,
+} = require("../controllers/inboundOrderController");
 
 const { authenticate } = require("../middleware/authenticate");
 const {
-    checkBuyer,
-    checkSeller,
-    checkAdmin
+  checkBuyer,
+  checkSeller,
+  checkAdmin,
 } = require("../middleware/checkRoles");
 
-inboundOrderRouter.put('/create', authenticate, createInboundOrder);
-inboundOrderRouter.get('/', authenticate, getAllInboundOrder);
-inboundOrderRouter.post('/:id', authenticate, getInboundOrderByID);
-inboundOrderRouter.post('/update/:id', authenticate, updateInboundOrder);
-inboundOrderRouter.delete('/delete/:id', authenticate,deleteInboundOrder);
-inboundOrderRouter.post('/fulfill/:id', fulfillInboundOrder);
+inboundOrderRouter.post(
+  "/create",
+  authenticate,
+  checkSeller,
+  createInboundOrder,
+);
+inboundOrderRouter.get("/", authenticate, checkSeller, getAllInboundOrder);
+inboundOrderRouter.get("/:id", authenticate, checkSeller, getInboundOrderByID);
+inboundOrderRouter.put(
+  "/update/:id",
+  authenticate,
+  checkSeller,
+  updateInboundOrder,
+);
+inboundOrderRouter.delete(
+  "/delete/:id",
+  authenticate,
+  checkSeller,
+  deleteInboundOrder,
+);
+inboundOrderRouter.put(
+  "/fulfill/:id",
+  authenticate,
+  checkSeller,
+  fulfillInboundOrder,
+);
 
 module.exports = inboundOrderRouter;

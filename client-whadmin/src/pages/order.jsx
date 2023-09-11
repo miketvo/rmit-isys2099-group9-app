@@ -1,9 +1,7 @@
-import OrderComponent from "../components/Order/OrderComponent"
+import OrderComponent from "../components/Order/OrderComponent";
 
 const OrderPage = () => {
-  return (
-    <OrderComponent />
-  )
-}
+  return <OrderComponent />;
+};
 
-export default OrderPage
+export default OrderPage;

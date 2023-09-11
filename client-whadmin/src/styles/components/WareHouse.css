@@ -47,12 +47,13 @@
 
 
 /* Warehouse Items (Table) */
-.warehouse_table, 
-.product_table {
+.warehouse_table,
+.product_category_table,
+.product_attribute_table {
     height: fit-content;
     max-height: 75vh;
 
-    width: fit-content;
+    width: 100%;
     max-width: 100%;
     overflow-x: auto;
     overflow-y: auto;
@@ -62,12 +63,6 @@
     width: 100%;
     table-layout: fixed;
     min-width: 1000px;
-}
-
-.product_table table {
-    width: 100%;
-    table-layout: fixed;
-    min-width: 1500px;
 }
 
 .warehouse_wrapper thead th {

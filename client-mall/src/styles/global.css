@@ -2,7 +2,6 @@
 @import url("./components/NavBar.css");
 @import url("./components/LoginRegister.css");
 @import url("./components/SellerDashboard/SellerDashboard.css");
-@import url("./components/SellerDashboard/NavBar.css");
 @import url("./components/PopUp/PopUp.css");
 
 * {
@@ -25,6 +24,13 @@
     /* ========== Width ========== */
     --verticalNavBarWidth: 90px;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 
 ul {
     list-style: none;

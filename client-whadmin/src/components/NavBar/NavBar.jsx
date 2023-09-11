@@ -1,55 +1,91 @@
-import { Link } from 'react-router-dom';
-import { Fragment } from 'react';
-import LazadaImg from "../../images/lazada.jpg"
+import { Link, useNavigate } from "react-router-dom";
+import { Fragment } from "react";
+import { toast } from "react-hot-toast";
+import LazadaImg from "../../images/lazada.jpg";
 
-import {BiCategoryAlt} from "react-icons/bi"
-import {FaBoxesPacking, FaClipboardUser} from "react-icons/fa6"
+import { FaUserCircle } from "react-icons/fa";
+import { FaBoxesPacking } from "react-icons/fa6";
 
-import {IoHome} from "react-icons/io5"
-import { IconSetting } from '../../utils/IconSettings'
+import { IconSetting } from "../../utils/IconSettings";
+import { deleteDataAPI } from "../../../../client-mall/src/api/apiRequest";
 
 const NavBar = () => {
-    return (
-        <Fragment>
-            <div className="navbar navbar_vertical">
-                <div className="navbar-logo">
-                    <Link to="/">
-                        <img src={LazadaImg} alt="" style={{width: "55px"}}/>
-                    </Link>
-                </div>
-                <div className="navbar_vertical_content mt-4">
-                    <ul className="navbar-nav flex-column mb-3">
-                        <li className="nav_item">
-                            <Link to="/">
-                                {IconSetting(<IoHome/>, 'white', "30px", "nav_icon")}
-                                <span className="nav_text text-white">Home</span>
-                            </Link>
-                        </li>
-                        <li className="nav_item">
-                            <Link to="/warehouse">
-                                {IconSetting(<FaBoxesPacking/>, 'white', "30px", "nav_icon")}
-                                <span className="nav_text text-white">Warehouse</span>
-                            </Link>
-                        </li>
-                        <li className="nav_item">
-                            <Link to="/category">
-                                {IconSetting(<BiCategoryAlt/>, 'white', "30px", "nav_icon")}
-                                <span className="nav_text text-white">Category</span>
-                            </Link>
-                        </li>
-                        <li className="nav_item">
-                            <Link to="/order">
-                                {IconSetting(<FaClipboardUser/>, 'white', "30px", "nav_icon")}
-                                <span className="nav_text text-white">Seller/Buyer</span>
-                            </Link>
-                        </li>
+  const navigate = useNavigate();
+  const handleLogOut = async () => {
+    const userData = JSON.parse(localStorage.getItem("userInfo"))?.username;
+    try {
+      const response = await deleteDataAPI("auth/logout", {
+        username: userData,
+      });
+      if (response.status === 200 || response.status === 201) {
+        localStorage.removeItem("userInfo");
+        toast.success(`Log Out Successfully`);
+        navigate("/login");
+      }
+    } catch (error) {
+      // localStorage.setItem("userInfo", userData)
+      toast.error(error);
+    }
+  };
 
-                    </ul>
-                </div>
+  return (
+    <Fragment>
+      <div className="navbar navbar_vertical">
+        <div className="navbar-logo">
+          <Link to="/warehouse">
+            <img src={LazadaImg} alt="" style={{ width: "55px" }} />
+          </Link>
+        </div>
+        <div className="navbar_vertical_content mt-4">
+          <ul className="navbar-nav flex-column mb-3">
+            <li className="nav_item">
+              <Link to="/warehouse">
+                {IconSetting(<FaBoxesPacking />, "white", "30px", "nav_icon")}
+                <span className="nav_text text-white">Warehouse</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="navbar navbar-expand-lg navbar-light top_navbar">
+        <div className="container-fluid">
+          <div className="navbar_spacer" style={{ width: "30px" }}></div>
+
+          <div className="navbar_user d-flex">
+            <div
+              className="d-flex me-4"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span className="nav-link">
+                {IconSetting(<FaUserCircle />, "black", "30px")}
+              </span>
             </div>
-        </Fragment>
-
-    )
-}
+            <div
+              className="dropdown-menu avatar-menu"
+              aria-labelledby="navbarDropdown"
+              style={{ left: "unset", right: "25px", top: "50px" }}
+            >
+              <Link className="dropdown-item" to={`/profile`}>
+                My Profile
+              </Link>
+              <span
+                className="dropdown-item"
+                style={{ cursor: "pointer" }}
+                onClick={handleLogOut}
+              >
+                Log Out
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Fragment>
+  );
+};
 
 export default NavBar;
