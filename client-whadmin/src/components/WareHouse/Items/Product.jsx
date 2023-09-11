@@ -24,13 +24,19 @@ const Product = ({ compData }) => {
               <tr key={item.id}>
                 <th scope="row">{item.id}</th>
                 <td>{item.title}</td>
-                <td className="p-4" style={{width: "100%", height: "200px"}}> 
-                  <img 
-                  className="w-100 h-100"
-                  style={{objectFit: "contain"}}
-                  src={item.image ? (item.image instanceof File ? URL.createObjectURL(item.image) : item.image) 
-                                  : "https://dummyimage.com/450x300/dee2e6/6c757d.jpg"}  
-                  alt="product" />
+                <td className="p-4" style={{ width: "100%", height: "200px" }}>
+                  <img
+                    className="w-100 h-100"
+                    style={{ objectFit: "contain" }}
+                    src={
+                      item.image
+                        ? item.image instanceof File
+                          ? URL.createObjectURL(item.image)
+                          : item.image
+                        : "https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+                    }
+                    alt="product"
+                  />
                 </td>
                 <td>{item.product_description}</td>
                 <td>{item.category}</td>
@@ -62,7 +68,7 @@ Product.propTypes = {
       length: PropTypes.number.isRequired,
       seller: PropTypes.string.isRequired,
     }),
-  ).isRequired
+  ).isRequired,
 };
 
 export default Product;

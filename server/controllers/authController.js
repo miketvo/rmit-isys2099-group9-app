@@ -23,31 +23,38 @@ const register = async (req, res) => {
     if (!username.match(normalCharRegex)) {
       throw new Error("The username must not have strange characters");
     }
-    console.log('\n');
+    console.log("\n");
     console.log(`username: ${username}`);
     console.log(`password: ${password}`);
     console.log(`role: ${role}`);
     console.log(`shop_name: ${shop_name}`);
 
-    if(await model.getLazadaUser(username) || await model.getWHAdmin(username)) {
-      return res.status(409).json({ message: 'Username already exists', username: username});
-    };
-
-    if (!username || !role) {
-      return res.status(400).json({ message: 'Please enter a username and role' });
-    } else if (role === 'seller' && !shop_name) {
-      return res.status(400).json({ message: 'Please enter a shop name' });
+    if (
+      (await model.getLazadaUser(username)) ||
+      (await model.getWHAdmin(username))
+    ) {
+      return res
+        .status(409)
+        .json({ message: "Username already exists", username: username });
     }
 
-    if (role === 'seller' && await model.getShopName(shop_name)) {
-      return res.status(409).json({ message: 'Shop name already exists' });
+    if (!username || !role) {
+      return res
+        .status(400)
+        .json({ message: "Please enter a username and role" });
+    } else if (role === "seller" && !shop_name) {
+      return res.status(400).json({ message: "Please enter a shop name" });
+    }
+
+    if (role === "seller" && (await model.getShopName(shop_name))) {
+      return res.status(409).json({ message: "Shop name already exists" });
     }
 
     // Hash the password
     const salt = genSaltSync(10);
     const hashedPassword = hashSync(password, salt);
 
-    console.log('\n');
+    console.log("\n");
     console.log(`Hashed Password: ${hashedPassword}`);
 
     // Insert the user into the database
@@ -55,13 +62,13 @@ const register = async (req, res) => {
 
     req.role = role;
     req.username = username;
-    req.role = role
+    req.role = role;
 
     return res.status(200).json({
-      message: `User ${role} created with username: ${username}`, 
-      username: username, 
-      role: role, 
-      shop_name: shop_name
+      message: `User ${role} created with username: ${username}`,
+      username: username,
+      role: role,
+      shop_name: shop_name,
     });
   } catch (err) {
     console.error("error: " + err.stack);
@@ -79,7 +86,7 @@ const login = async (req, res) => {
     console.log(`password: ${password}`);
 
     if (!username || !password) {
-      return res.status(400).send('Please provide a username and password');
+      return res.status(400).send("Please provide a username and password");
     }
 
     let role, user, shop_name;
@@ -87,23 +94,21 @@ const login = async (req, res) => {
     // Retrieve the user from the database
     if (await model.getSeller(username)) {
       role = "seller";
-      user = await model.getSeller(username)
+      user = await model.getSeller(username);
       shop_name = user.shop_name;
-
     } else if (await model.getBuyer(username)) {
       role = "buyer";
-
     } else {
       return res.status(401).send("User not found");
     }
     console.log("role: " + role);
-   
+
     // Get user password
     let existingUser;
     if (role === "seller" || role === "buyer") {
       existingUser = await model.getLazadaUserByRole("lazada_user", username);
-    } 
-    
+    }
+
     console.log("Login user's password_hash: " + existingUser.password_hash);
 
     // Compare the provided password with the stored hashed password
@@ -112,7 +117,7 @@ const login = async (req, res) => {
     if (!passwordMatches) {
       return res.status(401).send("Incorrect password");
     }
-    
+
     // Generate tokens
     const tokens = generateTokens(username, role, shop_name);
 
@@ -125,11 +130,11 @@ const login = async (req, res) => {
     req.username = username;
     req.shop_name = shop_name;
 
-    return res.status(200).json({ 
-      message: `User ${username} authenticated`, 
-      username: username, 
-      role: role, 
-      shop_name: shop_name
+    return res.status(200).json({
+      message: `User ${username} authenticated`,
+      username: username,
+      role: role,
+      shop_name: shop_name,
     });
   } catch (e) {
     console.log(e);
@@ -146,16 +151,16 @@ const loginAdmin = async (req, res) => {
     console.log(`password: ${password}`);
 
     if (!username || !password) {
-      return res.status(400).send('Please provide a username and password');
+      return res.status(400).send("Please provide a username and password");
     }
 
     // Retrieve the user from the database
-    if (!await model.getWHAdmin(username)) {
+    if (!(await model.getWHAdmin(username))) {
       return res.status(401).send("User not found or not an warehouse admin");
     }
-   
+
     const role = "admin";
-    // Get user password    
+    // Get user password
     const existingUser = await model.getLazadaUserByRole(role, username);
 
     console.log("Login user's password_hash: " + existingUser.password_hash);
@@ -166,7 +171,7 @@ const loginAdmin = async (req, res) => {
     if (!passwordMatches) {
       return res.status(401).send("Incorrect password");
     }
-    
+
     const shop_name = "";
     // Generate tokens
     const tokens = generateTokens(username, role, shop_name);
@@ -179,49 +184,46 @@ const loginAdmin = async (req, res) => {
     req.role = role;
     req.username = username;
 
-    return res.status(200).json({ 
-      message: `User ${username} authenticated`, 
-      username: username, 
-      role: "admin", 
+    return res.status(200).json({
+      message: `User ${username} authenticated`,
+      username: username,
+      role: "admin",
     });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
-}
+};
 
 // Endpoint for logout
 const logout = async (req, res) => {
-
   console.log(`${req.username} logged out with role ${req.role}`);
 
   if (req.role === "admin") {
     await model.deleteWHAdminToken(req.username);
     console.log(`\nDelete ${req.role} ${req.username} token`);
-
   } else if (req.role === "seller" || req.role === "buyer") {
     await model.deleteLazadaUserToken(req.username);
     console.log(`\nDelete ${req.role} ${req.username} token`);
-
   } else {
     return res.status(401).send("User not found");
   }
 
   res.cookie("accessToken", "", {
-      httpOnly: true,
-      expires: new Date(0),
+    httpOnly: true,
+    expires: new Date(0),
   });
 
   res.cookie("refreshToken", "", {
-      httpOnly: true,
-      expires: new Date(0),
+    httpOnly: true,
+    expires: new Date(0),
   });
 
-  return res.status(200).json({ 
-    message: `User ${req.username} log out`, 
-    username: req.username, 
-    role: req.role, 
-    shop_name: req.shop_name
+  return res.status(200).json({
+    message: `User ${req.username} log out`,
+    username: req.username,
+    role: req.role,
+    shop_name: req.shop_name,
   });
 };
 
@@ -229,5 +231,5 @@ module.exports = {
   register,
   login,
   loginAdmin,
-  logout
-}
+  logout,
+};

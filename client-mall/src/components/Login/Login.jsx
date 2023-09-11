@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 
 import { toast } from "react-hot-toast";
 import { postDataAPI } from "../../api/apiRequest";
 
-
-const LoginComponent = ({setIsLoggedIn}) => {
+const LoginComponent = ({ setIsLoggedIn }) => {
   const initialState = {
     username: "",
     password: "",
@@ -26,19 +25,27 @@ const LoginComponent = ({setIsLoggedIn}) => {
     setLoginState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleLoginUser = async(e) => {
+  const handleLoginUser = async e => {
     e.preventDefault();
     try {
-      const response = await postDataAPI("auth/login", loginState)
+      const response = await postDataAPI("auth/login", loginState);
 
       if (response.status === 200 || response.status === 201) {
-        localStorage.setItem("userInfo", JSON.stringify({username: response.data?.username, role: response.data?.role}));
-        toast.success(`Login Successfully! Welcome back ${response.data?.username}`);
+        localStorage.setItem(
+          "userInfo",
+          JSON.stringify({
+            username: response.data?.username,
+            role: response.data?.role,
+          }),
+        );
+        toast.success(
+          `Login Successfully! Welcome back ${response.data?.username}`,
+        );
         setIsLoggedIn(true);
-        navigate(`${from}`, {replace: true});
+        navigate(`${from}`, { replace: true });
       }
     } catch (error) {
-      toast.error(error)
+      toast.error(error);
     }
   };
 

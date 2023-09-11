@@ -30,9 +30,17 @@ const Product = ({ data, compFunction }) => {
               <tr key={item.id}>
                 <th scope="row">{item.id}</th>
                 <td>{item.title}</td>
-                <td className="p-4" style={{width: "100%", height: "200px"}}>
-                  <img src={item.image ? (item.image instanceof File ? URL.createObjectURL(item.image) : item.image) 
-                                  : ""}   alt="" />
+                <td className="p-4" style={{ width: "100%", height: "200px" }}>
+                  <img
+                    src={
+                      item.image
+                        ? item.image instanceof File
+                          ? URL.createObjectURL(item.image)
+                          : item.image
+                        : ""
+                    }
+                    alt=""
+                  />
                 </td>
                 <td>{item.product_description}</td>
                 <td>{item.category}</td>
@@ -42,8 +50,10 @@ const Product = ({ data, compFunction }) => {
                 <td>{item.length}</td>
                 <td>{item.seller}</td>
                 <td className="sticky_action">
-                  <span className="btn btn-primary"
-                  onClick={() => handleOpenEdited(item.id, "product")}>
+                  <span
+                    className="btn btn-primary"
+                    onClick={() => handleOpenEdited(item.id, "product")}
+                  >
                     <BiEdit />
                   </span>
                   <span
@@ -79,7 +89,7 @@ Product.propTypes = {
   ).isRequired,
   compFunction: PropTypes.shape({
     handleDeleteData: PropTypes.func.isRequired,
-    handleOpenEdited: PropTypes.func.isRequired
+    handleOpenEdited: PropTypes.func.isRequired,
   }).isRequired,
 };
 

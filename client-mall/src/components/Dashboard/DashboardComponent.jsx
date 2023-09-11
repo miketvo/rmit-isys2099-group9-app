@@ -13,32 +13,30 @@ import PopUp from "./PopUp/PopUp";
 
 import BuyerOrder from "./Items/BuyerOrder";
 
-
-import {toast} from "react-hot-toast"
-
+import { toast } from "react-hot-toast";
 
 const DashboardComponent = () => {
   const [productData, setProductData] = useState([]);
   const [buyerOrdersData, setBuyerOrdersData] = useState([]);
   const [inboundOrdersData, setInboundOrdersData] = useState([]);
 
-  const [categoryData, setCategoryData] = useState([])
+  const [categoryData, setCategoryData] = useState([]);
 
-  const [editedProductData, setEditedProductData] = useState({})
-  const [editedInboundOrderData, setEditedInboundOrderData] = useState({})
-  const [editedBuyerOrderData, setEditedBuyerOrderData] = useState({})
+  const [editedProductData, setEditedProductData] = useState({});
+  const [editedInboundOrderData, setEditedInboundOrderData] = useState({});
+  const [editedBuyerOrderData, setEditedBuyerOrderData] = useState({});
 
-
-
-  const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role
-  const username = JSON.parse(localStorage.getItem("userInfo"))?.username
+  const userRole = JSON.parse(localStorage.getItem("userInfo"))?.role;
+  const username = JSON.parse(localStorage.getItem("userInfo"))?.username;
 
   // Fetch data
   useEffect(() => {
     const fetchProductData = async () => {
       try {
         const result = await getDataAPI("product");
-        const filteredProductBySeller = result?.data.filter((obj) => obj.seller === username);
+        const filteredProductBySeller = result?.data.filter(
+          obj => obj.seller === username,
+        );
         setProductData(filteredProductBySeller);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -48,32 +46,36 @@ const DashboardComponent = () => {
     const fetchProductCategoryData = async () => {
       try {
         const result = await getDataAPI("product-category");
-        const categoryArray = result.data.map((item) => item.category_name);
-        setCategoryData(categoryArray)
+        const categoryArray = result.data.map(item => item.category_name);
+        setCategoryData(categoryArray);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    const fetchBuyerOrderData = async() => {
+    const fetchBuyerOrderData = async () => {
       try {
         const result = await getDataAPI("buyer-order");
-        const filteredBuyerOrderData = result?.data.filter((obj) => obj.buyer === username);
+        const filteredBuyerOrderData = result?.data.filter(
+          obj => obj.buyer === username,
+        );
         setBuyerOrdersData(filteredBuyerOrderData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    }
+    };
 
-    const fetchInboundOrderData = async() => {
+    const fetchInboundOrderData = async () => {
       try {
         const result = await getDataAPI("inbound-order");
-        const filteredInboundOrderBySeller = result?.data.filter((obj) => obj.seller === username);
-        setInboundOrdersData(filteredInboundOrderBySeller)
+        const filteredInboundOrderBySeller = result?.data.filter(
+          obj => obj.seller === username,
+        );
+        setInboundOrdersData(filteredInboundOrderBySeller);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    }
+    };
 
     if (userRole === "seller") {
       fetchProductData();
@@ -82,68 +84,65 @@ const DashboardComponent = () => {
       fetchBuyerOrderData();
     }
     fetchProductCategoryData();
-
-    
   }, [userRole, username]);
 
-
   // Function
-  const handleDeleteData = async(id, place) => {
+  const handleDeleteData = async (id, place) => {
     try {
       if (place === "buyer order") {
-        const response = await deleteDataAPI(`buyer-order/delete/${id}`)
+        const response = await deleteDataAPI(`buyer-order/delete/${id}`);
         if (response.status === 200 || response.status === 201) {
-          setBuyerOrdersData(preState => [...preState.filter(item => item.id !== id)]);
-          toast.success(`Delete Order ${id} Successfully`)
+          setBuyerOrdersData(preState => [
+            ...preState.filter(item => item.id !== id),
+          ]);
+          toast.success(`Delete Order ${id} Successfully`);
         }
-      } 
-      else if (place === "product") {
-        const response = await deleteDataAPI(`product/delete/${id}`)
-        if(response.data) {
-          setProductData(preState => [...preState.filter(item => item.id !== id)]);
-          toast.success(`Delete Product With id ${id} Successfully`)
+      } else if (place === "product") {
+        const response = await deleteDataAPI(`product/delete/${id}`);
+        if (response.data) {
+          setProductData(preState => [
+            ...preState.filter(item => item.id !== id),
+          ]);
+          toast.success(`Delete Product With id ${id} Successfully`);
         }
-        
-      }
-      else if (place === "inbound order") {
-        const response = await deleteDataAPI(`inbound-order/delete/${id}`)
+      } else if (place === "inbound order") {
+        const response = await deleteDataAPI(`inbound-order/delete/${id}`);
         if (response.status === 200 || response.status === 201) {
-          setInboundOrdersData(preState => [...preState.filter(item => item.id !== id)]);
-          toast.success(`Delete Order ${id} Successfully`)          
+          setInboundOrdersData(preState => [
+            ...preState.filter(item => item.id !== id),
+          ]);
+          toast.success(`Delete Order ${id} Successfully`);
         }
       }
     } catch (error) {
-      toast.error(error)
-    };
+      toast.error(error);
+    }
   };
 
-  
   const handleOpenEdited = (id, place) => {
     if (place === "product") {
-      setEditedProductData(productData.find(item => item.id === id))
+      setEditedProductData(productData.find(item => item.id === id));
       setPopUpState(prevState => ({
         ...prevState,
         state: !prevState.state,
-        edited: true
+        edited: true,
       }));
-    }
-    else if (place === "inbound order") {
-      setEditedInboundOrderData(inboundOrdersData.find(item => item.id === id))
+    } else if (place === "inbound order") {
+      setEditedInboundOrderData(inboundOrdersData.find(item => item.id === id));
       setPopUpState(prevState => ({
         ...prevState,
         state: !prevState.state,
-        edited: true
+        edited: true,
       }));
-    }
-    else if (place === "buyer order") {
-      setEditedBuyerOrderData(buyerOrdersData.find(item => item.id === id))
+    } else if (place === "buyer order") {
+      setEditedBuyerOrderData(buyerOrdersData.find(item => item.id === id));
       setPopUpState(prevState => ({
         ...prevState,
         state: !prevState.state,
-        edited: true
+        edited: true,
       }));
     }
-  }
+  };
 
   const handlePopUpForm = () => {
     setPopUpState(prevState => ({
@@ -153,33 +152,51 @@ const DashboardComponent = () => {
     }));
   };
 
-  const BuyerOrderFunction = { handleDeleteData, handleOpenEdited, setBuyerOrdersData };
+  const BuyerOrderFunction = {
+    handleDeleteData,
+    handleOpenEdited,
+    setBuyerOrdersData,
+  };
   const ProductFunction = { handleDeleteData, handleOpenEdited };
-  const InboundOrderFunction = {handleDeleteData, handleOpenEdited, setInboundOrdersData};
+  const InboundOrderFunction = {
+    handleDeleteData,
+    handleOpenEdited,
+    setInboundOrdersData,
+  };
 
-
-  const DashboardTabsMap = userRole === "buyer" ?
-    [
-      {
-        id: "buyer order",
-        component: <BuyerOrder data={buyerOrdersData} compFunction={BuyerOrderFunction} />,
-        created: false
-      }
-    ]
-    :
-    [
-      {
-        id: "product",
-        component: <Product data={productData} compFunction={ProductFunction} />,
-        created: true,
-      }
-      ,
-      {
-        id: "inbound order",
-        component: <InboundOrder data={inboundOrdersData} compFunction={InboundOrderFunction}/>,
-        created: true
-      },
-    ];
+  const DashboardTabsMap =
+    userRole === "buyer"
+      ? [
+          {
+            id: "buyer order",
+            component: (
+              <BuyerOrder
+                data={buyerOrdersData}
+                compFunction={BuyerOrderFunction}
+              />
+            ),
+            created: false,
+          },
+        ]
+      : [
+          {
+            id: "product",
+            component: (
+              <Product data={productData} compFunction={ProductFunction} />
+            ),
+            created: true,
+          },
+          {
+            id: "inbound order",
+            component: (
+              <InboundOrder
+                data={inboundOrdersData}
+                compFunction={InboundOrderFunction}
+              />
+            ),
+            created: true,
+          },
+        ];
 
   const [DashboardTabs, setDashboardTabs] = useState(DashboardTabsMap[0].id);
 
@@ -190,8 +207,20 @@ const DashboardComponent = () => {
     type: DashboardTabs,
   });
 
-  const PopUpData = { popUpState, productData, categoryData, editedProductData, editedInboundOrderData, editedBuyerOrderData };
-  const PopUpFunction = { setPopUpState, setProductData, setInboundOrdersData, setBuyerOrdersData };
+  const PopUpData = {
+    popUpState,
+    productData,
+    categoryData,
+    editedProductData,
+    editedInboundOrderData,
+    editedBuyerOrderData,
+  };
+  const PopUpFunction = {
+    setPopUpState,
+    setProductData,
+    setInboundOrdersData,
+    setBuyerOrdersData,
+  };
 
   return (
     <Fragment>
@@ -220,12 +249,15 @@ const DashboardComponent = () => {
               </ul>
             </div>
 
-            
             {DashboardTabsMap.map(
               tab =>
-                tab.id === DashboardTabs && tab.created === true && (
+                tab.id === DashboardTabs &&
+                tab.created === true && (
                   <div className="" key={tab.id}>
-                    <button className="btn btn-success" onClick={handlePopUpForm}>
+                    <button
+                      className="btn btn-success"
+                      onClick={handlePopUpForm}
+                    >
                       {IconSetting(<IoAddOutline />, "white", "16px")}
                       <span>Create</span>
                     </button>

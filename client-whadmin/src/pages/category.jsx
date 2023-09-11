@@ -1,9 +1,7 @@
-import CategoryComponent from "../components/Category/CategoryComponent"
+import CategoryComponent from "../components/Category/CategoryComponent";
 
 const CategoryPage = () => {
-  return (
-    <CategoryComponent />
-  )
-}
+  return <CategoryComponent />;
+};
 
-export default CategoryPage
+export default CategoryPage;

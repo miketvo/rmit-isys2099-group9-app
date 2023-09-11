@@ -1,12 +1,11 @@
-const generateTokens = require('./generateTokens');
+const generateTokens = require("./generateTokens");
 
 const setTokenCookie = (res, username, role, shop_name) => {
+  const tokens = generateTokens(username, role, shop_name);
 
-  const tokens = generateTokens(username, role, shop_name)
-
-  console.log('\n');
-  console.log('access token: ', tokens.accessToken);
-  console.log('refresh token: ', tokens.refreshToken);
+  console.log("\n");
+  console.log("access token: ", tokens.accessToken);
+  console.log("refresh token: ", tokens.refreshToken);
 
   const oneDay = 1000 * 60 * 60 * 24;
   const longerExp = 1000 * 60 * 60 * 24 * 30;
@@ -19,14 +18,14 @@ const setTokenCookie = (res, username, role, shop_name) => {
   });
 
   res.cookie("refreshToken", tokens.refreshToken, {
-      httpOnly: true,
-      // secure: true, // later in production
-      samesite: "strict",
-      expires: new Date(Date.now() + longerExp),
+    httpOnly: true,
+    // secure: true, // later in production
+    samesite: "strict",
+    expires: new Date(Date.now() + longerExp),
   });
 
-  console.log('\n');
-  console.log('response accessToken cookie and refreshToken cookie');
-}
+  console.log("\n");
+  console.log("response accessToken cookie and refreshToken cookie");
+};
 
 module.exports = setTokenCookie;

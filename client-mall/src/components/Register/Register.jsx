@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { postDataAPI } from "../../api/apiRequest";
 
 import { toast } from "react-hot-toast";
@@ -7,16 +7,15 @@ import { toast } from "react-hot-toast";
 const RegisterComponent = () => {
   const initialState = {
     username: "",
-    password: ""
+    password: "",
   };
   const [registerState, setLoginState] = useState(initialState);
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const rolesMap = ["buyer", "seller"]
-  const [roles, setRoles] = useState(rolesMap[0])
-  const [shopName, setShopName] = useState("")
+  const rolesMap = ["buyer", "seller"];
+  const [roles, setRoles] = useState(rolesMap[0]);
+  const [shopName, setShopName] = useState("");
   const { username, password } = registerState;
-
 
   // Functions
   const handleChangeInput = e => {
@@ -24,28 +23,36 @@ const RegisterComponent = () => {
     setLoginState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleRegisterUser = async(e) => {
+  const handleRegisterUser = async e => {
     e.preventDefault();
 
     if (confirmPassword === password) {
       try {
         if (roles === "buyer") {
-          const response = await postDataAPI("auth/register", {username: username, password: password, role: roles})
+          const response = await postDataAPI("auth/register", {
+            username: username,
+            password: password,
+            role: roles,
+          });
           if (response.status === 200 || response.status === 201) {
-            toast.success(`Register Successfully!`)
+            toast.success(`Register Successfully!`);
           }
-        } 
-        else if (roles === "seller") {
-          const response = await postDataAPI("auth/register", {username: username, password: password, role: roles, shop_name: shopName})
+        } else if (roles === "seller") {
+          const response = await postDataAPI("auth/register", {
+            username: username,
+            password: password,
+            role: roles,
+            shop_name: shopName,
+          });
           if (response.status === 200 || response.status === 201) {
-            toast.success(`Register Successfully!`)
+            toast.success(`Register Successfully!`);
           }
-        } 
+        }
       } catch (error) {
-        toast.error(error)
+        toast.error(error);
       }
     } else {
-      toast.error("Your confirmed password does not match")
+      toast.error("Your confirmed password does not match");
     }
   };
 
@@ -99,37 +106,43 @@ const RegisterComponent = () => {
             </div>
 
             <div className="d-flex flex-row mb-4">
-              <label htmlFor="radioTitle" className="me-4">Roles: </label>
-              {
-                rolesMap.map((role, idx) => (
-                  <div className="form-check me-4" key={idx}>
-                    <input className="form-check-input" type="radio" id={`flexRadio${role}`} 
-                    value={role} onChange={(e) => setRoles(e.target.value)}
-                    checked={roles === role}/>
-                    <label className="form-check-label text-capitalize" htmlFor={`flexRadio${role}`}>
-                      {role}
-                    </label>
-                  </div>
-                ))
-              }
+              <label htmlFor="radioTitle" className="me-4">
+                Roles:{" "}
+              </label>
+              {rolesMap.map((role, idx) => (
+                <div className="form-check me-4" key={idx}>
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    id={`flexRadio${role}`}
+                    value={role}
+                    onChange={e => setRoles(e.target.value)}
+                    checked={roles === role}
+                  />
+                  <label
+                    className="form-check-label text-capitalize"
+                    htmlFor={`flexRadio${role}`}
+                  >
+                    {role}
+                  </label>
+                </div>
+              ))}
             </div>
 
-            {
-              roles === "seller" && (
-                <div className="form-floating mb-4">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="floatingInput"
-                    placeholder=""
-                    name="username"
-                    value={shopName}
-                    onChange={(e) => setShopName(e.target.value)}
-                  />
-                  <label htmlFor="floatingInput">Shop Name</label>
-                </div>
-              )
-            }
+            {roles === "seller" && (
+              <div className="form-floating mb-4">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="floatingInput"
+                  placeholder=""
+                  name="username"
+                  value={shopName}
+                  onChange={e => setShopName(e.target.value)}
+                />
+                <label htmlFor="floatingInput">Shop Name</label>
+              </div>
+            )}
 
             <button
               type="submit"
@@ -152,6 +165,5 @@ const RegisterComponent = () => {
     </div>
   );
 };
-
 
 export default RegisterComponent;

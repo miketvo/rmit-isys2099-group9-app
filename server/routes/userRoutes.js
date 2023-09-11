@@ -3,45 +3,107 @@ const userRouter = express.Router();
 const userController = require("../controllers/userController");
 const { authenticate } = require("../middleware/authenticate");
 const {
-    checkBuyer,
-    checkSeller,
-    checkAdmin
+  checkBuyer,
+  checkSeller,
+  checkAdmin,
 } = require("../middleware/checkRoles");
 
 // Get all buyers
-userRouter.get("/buyers", authenticate, checkAdmin, userController.getAllBuyers);
+userRouter.get(
+  "/buyers",
+  authenticate,
+  checkAdmin,
+  userController.getAllBuyers,
+);
 
 // Get all sellers
-userRouter.get("/sellers", authenticate, checkAdmin, userController.getAllSellers);
+userRouter.get(
+  "/sellers",
+  authenticate,
+  checkAdmin,
+  userController.getAllSellers,
+);
 
 // Get all wh admins
-userRouter.get("/admins", authenticate, checkAdmin, userController.getAllWHAdmin);
+userRouter.get(
+  "/admins",
+  authenticate,
+  checkAdmin,
+  userController.getAllWHAdmin,
+);
 
 // Get buyer by username
-userRouter.get("/buyer/:username", authenticate, checkBuyer, userController.getBuyerByUsername);
+userRouter.get(
+  "/buyer/:username",
+  authenticate,
+  checkBuyer,
+  userController.getBuyerByUsername,
+);
 
 // Get seller by username
-userRouter.get("/seller/:username", authenticate, checkSeller, userController.getSellerByUsername);
+userRouter.get(
+  "/seller/:username",
+  authenticate,
+  checkSeller,
+  userController.getSellerByUsername,
+);
 
 // Get wh admin by username
-userRouter.get("/admin/:username", authenticate, checkAdmin, userController.getWHAdminByUsername);
+userRouter.get(
+  "/admin/:username",
+  authenticate,
+  checkAdmin,
+  userController.getWHAdminByUsername,
+);
 
 // Update a buyer's username
-userRouter.put("/buyer/:username", authenticate, checkBuyer, userController.updateBuyerUsername);
+userRouter.put(
+  "/buyer/:username",
+  authenticate,
+  checkBuyer,
+  userController.updateBuyerUsername,
+);
 
 // Update wh admin's username
-userRouter.put("/admin/:username", authenticate, checkAdmin, userController.updateWHAdminUsername);
+userRouter.put(
+  "/admin/:username",
+  authenticate,
+  checkAdmin,
+  userController.updateWHAdminUsername,
+);
 
 // Update a seller's username and/or shop name
-userRouter.put("/seller/:username", authenticate, checkSeller, userController.updateSeller);
+userRouter.put(
+  "/seller/:username",
+  authenticate,
+  checkSeller,
+  userController.updateSeller,
+);
 
 // Delete a buyer by username
-userRouter.delete("/buyer/:username", authenticate, checkAdmin, checkBuyer, userController.deleteBuyerByUsername);
+userRouter.delete(
+  "/buyer/:username",
+  authenticate,
+  checkAdmin,
+  checkBuyer,
+  userController.deleteBuyerByUsername,
+);
 
 // Delete a wh admin by username
-userRouter.delete("/admin/:username", authenticate, checkAdmin, userController.deleteWHAdminByUsername);
+userRouter.delete(
+  "/admin/:username",
+  authenticate,
+  checkAdmin,
+  userController.deleteWHAdminByUsername,
+);
 
 // Delete a seller by username
-userRouter.delete("/seller/:username", authenticate, checkAdmin, checkSeller, userController.deleteSellerByUsername);
+userRouter.delete(
+  "/seller/:username",
+  authenticate,
+  checkAdmin,
+  checkSeller,
+  userController.deleteSellerByUsername,
+);
 
 module.exports = userRouter;
