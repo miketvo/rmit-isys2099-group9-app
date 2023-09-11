@@ -96,7 +96,7 @@ const InboundOrder = ({ compData, compFunction }) => {
         toast.error("Quantity of a product must be larger than 1");
       }
     } catch (error) {
-      toast.error("Error: ", error);
+      toast.error("Error: ", error.response?.data?.error);
     }
   };
 

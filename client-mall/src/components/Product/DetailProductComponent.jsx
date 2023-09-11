@@ -49,7 +49,7 @@ const DetailProductComponent = () => {
         toast.success(response.data?.message);
       }
     } catch (error) {
-      toast.error("Error: ", error);
+      toast.error("Error: ", error.response?.data?.error);
     }
   };
   return (
