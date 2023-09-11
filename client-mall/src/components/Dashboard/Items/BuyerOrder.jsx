@@ -42,7 +42,7 @@ const BuyerOrder = ({ data, compFunction }) => {
         toast.error("Only accepted and rejected status is required");
       }
     } catch (error) {
-      toast.error("Error: ", error.response?.data?.error);
+      toast.error(error.response?.data?.error);
     }
   };
 

@@ -153,7 +153,7 @@ const Product = ({ compData, compFunction }) => {
         }
       }
     } catch (error) {
-      toast.error("Error: ", error.response?.data?.error);
+      toast.error(error.response?.data?.error);
     }
 
     handleClosePopUpForm();

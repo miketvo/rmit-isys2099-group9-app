@@ -95,7 +95,7 @@ const WareHouse = ({ compData, compFunction }) => {
           toast.success("Create A Warehouse Successfully!");
         }
       } catch (error) {
-        toast.error("Error: ", error);
+        toast.error(error);
       }
     } else if (edited) {
       // Handle call update warehouse here
@@ -119,7 +119,7 @@ const WareHouse = ({ compData, compFunction }) => {
           );
         }
       } catch (error) {
-        toast.error("Error: ", error.response?.data?.error);
+        toast.error(error.response?.data?.error);
       }
 
       setWareHouseData(preData =>
