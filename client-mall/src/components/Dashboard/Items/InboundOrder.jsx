@@ -35,7 +35,7 @@ const InboundOrder = ({ data, compFunction }) => {
         toast.success("Successfully fulfilled order");
       }
     } catch (error) {
-      toast.error("Error: ", error);
+      toast.error(error.response?.data?.error);
     }
   };
   return (

@@ -39,7 +39,7 @@ function App() {
           <Route exact path="/register" element={<RegisterPage />} />
 
           <Route exact path="/" element={<PrivateRouter />}>
-            <Route exact path="/homepage" element={<HomePage />} />
+            <Route exact path="/" element={<HomePage />} />
             <Route exact path="/products/:id" element={<DetailProductPage />} />
 
             <Route exact path="/:page" element={<PageRender />} />

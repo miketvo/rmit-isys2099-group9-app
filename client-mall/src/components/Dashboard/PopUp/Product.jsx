@@ -109,7 +109,6 @@ const Product = ({ compData, compFunction }) => {
               {
                 id: response.data.id,
                 title: response.data.title,
-                image: response.data.image,
                 product_description: response.data.product_description,
                 category: response.data.category,
                 price: response.data.price,
@@ -154,7 +153,7 @@ const Product = ({ compData, compFunction }) => {
         }
       }
     } catch (error) {
-      toast.error("Error: ", error);
+      toast.error(error.response?.data?.error);
     }
 
     handleClosePopUpForm();

@@ -64,11 +64,9 @@ const getProductCategoryByName = async (req, res) => {
       [categoryName],
     );
     if (results.length === 0) {
-      return res
-        .status(404)
-        .json({
-          error: `Product category with name: ${categoryName} not found`,
-        });
+      return res.status(404).json({
+        error: `Product category with name: ${categoryName} not found`,
+      });
     }
     return res.json(results);
   } catch (error) {
@@ -97,7 +95,7 @@ const updateProductCategory = async (req, res) => {
   if (categoryName === parent) {
     return res
       .status(409)
-      .json({ message: "Product Category and parent cannot have same name" });
+      .json({ error: "Product Category and parent cannot have same name" });
   }
 
   try {
@@ -122,7 +120,9 @@ const updateProductCategory = async (req, res) => {
   } catch (error) {
     await db.poolWHAdmin.query("ROLLBACK");
     console.error(error);
-    res.status(500).send("An error occurred while updating a product category");
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating a product category" });
   }
 };
 
@@ -144,16 +144,16 @@ const deleteProductCategory = async (req, res) => {
       [category_name],
     );
     await db.poolWHAdmin.query("COMMIT");
-    res
-      .status(200)
-      .json({
-        message: `Product category with name: ${category_name} deleted`,
-        category_name: category_name,
-      });
+    res.status(200).json({
+      message: `Product category with name: ${category_name} deleted`,
+      category_name: category_name,
+    });
   } catch (error) {
     await db.poolWHAdmin.query("ROLLBACK");
     console.error(error);
-    res.status(500).send("An error occurred while deleting a product category");
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting a product category" });
   }
 };
 

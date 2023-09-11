@@ -164,7 +164,9 @@ const updateInboundOrder = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred while updating an inbound order");
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating an inbound order" });
   }
 };
 
@@ -174,10 +176,12 @@ const deleteInboundOrder = async (req, res) => {
     await db.poolSeller.query("DELETE FROM inbound_order WHERE id = ?", [id]);
     res
       .status(200)
-      .json({ message: `Inbound order with ID: ${id} deleted`, id: id });
+      .json({ error: `Inbound order with ID: ${id} deleted`, id: id });
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred while deleting an inbound order");
+    res
+      .status(500)
+      .json({ erorr: "An error occurred while deleting an inbound order" });
   }
 };
 
@@ -218,23 +222,22 @@ const fulfillInboundOrder = async (req, res) => {
         fulfilled_time: inboundOrder.fulfilled_time,
       });
     } else if (resultCode === 1) {
-      return res
-        .status(400)
-        .json({
-          error: "No available warehouses or inbound order already fulfilled",
-          result: resultCode,
-        });
+      return res.status(400).json({
+        error: "No available warehouses or inbound order already fulfilled",
+        result: resultCode,
+      });
     } else if (resultCode === 2) {
       return res
         .status(404)
-        .json({ error: "Inbound order ID does not exist", result: resultCode });
+        .json({
+          error: `Inbound order ID ${id} does not exist`,
+          result: resultCode,
+        });
     }
-    return res
-      .status(500)
-      .json({
-        error: "An error occurred while fulfilling an inbound order",
-        result: resultCode,
-      });
+    return res.status(500).json({
+      error: "An error occurred while fulfilling an inbound order",
+      result: resultCode,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

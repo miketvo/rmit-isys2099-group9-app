@@ -158,9 +158,7 @@ npm clean-install
 
 ## Video Demonstration:
 
-Available on [YouTube](https://www.youtube.com/watch?v=dQw4w9WgXcQ).
-
-[//]: # (TODO: Finish editing the demo video and upload it on YouTube, then paste the link here)
+Available on [YouTube](https://youtu.be/nmXr4WKHXf8).
 
 
 ## Contribution

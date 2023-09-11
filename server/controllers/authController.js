@@ -35,19 +35,19 @@ const register = async (req, res) => {
     ) {
       return res
         .status(409)
-        .json({ message: "Username already exists", username: username });
+        .json({ error: "Username already exists", username: username });
     }
 
     if (!username || !role) {
       return res
         .status(400)
-        .json({ message: "Please enter a username and role" });
+        .json({ error: "Please enter a username and role" });
     } else if (role === "seller" && !shop_name) {
-      return res.status(400).json({ message: "Please enter a shop name" });
+      return res.status(400).json({ error: "Please enter a shop name" });
     }
 
     if (role === "seller" && (await model.getShopName(shop_name))) {
-      return res.status(409).json({ message: "Shop name already exists" });
+      return res.status(409).json({ error: "Shop name already exists" });
     }
 
     // Hash the password
@@ -72,7 +72,9 @@ const register = async (req, res) => {
     });
   } catch (err) {
     console.error("error: " + err.stack);
-    return res.status(500).send("Error inserting user into database");
+    return res
+      .status(500)
+      .json({ error: "Error inserting user into database" });
   }
 };
 
@@ -86,7 +88,9 @@ const login = async (req, res) => {
     console.log(`password: ${password}`);
 
     if (!username || !password) {
-      return res.status(400).send("Please provide a username and password");
+      return res
+        .status(400)
+        .json({ error: "Please provide a username and password" });
     }
 
     let role, user, shop_name;
@@ -99,7 +103,7 @@ const login = async (req, res) => {
     } else if (await model.getBuyer(username)) {
       role = "buyer";
     } else {
-      return res.status(401).send("User not found");
+      return res.status(401).json({ error: "User not found" });
     }
     console.log("role: " + role);
 
@@ -115,7 +119,7 @@ const login = async (req, res) => {
     const passwordMatches = compareSync(password, existingUser.password_hash);
 
     if (!passwordMatches) {
-      return res.status(401).send("Incorrect password");
+      return res.status(401).json({ error: "Incorrect password" });
     }
 
     // Generate tokens
@@ -151,12 +155,16 @@ const loginAdmin = async (req, res) => {
     console.log(`password: ${password}`);
 
     if (!username || !password) {
-      return res.status(400).send("Please provide a username and password");
+      return res
+        .status(400)
+        .json({ error: "Please provide a username and password" });
     }
 
     // Retrieve the user from the database
     if (!(await model.getWHAdmin(username))) {
-      return res.status(401).send("User not found or not an warehouse admin");
+      return res
+        .status(401)
+        .json({ error: "User not found or not an warehouse admin" });
     }
 
     const role = "admin";
@@ -169,7 +177,7 @@ const loginAdmin = async (req, res) => {
     const passwordMatches = compareSync(password, existingUser.password_hash);
 
     if (!passwordMatches) {
-      return res.status(401).send("Incorrect password");
+      return res.status(401).json({ error: "Incorrect password" });
     }
 
     const shop_name = "";

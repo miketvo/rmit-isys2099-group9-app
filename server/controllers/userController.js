@@ -46,13 +46,11 @@ const userController = {
         [username],
       );
       if (results.length === 0) {
-        return res
-          .status(404)
-          .json({
-            error: `Buyer ${username} not found`,
-            username: username,
-            role: "buyer",
-          });
+        return res.status(404).json({
+          error: `Buyer ${username} not found`,
+          username: username,
+          role: "buyer",
+        });
       }
       return res.json(results[0]);
     } catch (error) {
@@ -70,13 +68,11 @@ const userController = {
         [username],
       );
       if (results.length === 0) {
-        return res
-          .status(404)
-          .json({
-            error: `Admin ${username} not found`,
-            username: username,
-            role: "admin",
-          });
+        return res.status(404).json({
+          error: `Admin ${username} not found`,
+          username: username,
+          role: "admin",
+        });
       }
       return res.json(results[0]);
     } catch (error) {
@@ -94,13 +90,11 @@ const userController = {
         [username],
       );
       if (results.length === 0) {
-        return res
-          .status(404)
-          .json({
-            error: `Seller ${username} not found`,
-            username: username,
-            role: "seller",
-          });
+        return res.status(404).json({
+          error: `Seller ${username} not found`,
+          username: username,
+          role: "seller",
+        });
       }
       return res.json(results[0]);
     } catch (error) {
@@ -207,13 +201,11 @@ const userController = {
         });
       }
 
-      res
-        .status(400)
-        .json({
-          message: "Please provide either newUsername or newShopName or both",
-          username: oldUsername,
-          role: "seller",
-        });
+      res.status(400).json({
+        message: "Please provide either newUsername or newShopName or both",
+        username: oldUsername,
+        role: "seller",
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal server error" });

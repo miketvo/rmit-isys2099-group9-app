@@ -24,7 +24,7 @@ const NavBar = () => {
       }
     } catch (error) {
       // localStorage.setItem("userInfo", userData)
-      toast.error(error);
+      toast.error(error.response?.data?.error);
     }
   };
 

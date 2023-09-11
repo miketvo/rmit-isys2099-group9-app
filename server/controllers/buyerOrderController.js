@@ -80,12 +80,10 @@ const placeOrder = async (req, res) => {
         .status(400)
         .json({ error: "Product or buyer does not exist", result: resultCode });
     }
-    return res
-      .status(500)
-      .json({
-        error: "An error occurred while processing your request",
-        result: resultCode,
-      });
+    return res.status(500).json({
+      error: "An error occurred while processing your request",
+      result: resultCode,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -242,7 +240,9 @@ const deleteBuyerOrder = async (req, res) => {
       .json({ message: `Buyer order with ID: ${id} deleted`, id: id });
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred while deleting a buyer order");
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting a buyer order" });
   }
 };
 
