@@ -33,14 +33,10 @@ app.set('trust proxy', true);
 
 app.use(cookieParser());
 
-// eslint-disable-next-line no-undef
 const SERVER_PORT = process.env.SERVER_PORT;
 const CORS_WHITELIST = [
-  // eslint-disable-next-line no-undef
   `http://localhost:${process.env.SERVER_PORT}`,
-  // eslint-disable-next-line no-undef
   `http://localhost:${process.env.CLIENT_MALL_PORT}`,
-  // eslint-disable-next-line no-undef
   `http://localhost:${process.env.CLIENT_WHADMIN_PORT}`
 ];
 
