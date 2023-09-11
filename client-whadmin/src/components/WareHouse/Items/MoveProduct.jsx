@@ -182,7 +182,7 @@ const MoveProduct = ({ compData }) => {
         toast.error("You need to enter all information before move product");
       }
     } catch (error) {
-      toast.error("Error: ", error.response?.data?.error);
+      toast.error(error.response?.data?.error);
     }
   };
 
