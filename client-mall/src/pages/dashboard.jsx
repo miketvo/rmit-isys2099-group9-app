@@ -1,10 +1,7 @@
 import DashboardComponent from "../components/Dashboard/DashboardComponent";
 
-
 const SellerDashboardPage = () => {
-  return (
-    <DashboardComponent />
-  );
+  return <DashboardComponent />;
 };
 
 export default SellerDashboardPage;

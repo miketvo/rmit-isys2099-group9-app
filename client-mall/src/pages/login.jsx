@@ -1,8 +1,8 @@
 import LoginComponent from "../components/Login/Login";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 
-const LoginPage = ({setIsLoggedIn}) => {
-  return <LoginComponent setIsLoggedIn={setIsLoggedIn}/>;
+const LoginPage = ({ setIsLoggedIn }) => {
+  return <LoginComponent setIsLoggedIn={setIsLoggedIn} />;
 };
 
 LoginPage.propTypes = {

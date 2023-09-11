@@ -1,15 +1,13 @@
 const express = require("express");
 const authRouter = express.Router();
 
-const {
-    authenticate,
-} = require("../middleware/authenticate");
+const { authenticate } = require("../middleware/authenticate");
 
 const {
-    register,
-    login,
-    loginAdmin,
-    logout
+  register,
+  login,
+  loginAdmin,
+  logout,
 } = require("../controllers/authController");
 
 authRouter.post("/register", register);

@@ -1,74 +1,107 @@
 import PropTypes from "prop-types";
+import { toast } from "react-hot-toast";
 
 // Icon Imported
+import { AiFillCheckCircle, AiOutlineCheck } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
 import { ImBin2 } from "react-icons/im";
+import { putDataAPI } from "../../../api/apiRequest";
 
-import { FaSortAmountDownAlt, FaSortAmountUp } from "react-icons/fa";
+import { IconSetting } from "../../../utils/IconSetting";
+
+// import { FaSortAmountDownAlt, FaSortAmountUp } from "react-icons/fa";
 
 const InboundOrder = ({ data, compFunction }) => {
-  const { handleDeleteData } = compFunction;
+  const { handleOpenEdited, handleDeleteData, setInboundOrdersData } =
+    compFunction;
+
+  const handleFulfilledOrder = async id => {
+    try {
+      const response = await putDataAPI(`inbound-order/fulfill/${id}`);
+      if (response.status === 200 || response.status === 201) {
+        setInboundOrdersData(preData =>
+          preData.map(obj => {
+            if (obj.id === id) {
+              return {
+                ...obj,
+                fulfilled_time: response.data.fulfilled_time,
+                fulfilled_date: response.data.fulfilled_date,
+              };
+            }
+            return obj;
+          }),
+        );
+
+        toast.success("Successfully fulfilled order");
+      }
+    } catch (error) {
+      toast.error("Error: ", error);
+    }
+  };
   return (
-    <div className="product_table d-flex mt-2">
+    <div className="inboundOrder_table d-flex mt-2">
       <table className="table table-striped table-hover">
         <thead>
           <tr>
-            <th className="position-relative" style={{width: "125px", minWidth: "1050px"}}>
+            <th className="" style={{ width: "125px", minWidth: "125px" }}>
               <span>ID</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
+              {/* <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
                 <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
+              </div> */}
             </th>
 
-            <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
+            <th className="" style={{ width: "200px", minWidth: "200px" }}>
               <span>ProductID</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
+              {/* <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
                 <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
+              </div> */}
             </th>
 
-            <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
+            <th className="" style={{ width: "200px", minWidth: "200px" }}>
               <span>Quantity</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
+              {/* <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
                 <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
+              </div> */}
             </th>
 
-            <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
+            <th className="" style={{ width: "200px", minWidth: "200px" }}>
               <span>Fulfilled Time</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
+              {/* <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
                 <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
+              </div> */}
             </th>
 
-            <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
+            <th className="" style={{ width: "200px", minWidth: "200px" }}>
               <span>Fulfilled Date</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
+              {/* <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
                 <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
+              </div> */}
             </th>
 
-            <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
+            <th className="" style={{ width: "200px", minWidth: "200px" }}>
               <span>Created Time</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
+              {/* <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
                 <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
+              </div> */}
             </th>
 
-            <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
+            <th className="" style={{ width: "200px", minWidth: "200px" }}>
               <span>Created Date</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
+              {/* <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
                 <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
+              </div> */}
             </th>
-            
-            <th className="position-relative" style={{width: "200px", minWidth: "1050px"}}>
+
+            <th className="" style={{ width: "200px", minWidth: "200px" }}>
               <span>Seller</span>
-              <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
+              {/* <div className="position-absolute ms-2" style={{top: "5px", right: "7px"}}>
                 <FaSortAmountDownAlt/> <FaSortAmountUp/>
-              </div>
+              </div> */}
             </th>
-            
+
+            <th className="" style={{ width: "100px", minWidth: "100px" }}>
+              <span>Fulfilled ?</span>
+            </th>
             <th>
               <span>Action</span>
             </th>
@@ -86,14 +119,39 @@ const InboundOrder = ({ data, compFunction }) => {
                 <td>{item.created_time}</td>
                 <td>{item.created_date}</td>
                 <td>{item.seller}</td>
-                
+                <td>
+                  {item.fulfilled_time && item.fulfilled_date ? (
+                    <span>
+                      Success
+                      {IconSetting(
+                        <AiFillCheckCircle />,
+                        "",
+                        "30px",
+                        "text-success fw-bold",
+                      )}
+                    </span>
+                  ) : (
+                    <span
+                      className="btn btn-info"
+                      onClick={() => handleFulfilledOrder(item.id)}
+                    >
+                      <AiOutlineCheck />
+                    </span>
+                  )}
+                </td>
                 <td className="sticky_action">
-                  <span className="btn btn-primary">
-                    <BiEdit />
-                  </span>
+                  {!item.fulfilled_time && !item.fulfilled_date && (
+                    <span
+                      className="btn btn-primary"
+                      onClick={() => handleOpenEdited(item.id, "inbound order")}
+                    >
+                      <BiEdit />
+                    </span>
+                  )}
+
                   <span
                     className="btn btn-warning ms-2"
-                    onClick={() => handleDeleteData(item.id, "product")}
+                    onClick={() => handleDeleteData(item.id, "inbound order")}
                   >
                     <ImBin2 />
                   </span>
@@ -108,20 +166,23 @@ const InboundOrder = ({ data, compFunction }) => {
 };
 
 InboundOrder.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    product_id: PropTypes.number.isRequired,
-    quantity: PropTypes.number.isRequired,
-    created_time: PropTypes.string.isRequired,
-    created_date: PropTypes.string.isRequired,
-    fulfilled_time: PropTypes.string,
-    fulfilled_date: PropTypes.string,
-    seller: PropTypes.string.isRequired,
-  })).isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      product_id: PropTypes.number.isRequired,
+      quantity: PropTypes.number.isRequired,
+      created_time: PropTypes.string.isRequired,
+      created_date: PropTypes.string.isRequired,
+      fulfilled_time: PropTypes.string,
+      fulfilled_date: PropTypes.string,
+      seller: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
   compFunction: PropTypes.shape({
+    handleOpenEdited: PropTypes.func.isRequired,
     handleDeleteData: PropTypes.func.isRequired,
+    setInboundOrdersData: PropTypes.func,
   }).isRequired,
 };
 
 export default InboundOrder;
-

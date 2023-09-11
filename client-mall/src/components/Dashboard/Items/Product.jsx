@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import { BiEdit } from "react-icons/bi";
 import { ImBin2 } from "react-icons/im";
 
-import TestImg from "../../../images/potato.jpg";
-
 const Product = ({ data, compFunction }) => {
   const { handleDeleteData, handleOpenEdited } = compFunction;
   return (
@@ -14,8 +12,8 @@ const Product = ({ data, compFunction }) => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Title</th>
-            <th style={{ width: "15%" }}>Image</th>
+            <th style={{ width: "10%" }}>Title</th>
+            <th style={{ width: "20%" }}>Image</th>
             <th style={{ width: "15%" }}>Product Description</th>
             <th>Category</th>
             <th>Price</th>
@@ -32,8 +30,17 @@ const Product = ({ data, compFunction }) => {
               <tr key={item.id}>
                 <th scope="row">{item.id}</th>
                 <td>{item.title}</td>
-                <td>
-                  <img src={TestImg} alt="" />
+                <td className="p-4" style={{ width: "100%", height: "200px" }}>
+                  <img
+                    src={
+                      item.image
+                        ? item.image instanceof File
+                          ? URL.createObjectURL(item.image)
+                          : item.image
+                        : ""
+                    }
+                    alt=""
+                  />
                 </td>
                 <td>{item.product_description}</td>
                 <td>{item.category}</td>
@@ -43,8 +50,10 @@ const Product = ({ data, compFunction }) => {
                 <td>{item.length}</td>
                 <td>{item.seller}</td>
                 <td className="sticky_action">
-                  <span className="btn btn-primary"
-                  onClick={() => handleOpenEdited(item.id, "product")}>
+                  <span
+                    className="btn btn-primary"
+                    onClick={() => handleOpenEdited(item.id, "product")}
+                  >
                     <BiEdit />
                   </span>
                   <span
@@ -80,7 +89,7 @@ Product.propTypes = {
   ).isRequired,
   compFunction: PropTypes.shape({
     handleDeleteData: PropTypes.func.isRequired,
-    handleOpenEdited: PropTypes.func.isRequired
+    handleOpenEdited: PropTypes.func.isRequired,
   }).isRequired,
 };
 

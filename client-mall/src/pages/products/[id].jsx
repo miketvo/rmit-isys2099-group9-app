@@ -1,9 +1,7 @@
-import DetailProductComponent from "../../components/Product/DetailProductComponent"
+import DetailProductComponent from "../../components/Product/DetailProductComponent";
 
 const DetailProductPage = () => {
-  return (
-    <DetailProductComponent />
-  )
-}
+  return <DetailProductComponent />;
+};
 
-export default DetailProductPage
+export default DetailProductPage;

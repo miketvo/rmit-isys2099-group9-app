@@ -10,7 +10,7 @@ database.getBuyer = async username => {
   try {
     const [results] = await db.poolBuyer.query(
       `SELECT * FROM buyer WHERE username = ?`,
-      [username]
+      [username],
     );
     return results[0];
   } catch (err) {
@@ -43,7 +43,7 @@ database.getSeller = async username => {
   try {
     const [results] = await db.poolSeller.query(
       `SELECT * FROM seller WHERE username = ?`,
-      [username]
+      [username],
     );
     return results[0];
   } catch (err) {
@@ -73,14 +73,14 @@ database.getShopName = async shop_name => {
   try {
     const [results] = await db.poolSeller.query(
       `SELECT * FROM seller WHERE shop_name = ?`,
-      [shop_name]
+      [shop_name],
     );
     return results[0];
   } catch (err) {
     console.error("error: " + err.stack);
     throw err;
   }
-}
+};
 
 {
   /* Endpoints for WH Admin */
@@ -89,7 +89,7 @@ database.getWHAdmin = async username => {
   try {
     const [results] = await db.poolWHAdmin.query(
       `SELECT * FROM wh_admin WHERE username = ?`,
-      [username]
+      [username],
     );
     return results[0];
   } catch (err) {
@@ -119,13 +119,13 @@ database.deleteWHAdminToken = async username => {
   try {
     await db.poolWHAdmin.query(
       `UPDATE wh_admin SET refresh_token = NULL WHERE username = ?`,
-      [username]
+      [username],
     );
   } catch (err) {
     console.error("error: " + err.stack);
     throw err;
   }
-}
+};
 
 {
   /* 
@@ -144,20 +144,25 @@ database.getLazadaUserByRole = (role, username) => {
   }
 };
 
-database.getLazadaUser = async (username) => {
+database.getLazadaUser = async username => {
   try {
     const [results] = await db.poolSeller.query(
       `SELECT * FROM lazada_user WHERE username = ?`,
-      [username]
+      [username],
     );
     return results[0];
   } catch (err) {
     console.error("error: " + err.stack);
     throw err;
   }
-}
+};
 
-database.insertLazadaUserByRole = async (role, username, hashedPassword, shop_name) => {
+database.insertLazadaUserByRole = async (
+  role,
+  username,
+  hashedPassword,
+  shop_name,
+) => {
   try {
     const queryMall = `INSERT INTO lazada_user (username, password_hash) VALUES (?, ?)`;
 
@@ -165,28 +170,24 @@ database.insertLazadaUserByRole = async (role, username, hashedPassword, shop_na
 
     // Insert the user into the table based on their role
 
-    if (role === 'buyer') {
+    if (role === "buyer") {
       // Insert the user into the lazada_user table
       await db.poolBuyer.query(queryMall, values);
 
       // Insert the user into the buyer table
       database.insertBuyer(username);
-
-    } else if (role === 'seller') {
+    } else if (role === "seller") {
       // Insert the user into the lazada_user table
       await db.poolSeller.query(queryMall, values);
 
       // Insert the user into the seller table
       database.insertSeller(username, shop_name);
-
-    } else if (role === 'admin') {
+    } else if (role === "admin") {
       // Insert the user into the wh_admin table
       database.insertWHAdmin(username, hashedPassword);
-
     } else {
-      throw new Error('Invalid role');
+      throw new Error("Invalid role");
     }
-
   } catch (err) {
     console.error("error: " + err.stack);
   }
@@ -196,12 +197,12 @@ database.deleteLazadaUserToken = async username => {
   try {
     await db.poolSeller.query(
       `UPDATE lazada_user SET refresh_token = NULL WHERE username = ?`,
-      [username]
+      [username],
     );
   } catch (err) {
     console.error("error: " + err.stack);
     throw err;
   }
-}
+};
 
 module.exports = database;

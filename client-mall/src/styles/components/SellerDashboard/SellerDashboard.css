@@ -48,7 +48,8 @@
 
 /* Warehouse Items (Table) */
 .dashboard_table,
-.product_table {
+.product_table,
+.inboundOrder_table {
     height: fit-content;
     max-height: 70vh;
 
@@ -59,14 +60,16 @@
 }
 
 .dashboard_table table,
-.product_table table {
+.product_table table,
+.inboundOrder_table table {
     width: 100%;
     table-layout: fixed;
     min-width: 1500px;
 }
 
 .dashboard_wrapper thead th,
-.product_table thead th {
+.product_table thead th,
+.inboundOrder_table thead th {
     position: sticky;
     top: 0;
     background-color: #B64F4F;
@@ -77,7 +80,9 @@
 .dashboard_wrapper th,
 .dashboard_wrapper td,
 .product_table th,
-.product_table td {
+.product_table td,
+.inboundOrder_table th,
+.inboundOrder_table td {
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -88,7 +93,9 @@
 .dashboard_table table th:nth-last-child(1),
 .dashboard_table table td:nth-last-child(1),
 .product_table table th:nth-last-child(1),
-.product_table table td:nth-last-child(1) {
+.product_table table td:nth-last-child(1),
+.inboundOrder_table table th:nth-last-child(1),
+.inboundOrder_table table td:nth-last-child(1) {
     position: sticky;
     right: 0;
     width: 175px;
@@ -96,7 +103,9 @@
 }
 
 .dashboard_table table th:nth-last-child(2),
-.dashboard_table table td:nth-last-child(2) {
+.dashboard_table table td:nth-last-child(2),
+.inboundOrder_table table th:nth-last-child(2),
+.inboundOrder_table table td:nth-last-child(2) {
     position: sticky;
     right: 175px;
     width: 175px;
@@ -105,12 +114,14 @@
 
 .dashboard_table table th:nth-last-child(1),
 .dashboard_table table th:nth-last-child(2),
+.inboundOrder_table table th:nth-last-child(1),
+.inboundOrder_table table th:nth-last-child(2),
 .product_table table th:nth-last-child(1) {
     z-index: 2;
 } 
 
 .dashboard_wrapper td img {
-    width: 120px;
+    width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 15px;
