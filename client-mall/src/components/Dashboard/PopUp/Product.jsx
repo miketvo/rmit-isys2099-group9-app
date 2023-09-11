@@ -109,7 +109,6 @@ const Product = ({ compData, compFunction }) => {
               {
                 id: response.data.id,
                 title: response.data.title,
-                image: response.data.image,
                 product_description: response.data.product_description,
                 category: response.data.category,
                 price: response.data.price,

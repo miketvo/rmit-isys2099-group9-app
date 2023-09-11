@@ -166,8 +166,9 @@ const deleteWarehouse = async (req, res) => {
       [warehouseID],
     );
     const [[{ result: resultCode }]] = await db.poolWHAdmin.query(
-      `SELECT @result`,
+      `SELECT @result as result`,
     );
+    console.log(resultCode);
     if (resultCode === 1) {
       return res.status(400).json({
         error: `Warehouse with id: ${warehouseID} not empty or not exist`,
