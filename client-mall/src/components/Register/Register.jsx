@@ -49,7 +49,7 @@ const RegisterComponent = () => {
           }
         }
       } catch (error) {
-        toast.error(error);
+        toast.error(error.response?.data?.error);
       }
     } else {
       toast.error("Your confirmed password does not match");
@@ -75,6 +75,7 @@ const RegisterComponent = () => {
                 name="username"
                 value={username}
                 onChange={handleChangeInput}
+                required
               />
               <label htmlFor="floatingInput">Username</label>
             </div>
@@ -88,6 +89,7 @@ const RegisterComponent = () => {
                 name="password"
                 value={password}
                 onChange={handleChangeInput}
+                required
               />
               <label htmlFor="floatingPassword">Password</label>
             </div>
@@ -101,6 +103,7 @@ const RegisterComponent = () => {
                 name="confirmPassword"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
+                required
               />
               <label htmlFor="floatingPassword">Confirm Password</label>
             </div>
@@ -118,6 +121,7 @@ const RegisterComponent = () => {
                     value={role}
                     onChange={e => setRoles(e.target.value)}
                     checked={roles === role}
+                    required
                   />
                   <label
                     className="form-check-label text-capitalize"
@@ -139,6 +143,7 @@ const RegisterComponent = () => {
                   name="username"
                   value={shopName}
                   onChange={e => setShopName(e.target.value)}
+                  required
                 />
                 <label htmlFor="floatingInput">Shop Name</label>
               </div>
